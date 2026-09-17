@@ -15,7 +15,7 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Security test suite catalog + hard gates (stub runner)
 - [x] Quarantine center UI + gateway deny
 - [x] Certification checklist + CI certify workflows
-- [ ] Ephemeral sandbox runner with synthetic fixtures and signed evidence store
+- [x] Ephemeral sandbox runner with HMAC-signed evidence (`scripts/ephemeral-lab-runner.mjs` + `/lab-runs`)
 - [ ] Live SBOM/signature/CVE feed ingestion
 
 ### Milestone 3 — Gateway enforcement
@@ -32,13 +32,13 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Hooks preflight/postflight/secret-scan (+ TypeScript examples)
 - [x] Rules baseline `00/10/20/30` + LevelUpWorld operating rules
 - [x] Archify pilot: Secure PR Guardian + Production Triage Copilot
-- [ ] CI proving hooks cannot be bypassed by ordinary project workflows
+- [x] CI proving hooks cannot be bypassed (`.github/workflows/hooks-bypass-proof.yml`)
 
 ### Milestone 5 — Controlled mutations
 
 - [x] Approval API, args_hash-bound grants, consume semantics
 - [x] First constrained write: `github-write.create_pull_request` (non-prod, dry-run default)
-- [ ] Dual approval + step-up for production writes
+- [x] Dual approval + step-up for production writes
 - [ ] Expand mutations only after observing deny/audit/test quality
 
 ### Weeks 1–8 (historical delivery slices)

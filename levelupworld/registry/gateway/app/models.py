@@ -111,9 +111,13 @@ class ApprovalCreateRequest(BaseModel):
     idempotency_key: str
     correlation_id: str
     ttl_seconds: int = 300
+    required_approver_count: int | None = None
+    approval_mode: str | None = None  # none|single|dual|change_ticket
+    step_up_required: bool = False
 
 
 class ApprovalDecision(BaseModel):
     approver: str
     approve: bool
     note: str | None = None
+    step_up_verified: bool = False

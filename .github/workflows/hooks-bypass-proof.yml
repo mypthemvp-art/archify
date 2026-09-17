@@ -1,0 +1,38 @@
+name: Hooks Bypass Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".cursor/hooks/**"
+      - ".cursor/hooks.json"
+      - ".cursor/mcp.json"
+      - ".cursor/mcp.pilot.json"
+      - ".cursor/mcp.gateway.example.json"
+      - "levelupworld/scripts/prove-hooks-fail-closed.mjs"
+      - "levelupworld/scripts/check-contract.mjs"
+      - ".github/workflows/hooks-bypass-proof.yml"
+  pull_request:
+    paths:
+      - ".cursor/hooks/**"
+      - ".cursor/hooks.json"
+      - ".cursor/mcp.json"
+      - ".cursor/mcp.pilot.json"
+      - ".cursor/mcp.gateway.example.json"
+      - "levelupworld/scripts/prove-hooks-fail-closed.mjs"
+      - "levelupworld/scripts/check-contract.mjs"
+      - ".github/workflows/hooks-bypass-proof.yml"
+  workflow_dispatch:
+
+jobs:
+  prove-fail-closed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove hooks fail closed (adversarial cases)
+        run: node levelupworld/scripts/prove-hooks-fail-closed.mjs
+      - name: Agent-ops contract checks
+        run: node levelupworld/scripts/check-contract.mjs

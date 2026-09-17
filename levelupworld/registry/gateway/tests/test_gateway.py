@@ -335,6 +335,68 @@ def test_saved_views_and_quarantine_page(client):
     assert "Quarantine" in page.text
 
 
+def test_dual_approval_and_step_up_for_production(client):
+    create = client.post(
+        "/api/v1/approvals",
+        json={
+            "actor": "user:alice",
+            "environment": "production",
+            "connector_slug": "filesystem-sandbox",
+            "connector_version": "1.0.0",
+            "tool_name": "write_artifact",
+            "plan_markdown": "Prod write needs dual approval",
+            "arguments": {"path": "out/x.md", "content": "x"},
+            "idempotency_key": "dual-1",
+            "correlation_id": "00000000-0000-0000-0000-0000000000d1",
+        },
+    )
+    assert create.status_code == 200
+    body = create.json()
+    assert body["required_approver_count"] == 2
+    assert body["step_up_required"] is True
+    req_id = body["id"]
+
+    # Self-approve rejected
+    self_approve = client.post(
+        f"/api/v1/approvals/{req_id}/decide",
+        json={"approver": "user:alice", "approve": True, "step_up_verified": True},
+    )
+    assert self_approve.status_code == 400
+
+    # First approver without step-up rejected
+    no_step = client.post(
+        f"/api/v1/approvals/{req_id}/decide",
+        json={"approver": "user:boss1", "approve": True, "step_up_verified": False},
+    )
+    assert no_step.status_code == 400
+
+    first = client.post(
+        f"/api/v1/approvals/{req_id}/decide",
+        json={"approver": "user:boss1", "approve": True, "step_up_verified": True},
+    )
+    assert first.status_code == 200
+    assert first.json()["status"] == "partially_approved"
+    assert first.json().get("grant_token") in (None, "")
+
+    second = client.post(
+        f"/api/v1/approvals/{req_id}/decide",
+        json={"approver": "user:boss2", "approve": True, "step_up_verified": True},
+    )
+    assert second.status_code == 200
+    assert second.json()["status"] == "approved"
+    assert second.json()["grant_token"]
+    assert len(second.json()["decisions"]) == 2
+
+
+def test_ephemeral_lab_run(client):
+    res = client.post("/api/v1/connectors/github-readonly/versions/1.0.0/lab-runs?suite=full")
+    assert res.status_code == 200
+    body = res.json()
+    assert "ephemeral" in body
+    assert body["ephemeral"]["ok"] is True
+    assert body["ephemeral"]["evidence"]
+
+
 def test_healthz_reports_auth_and_rls(client):
     res = client.get("/healthz")
     assert res.status_code == 200

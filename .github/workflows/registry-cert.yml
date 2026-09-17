@@ -55,6 +55,9 @@ jobs:
       - name: Certification gate (manifests + github-write)
         run: node levelupworld/registry/scripts/certify-connectors.mjs
 
+      - name: Ephemeral lab evidence (HMAC-signed)
+        run: node levelupworld/registry/scripts/ephemeral-lab-runner.mjs github-readonly full
+
       - name: Agent-ops contract checks
         run: node levelupworld/scripts/check-contract.mjs
 

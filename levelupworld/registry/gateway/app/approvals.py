@@ -1,4 +1,7 @@
-"""Approval request store and signed grant issue/verify."""
+"""Approval request store and signed grant issue/verify.
+
+Supports dual approval + step-up for production (spec §7.1 / Milestone 5).
+"""
 
 from __future__ import annotations
 
@@ -14,6 +17,14 @@ from .models import ApprovalCreateRequest, Environment
 from .security import args_hash
 
 
+def default_approver_count(environment: str, explicit: int | None = None) -> int:
+    if explicit is not None and explicit >= 1:
+        return explicit
+    if environment == Environment.production.value:
+        return int(os.environ.get("PRODUCTION_REQUIRED_APPROVERS", "2"))
+    return 1
+
+
 class ApprovalService:
     def __init__(self, signing_secret: str | None = None):
         self.signing_secret = signing_secret or os.environ.get(
@@ -26,13 +37,16 @@ class ApprovalService:
         req_id = f"apr_{uuid.uuid4().hex}"
         digest = args_hash(body.arguments)
         expires = time.time() + body.ttl_seconds
+        env = body.environment.value
+        required = default_approver_count(env, body.required_approver_count)
+        mode = body.approval_mode or ("dual" if required >= 2 else "single")
         record = {
             "id": req_id,
             "status": "pending",
             "org_id": body.org_id,
             "tenant_id": body.tenant_id,
             "project_id": body.project_id,
-            "environment": body.environment.value,
+            "environment": env,
             "actor": body.actor,
             "connector_slug": body.connector_slug,
             "connector_version": body.connector_version,
@@ -42,30 +56,73 @@ class ApprovalService:
             "args_hash": digest,
             "idempotency_key": body.idempotency_key,
             "correlation_id": body.correlation_id,
+            "required_approver_count": required,
+            "approval_mode": mode,
+            "decisions": [],
+            "step_up_required": env == Environment.production.value or body.step_up_required,
             "expires_at": datetime.fromtimestamp(expires, tz=timezone.utc).isoformat(),
             "created_at": datetime.now(tz=timezone.utc).isoformat(),
             "grant_id": None,
+            "grant_token": None,
         }
         self.requests[req_id] = record
         return record
 
-    def decide(self, request_id: str, approver: str, approve: bool, note: str | None = None) -> dict[str, Any]:
+    def decide(
+        self,
+        request_id: str,
+        approver: str,
+        approve: bool,
+        note: str | None = None,
+        *,
+        step_up_verified: bool = False,
+    ) -> dict[str, Any]:
         req = self.requests.get(request_id)
         if not req:
             raise KeyError("approval request not found")
-        if req["status"] != "pending":
+        if req["status"] not in {"pending", "partially_approved"}:
             raise ValueError(f"request is {req['status']}")
         if datetime.fromisoformat(req["expires_at"]) < datetime.now(tz=timezone.utc):
             req["status"] = "expired"
             raise ValueError("request expired")
 
+        # Production / dual: actor cannot self-approve
+        if approver == req["actor"] and req["required_approver_count"] >= 2:
+            raise ValueError("actor cannot self-approve dual/production requests")
+
+        if req.get("step_up_required") and approve and not step_up_verified:
+            raise ValueError("step-up verification required for this approval (SSO/WebAuthn)")
+
+        decisions: list[dict[str, Any]] = req.setdefault("decisions", [])
+        if any(d["approver"] == approver for d in decisions):
+            raise ValueError("approver already recorded a decision")
+
+        decisions.append(
+            {
+                "approver": approver,
+                "approve": approve,
+                "note": note,
+                "step_up_verified": step_up_verified,
+                "decided_at": datetime.now(tz=timezone.utc).isoformat(),
+            }
+        )
         req["decided_by"] = approver
         req["decided_at"] = datetime.now(tz=timezone.utc).isoformat()
         req["decision_note"] = note
+
         if not approve:
             req["status"] = "denied"
             return req
 
+        approvals = [d for d in decisions if d["approve"]]
+        if len(approvals) < req["required_approver_count"]:
+            req["status"] = "partially_approved"
+            req["grant_token"] = None
+            return req
+
+        return self._issue_grant(req, [d["approver"] for d in approvals])
+
+    def _issue_grant(self, req: dict[str, Any], approvers: list[str]) -> dict[str, Any]:
         grant_id = f"grn_{uuid.uuid4().hex}"
         now = int(time.time())
         exp = now + 300
@@ -88,8 +145,11 @@ class ApprovalService:
             "nbf": now,
             "iat": now,
             "exp": exp,
-            "approval_request_id": request_id,
-            "required_approvers": [approver],
+            "approval_request_id": req["id"],
+            "required_approvers": approvers,
+            "required_approver_count": req["required_approver_count"],
+            "approval_mode": req["approval_mode"],
+            "step_up": bool(req.get("step_up_required")),
         }
         token = jwt.encode(claims, self.signing_secret, algorithm="HS256")
         self.grants[grant_id] = {
@@ -145,15 +205,20 @@ class ApprovalService:
             if not ok:
                 raise ValueError(msg)
 
+        # Production grants must record dual approval in claims
+        if environment == Environment.production:
+            needed = int(claims.get("required_approver_count") or 2)
+            got = claims.get("required_approvers") or []
+            if len(got) < needed:
+                raise ValueError("production grant missing dual approval evidence")
+
         grant_id = claims["grant_id"]
         stored = self.grants.get(grant_id)
         if not stored:
             raise ValueError("unknown grant")
         if stored.get("revoked_at"):
             raise ValueError("grant revoked")
-        # Atomic-style consume: only one successful consume for a grant
         if stored.get("consumed_at"):
-            # Idempotent replay only when same args_hash (already checked) and same idempotency
             if stored.get("claims", {}).get("idempotency_key") != idempotency_key:
                 raise ValueError("grant already consumed")
         else:

@@ -79,9 +79,21 @@ verify_grant(grant, request):
   return allow
 ```
 
-## Security properties
+## Dual approval + step-up (production)
 
-- TTL typically 1–15 minutes for high-risk tools.
-- Single-use or idempotent-replay only (same key + same hash).
-- Fail closed if signing keys or approval service unavailable for medium/high risk.
-- Audit both grant issuance and grant consumption with correlation IDs.
+| Environment | Default `required_approver_count` | Step-up |
+|---|---:|---|
+| development / staging | 1 | optional |
+| production | 2 (`PRODUCTION_REQUIRED_APPROVERS`) | required (`step_up_verified=true` on each approve) |
+
+Rules:
+
+- Actor **cannot** self-approve when count ≥ 2.
+- Status is `partially_approved` until enough distinct approvers approve.
+- Grant JWT includes `required_approvers`, `required_approver_count`, `approval_mode`, `step_up`.
+- Production invoke rejects grants that lack dual-approver evidence in claims.
+
+```http
+POST /api/v1/approvals/{id}/decide
+{ "approver": "user:boss1", "approve": true, "step_up_verified": true }
+```

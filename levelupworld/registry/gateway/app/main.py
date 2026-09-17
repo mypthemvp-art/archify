@@ -283,6 +283,35 @@ def create_test_run(slug: str, version: str, suite: str = "full", org_id: str = 
     return control_plane.create_test_run(slug, version, suite, org_id)
 
 
+@app.post("/api/v1/connectors/{slug}/versions/{version}/lab-runs")
+def create_ephemeral_lab_run(slug: str, version: str, suite: str = "full"):
+    """Spin ephemeral sandbox via Node runner; return HMAC-signed evidence paths."""
+    import subprocess
+    from pathlib import Path
+
+    conn = registry.get(slug)
+    if not conn or conn.version != version:
+        raise HTTPException(404, "connector version not found")
+    script = Path(__file__).resolve().parents[2] / "scripts" / "ephemeral-lab-runner.mjs"
+    proc = subprocess.run(
+        ["node", str(script), slug, suite],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode not in (0, 2):
+        raise HTTPException(500, f"lab runner failed: {proc.stderr or proc.stdout}")
+    try:
+        summary = __import__("json").loads(proc.stdout.strip().splitlines()[-1])
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(500, f"invalid lab runner output: {proc.stdout}") from exc
+    # Also record in control-plane test runs
+    record = control_plane.create_test_run(slug, version, suite)
+    record["ephemeral"] = summary
+    record["status"] = "passed" if summary.get("ok") else "failed"
+    return record
+
+
 @app.get("/api/v1/test-runs/{run_id}")
 def get_test_run(run_id: str):
     run = control_plane.get_test_run(run_id)
@@ -593,7 +622,13 @@ def decide_approval(
     principal: Principal = Depends(require_roles("approver", "admin")),
 ):
     try:
-        record = approvals.decide(request_id, body.approver or principal.subject, body.approve, body.note)
+        record = approvals.decide(
+            request_id,
+            body.approver or principal.subject,
+            body.approve,
+            body.note,
+            step_up_verified=body.step_up_verified,
+        )
     except KeyError:
         raise HTTPException(404, "not found") from None
     except ValueError as exc:
@@ -610,11 +645,17 @@ def decide_approval(
             "connector_version": record["connector_version"],
             "tool_name": record["tool_name"],
             "normalized_arguments_hash": record["args_hash"],
-            "policy_decision": PolicyDecision.allow.value if body.approve else PolicyDecision.deny.value,
+            "policy_decision": (
+                PolicyDecision.allow.value
+                if record["status"] == "approved"
+                else PolicyDecision.deny.value
+                if record["status"] == "denied"
+                else PolicyDecision.require_approval.value
+            ),
             "approval_id": record["id"],
             "idempotency_key": record["idempotency_key"],
             "latency_ms": 0,
-            "outcome": "approved" if body.approve else "denied",
+            "outcome": record["status"],
             "response_hash": None,
             "evidence_uri": None,
             "redaction_count": 0,

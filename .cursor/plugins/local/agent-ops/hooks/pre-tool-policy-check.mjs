@@ -32,6 +32,26 @@ const DENY_TOOL_NAME = [/prod(?:uction)?_shell/i, /unrestricted_http/i, /db_supe
 const SECRET_ARG =
   /(api[_-]?key|password|private[_-]?key|secret|token|connection[_-]?string)\s*[:=]\s*['\"]?[^'\"\s]{8,}/i;
 
+const SECRET_JSON_KEY =
+  /"(api[_-]?key|password|private[_-]?key|secret|token|connection[_-]?string)"\s*:\s*"[^"]{8,}"/i;
+
+const SECRET_KEY_NAMES = /^(api[_-]?key|password|private[_-]?key|secret|token|connection[_-]?string|authorization)$/i;
+
+function containsSecretMaterial(value) {
+  const text = typeof value === 'string' ? value : JSON.stringify(value ?? {});
+  if (SECRET_ARG.test(text) || SECRET_JSON_KEY.test(text)) return true;
+  const walk = (node) => {
+    if (!node || typeof node !== 'object') return false;
+    if (Array.isArray(node)) return node.some(walk);
+    for (const [k, v] of Object.entries(node)) {
+      if (SECRET_KEY_NAMES.test(k) && typeof v === 'string' && v.length >= 8) return true;
+      if (walk(v)) return true;
+    }
+    return false;
+  };
+  return walk(value);
+}
+
 function readInput() {
   try {
     return JSON.parse(fs.readFileSync(0, 'utf8') || '{}');
@@ -138,7 +158,7 @@ async function main() {
   const args = event.tool_input || event.args || {};
   const argsText = JSON.stringify(args);
 
-  if (SECRET_ARG.test(argsText) || SECRET_ARG.test(command)) {
+  if (containsSecretMaterial(args) || SECRET_ARG.test(command) || SECRET_JSON_KEY.test(command)) {
     deny('Refusing tool call that appears to embed raw secret material in arguments.', cid);
     return;
   }

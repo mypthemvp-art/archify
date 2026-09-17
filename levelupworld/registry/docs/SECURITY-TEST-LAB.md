@@ -3,7 +3,8 @@
 Isolated ephemeral lab for connector certification. Never targets production resources.
 
 Executable stub today: `POST /api/v1/connectors/{slug}/versions/{version}/test-runs?suite=…`  
-Full family matrix is the certification contract; expand adapters toward real probes over time.
+Ephemeral runner (HMAC-signed evidence): `node levelupworld/registry/scripts/ephemeral-lab-runner.mjs [slug] [suite]`  
+API: `POST /api/v1/connectors/{slug}/versions/{version}/lab-runs?suite=full`
 
 ## Suites
 
