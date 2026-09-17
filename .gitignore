@@ -5,6 +5,7 @@ node_modules/
 .lore/
 .cursor/audit/
 levelupworld/registry/.venv/
+levelupworld/registry/gateway/.venv/
 **/__pycache__/
 *.py[cod]
 .pytest_cache/

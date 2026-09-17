@@ -246,26 +246,71 @@ const connectors = [
     allowed_environments: ['development', 'staging', 'production'],
     data_classification: 'restricted',
     tools: [
-      { name: 'append_event', capability: 'write', risk_level: 'medium', requires_approval: false },
+      { name: 'append_event', capability: 'write', risk_level: 'medium', requires_approval: true },
       { name: 'get_evidence', capability: 'read', risk_level: 'low', requires_approval: false },
-      { name: 'attach_artifact_hash', capability: 'write', risk_level: 'medium', requires_approval: false },
+      { name: 'attach_artifact_hash', capability: 'write', risk_level: 'medium', requires_approval: true },
     ],
     safety: 'Append-only writes; signed/hash-linked audit records',
+  },
+  {
+    slug: 'github-write',
+    display_name: 'GitHub Write (non-prod PR create)',
+    category: 'github',
+    rank: 11,
+    description: 'Create pull requests in allowlisted non-production repositories behind signed approval grants.',
+    owner_team: 'platform-security',
+    escalation_contact: 'secops@localhost',
+    trust_tier: 'reviewed',
+    certification_state: 'in_lab',
+    transport: 'streamable_http',
+    version: '1.0.0',
+    image_digest: 'sha256:github-write-dev-digest',
+    oauth_scopes: ['pull_requests:write', 'contents:read'],
+    outbound_domains: ['api.github.com'],
+    allowed_environments: ['development', 'staging'],
+    data_classification: 'internal',
+    tools: [
+      {
+        name: 'create_pull_request',
+        capability: 'write',
+        risk_level: 'high',
+        requires_approval: true,
+      },
+    ],
+    safety: 'Non-prod only; repo allowlist; signed grant; dry-run default',
   },
 ];
 
 for (const c of connectors) {
-  const tools = c.tools.map((t) => ({
-    ...t,
-    description: `${t.name} for ${c.display_name}`,
-    input_schema: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        correlation_id: { type: 'string' },
-      },
-    },
-  }));
+  const tools = c.tools.map((t) => {
+    const input_schema =
+      c.slug === 'github-write' && t.name === 'create_pull_request'
+        ? {
+            type: 'object',
+            additionalProperties: false,
+            required: ['repository', 'head', 'base', 'title'],
+            properties: {
+              repository: { type: 'string' },
+              head: { type: 'string' },
+              base: { type: 'string' },
+              title: { type: 'string' },
+              body: { type: 'string' },
+              draft: { type: 'boolean' },
+            },
+          }
+        : {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              correlation_id: { type: 'string' },
+            },
+          };
+    return {
+      ...t,
+      description: `${t.name} for ${c.display_name}`,
+      input_schema,
+    };
+  });
   const read = tools.filter((t) => t.capability === 'read').length;
   const write = tools.filter((t) => t.capability === 'write').length;
   const del = tools.filter((t) => t.capability === 'delete').length;
@@ -283,7 +328,9 @@ for (const c of connectors) {
       healthy: true,
       last_health_at: new Date().toISOString(),
     },
-    active_in_production: ['github-readonly', 'git-repository', 'policy-approval-gateway', 'audit-evidence-store'].includes(c.slug),
+    active_in_production: ['github-readonly', 'git-repository', 'policy-approval-gateway', 'audit-evidence-store'].includes(
+      c.slug,
+    ),
   };
   fs.writeFileSync(path.join(dir, `${c.slug}.manifest.json`), `${JSON.stringify(manifest, null, 2)}\n`);
 

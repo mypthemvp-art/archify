@@ -4,22 +4,23 @@
 
 - [x] Registry schema, connector manifest ingestion, catalog UI, connector detail pages
 - [x] Register the ten core connectors as metadata
-- [ ] SSO, org/project RBAC, RLS wired to real IdP
+- [x] SSO/IdP modes (`AUTH_MODE=disabled|dev|oidc`) + org principal on gateway APIs
 - [x] Connector version pinning fields in manifests
 
 ### Week 3–4: test and observability plane
 
 - [x] Sandbox test-run API stubs + certification suite list
-- [ ] Live connector health probes and OpenTelemetry ingestion
+- [x] OpenTelemetry traces/metrics instrumentation (OTLP soft-dep + console export)
 - [x] Policy-decision and invocation audit tables/APIs
-- [ ] Automated certification checks in GitHub Actions
+- [x] Automated certification checks in GitHub Actions (`.github/workflows/registry-cert.yml`)
+- [x] Postgres RLS policies via `app.org_id` GUC (`schema/003_rls_policies.sql` + `db.py`)
 
 ### Week 5–6: gateway and approvals
 
 - [x] MCP gateway with read-only connectors first (stub adapters)
 - [x] JSON-schema path, output redaction, tool budgets, audit events
 - [x] Approval requests and signed grants with exact args_hash binding
-- [ ] First real mutation connector: GitHub PR create in non-prod
+- [x] First constrained mutation connector: `github-write.create_pull_request` (non-prod, dry-run default, repo allowlist, signed grants)
 
 ### Week 7–8: Cursor package
 

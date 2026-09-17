@@ -19,7 +19,7 @@ spec:
   trust:
     tier: 4
     certification: certified
-    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+    lastSecurityReviewAt: 2026-09-17T05:51:53.242Z
   data:
     classifications: [restricted]
     outboundDomains: []
@@ -33,6 +33,7 @@ spec:
       operation: write
       risk: medium
       policy: audit-evidence-store.append_event
+      approval: required
     - name: get_evidence
       operation: read
       risk: low
@@ -41,6 +42,7 @@ spec:
       operation: write
       risk: medium
       policy: audit-evidence-store.attach_artifact_hash
+      approval: required
   limits:
     timeoutSeconds: 30
     maxCallsPerRun: 20

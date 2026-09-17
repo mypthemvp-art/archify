@@ -32,11 +32,20 @@ for (const required of [
   'levelupworld/registry/docs/APPROVAL-TOKENS.md',
   'levelupworld/registry/schema/001_init.sql',
   'levelupworld/registry/schema/002_implementation_starter.sql',
+  'levelupworld/registry/schema/003_rls_policies.sql',
   'levelupworld/registry/gateway/app/main.py',
+  'levelupworld/registry/gateway/app/auth.py',
+  'levelupworld/registry/gateway/app/db.py',
+  'levelupworld/registry/gateway/app/otel_setup.py',
   'levelupworld/registry/gateway/app/control_plane.py',
+  'levelupworld/registry/gateway/app/adapters/github_write.py',
   'levelupworld/registry/connectors/index.json',
   'levelupworld/registry/connectors/github-readonly.manifest.json',
   'levelupworld/registry/connectors/github-readonly.manifest.yaml',
+  'levelupworld/registry/connectors/github-write.manifest.json',
+  'levelupworld/registry/connectors/github-write.manifest.yaml',
+  'levelupworld/registry/scripts/certify-connectors.mjs',
+  '.github/workflows/registry-cert.yml',
   '.cursor/plugins/local/agent-ops/mcp-servers/registry-gateway/proxy.mjs',
   '.cursor/hooks/policy-pre-tool.mjs',
   '.cursor/hooks/post-tool-audit-log.mjs',
@@ -49,11 +58,12 @@ for (const required of [
 const manifests = fs
   .readdirSync(path.join(root, 'levelupworld/registry/connectors'))
   .filter((f) => f.endsWith('.manifest.json'));
-assert.equal(manifests.length, 10);
+assert.equal(manifests.length, 11);
+assert.ok(manifests.includes('github-write.manifest.json'));
 const yamls = fs
   .readdirSync(path.join(root, 'levelupworld/registry/connectors'))
   .filter((f) => f.endsWith('.manifest.yaml'));
-assert.equal(yamls.length, 10);
+assert.equal(yamls.length, 11);
 
 const policy = path.join(root, '.cursor/hooks/policy-pre-tool.mjs');
 function run(input) {

@@ -27,7 +27,7 @@
       "name": "append_event",
       "capability": "write",
       "risk_level": "medium",
-      "requires_approval": false,
+      "requires_approval": true,
       "description": "append_event for Audit/Evidence Store",
       "input_schema": {
         "type": "object",
@@ -59,7 +59,7 @@
       "name": "attach_artifact_hash",
       "capability": "write",
       "risk_level": "medium",
-      "requires_approval": false,
+      "requires_approval": true,
       "description": "attach_artifact_hash for Audit/Evidence Store",
       "input_schema": {
         "type": "object",
@@ -82,7 +82,7 @@
     "error_rate_24h": 0.01,
     "policy_denial_rate_24h": 0.02,
     "healthy": true,
-    "last_health_at": "2026-09-17T05:43:58.557Z"
+    "last_health_at": "2026-09-17T05:51:53.242Z"
   },
   "active_in_production": true
 }

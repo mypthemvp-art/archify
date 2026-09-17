@@ -38,11 +38,29 @@ A connector **cannot** be marked `certified` until all items pass. The gateway m
 
 ## Operations
 
-- [ ] Structured OpenTelemetry traces/metrics/logs
-- [ ] Append-only audit events with correlation IDs
+- [x] Structured OpenTelemetry traces/metrics on the gateway (`otel_setup.py`, OTLP optional)
+- [x] Append-only audit events with correlation IDs
 - [ ] Incident runbook linked
 - [ ] Owner, SLO, certificate expiry date recorded
-- [ ] Emergency quarantine action verified end-to-end at the gateway
+- [x] Emergency quarantine action verified end-to-end at the gateway
+
+## CI gate (automated)
+
+GitHub Actions workflow [`.github/workflows/registry-cert.yml`](../../../.github/workflows/registry-cert.yml) runs on registry changes:
+
+1. Regenerate manifests and fail if committed JSON/YAML is stale
+2. `node levelupworld/registry/scripts/certify-connectors.mjs` (top-10 + `github-write`)
+3. Agent-ops contract checks
+4. Gateway pytest (`AUTH_MODE=disabled`, `GITHUB_WRITE_DRY_RUN=1`)
+5. Live API smoke: sandbox test-run + approval-bound `github-write.create_pull_request` dry-run
+
+## First constrained mutation
+
+`github-write` (`create_pull_request`) is certified only for **non-production** environments:
+
+- Allowed: `development`, `staging` (never `production`)
+- Requires signed grant bound to exact `args_hash`
+- Default `GITHUB_WRITE_DRY_RUN=1`; live calls need token + explicit repo allowlist
 
 ## Registry gate
 

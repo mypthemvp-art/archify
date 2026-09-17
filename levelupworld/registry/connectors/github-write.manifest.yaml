@@ -1,0 +1,45 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: github-write
+  version: 1.0.0
+  ownerTeam: platform-security
+  source:
+    repository: https://github.com/your-org/mcp-github-write
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: streamable-http
+    endpoint: https://mcp-gateway.example.com/connectors/github-write
+  runtime:
+    image: ghcr.io/your-org/mcp-github-write@sha256:github-write-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-github-write:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-github-write:attestation
+  trust:
+    tier: 2
+    certification: in_lab
+    lastSecurityReviewAt: 2026-09-17T05:51:53.242Z
+  data:
+    classifications: [internal]
+    outboundDomains: [api.github.com]
+    retention: none
+  auth:
+    mode: oauth
+    scopes: [pull_requests:write, contents:read]
+    credentialSource: workload-identity
+  tools:
+    - name: create_pull_request
+      operation: write
+      risk: high
+      policy: github-write.create_pull_request
+      approval: required
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging]
+  status:
+    health: healthy
+    activated: false

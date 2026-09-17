@@ -19,7 +19,7 @@ spec:
   trust:
     tier: 1
     certification: in_lab
-    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+    lastSecurityReviewAt: 2026-09-17T05:51:53.242Z
   data:
     classifications: [internal]
     outboundDomains: [localhost, staging.example.internal]

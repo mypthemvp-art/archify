@@ -12,15 +12,19 @@ import time
 import uuid
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from .adapters import github_write
 from .approvals import ApprovalService
 from .audit import AuditStore
+from .auth import Principal, get_principal, idp, require_roles
 from .control_plane import ControlPlaneStore
+from .db import db
 from .models import ApprovalCreateRequest, ApprovalDecision, InvokeRequest, PolicyDecision
+from .otel_setup import configure_telemetry, record_invoke, record_policy, span_ctx
 from .policy import PolicyEngine
 from .registry import Registry
 from .security import BudgetTracker, args_hash, new_correlation_id, redact_payload
@@ -30,7 +34,7 @@ DASHBOARD = ROOT / "dashboard"
 
 app = FastAPI(
     title="Agent-Ops MCP Registry Gateway",
-    version="0.2.0",
+    version="0.3.0",
     description="Control plane (registry) + policy gateway for certified MCP connectors.",
 )
 
@@ -41,6 +45,8 @@ budgets = BudgetTracker()
 control_plane = ControlPlaneStore()
 policy = PolicyEngine(registry, approvals, control_plane)
 
+configure_telemetry(app)
+
 if (DASHBOARD / "static").exists():
     app.mount("/static", StaticFiles(directory=str(DASHBOARD / "static")), name="static")
 templates = Jinja2Templates(directory=str(DASHBOARD / "templates"))
@@ -48,7 +54,41 @@ templates = Jinja2Templates(directory=str(DASHBOARD / "templates"))
 
 @app.get("/healthz")
 def healthz():
-    return {"ok": True, "connectors": len(registry.connectors), "audit_events": len(audit.events)}
+    return {
+        "ok": True,
+        "connectors": len(registry.connectors),
+        "audit_events": len(audit.events),
+        "auth_mode": idp.mode,
+        "database_rls": db.enabled,
+        "version": app.version,
+    }
+
+
+@app.get("/api/v1/auth/whoami")
+def whoami(principal: Principal = Depends(get_principal)):
+    return {
+        "subject": principal.subject,
+        "org_id": principal.org_id,
+        "tenant_id": principal.tenant_id,
+        "roles": principal.roles,
+        "email": principal.email,
+    }
+
+
+@app.post("/api/v1/auth/dev-token")
+def issue_dev_token(body: dict):
+    """Issue a short-lived HS256 token for AUTH_MODE=dev. Disabled in oidc mode."""
+    if idp.mode == "oidc":
+        raise HTTPException(403, "dev tokens disabled in oidc mode")
+    token = idp.issue_dev_token(
+        subject=body.get("subject", "user:dev"),
+        org_id=body.get("org_id", "org_local"),
+        tenant_id=body.get("tenant_id", "tenant_local"),
+        roles=body.get("roles", ["operator", "approver"]),
+        email=body.get("email"),
+        ttl_seconds=int(body.get("ttl_seconds", 3600)),
+    )
+    return {"access_token": token, "token_type": "bearer"}
 
 
 # ── Registry (control plane) ─────────────────────────────────────────────
@@ -214,8 +254,13 @@ def policy_decisions(policy_key: str):
 
 
 @app.post("/api/v1/policy/evaluate")
-def evaluate_policy(req: InvokeRequest):
-    result = policy.evaluate(req)
+def evaluate_policy(req: InvokeRequest, principal: Principal = Depends(get_principal)):
+    req.actor = req.actor or principal.subject
+    req.org_id = principal.org_id
+    req.tenant_id = principal.tenant_id
+    with span_ctx("policy.evaluate", connector=req.connector_slug, tool=req.tool_name):
+        result = policy.evaluate(req)
+    record_policy(result.decision.value, req.connector_slug, req.tool_name)
     control_plane.log_policy_decision(
         policy_key=f"{req.connector_slug}.{req.tool_name}",
         decision=result.decision.value,
@@ -223,6 +268,7 @@ def evaluate_policy(req: InvokeRequest):
         reason=result.reason,
         input_data={
             "actor": req.actor,
+            "org_id": principal.org_id,
             "environment": req.environment.value,
             "args_hash": result.args_hash,
         },
@@ -252,26 +298,77 @@ def evaluate_policy(req: InvokeRequest):
 
 
 @app.post("/api/v1/gateway/invoke")
-def invoke(req: InvokeRequest):
-    """Evaluate policy, optionally require grant, stub-invoke connector, redact, audit."""
+def invoke(req: InvokeRequest, principal: Principal = Depends(get_principal)):
+    """Evaluate policy, optionally require grant, invoke adapter, redact, audit."""
     started = time.time()
+    req.actor = req.actor or principal.subject
+    req.org_id = principal.org_id
+    req.tenant_id = principal.tenant_id
     run_id = budgets.begin(req.run_id)
     ok, budget_msg = budgets.charge(run_id)
     if not ok:
         raise HTTPException(429, budget_msg)
 
-    result = policy.evaluate(req)
-    if result.decision == PolicyDecision.require_approval:
-        return JSONResponse(
-            status_code=401,
-            content={
-                "error": "approval_required",
-                "policy": result.model_dump(),
-                "hint": "Create an approval request, obtain a signed grant, retry with approval_grant.",
-            },
-        )
-    if result.decision != PolicyDecision.allow:
-        audit.append(
+    with span_ctx("gateway.invoke", connector=req.connector_slug, tool=req.tool_name, org=principal.org_id):
+        result = policy.evaluate(req)
+        record_policy(result.decision.value, req.connector_slug, req.tool_name)
+        if result.decision == PolicyDecision.require_approval:
+            return JSONResponse(
+                status_code=401,
+                content={
+                    "error": "approval_required",
+                    "policy": result.model_dump(),
+                    "hint": "Create an approval request, obtain a signed grant, retry with approval_grant.",
+                },
+            )
+        if result.decision != PolicyDecision.allow:
+            latency_ms = int((time.time() - started) * 1000)
+            record_invoke(req.connector_slug, req.tool_name, "deny", latency_ms)
+            audit.append(
+                {
+                    "correlation_id": result.correlation_id,
+                    "actor_id": req.actor,
+                    "organization": req.org_id,
+                    "tenant": req.tenant_id,
+                    "project": req.project_id,
+                    "environment": req.environment.value,
+                    "connector_slug": req.connector_slug,
+                    "connector_version": registry.get(req.connector_slug).version if registry.get(req.connector_slug) else None,
+                    "tool_name": req.tool_name,
+                    "normalized_arguments_hash": result.args_hash,
+                    "policy_decision": result.decision.value,
+                    "approval_id": None,
+                    "idempotency_key": req.idempotency_key,
+                    "latency_ms": latency_ms,
+                    "outcome": result.reason,
+                    "response_hash": None,
+                    "evidence_uri": None,
+                    "redaction_count": 0,
+                }
+            )
+            raise HTTPException(403, result.reason)
+
+        try:
+            if req.connector_slug == github_write.SLUG and req.tool_name == github_write.TOOL_NAME:
+                raw = github_write.create_pull_request(
+                    arguments=req.arguments,
+                    environment=req.environment.value,
+                )
+            else:
+                raw = {
+                    "ok": True,
+                    "connector": req.connector_slug,
+                    "tool": req.tool_name,
+                    "echo_args": req.arguments,
+                    "note": "stub invoke — replace with certified connector adapter",
+                }
+        except (ValueError, RuntimeError) as exc:
+            raise HTTPException(400, str(exc)) from exc
+
+        safe, redactions = redact_payload(raw)
+        latency_ms = int((time.time() - started) * 1000)
+        record_invoke(req.connector_slug, req.tool_name, "ok", latency_ms)
+        event = audit.append(
             {
                 "correlation_id": result.correlation_id,
                 "actor_id": req.actor,
@@ -286,59 +383,32 @@ def invoke(req: InvokeRequest):
                 "policy_decision": result.decision.value,
                 "approval_id": None,
                 "idempotency_key": req.idempotency_key,
-                "latency_ms": int((time.time() - started) * 1000),
-                "outcome": result.reason,
-                "response_hash": None,
-                "evidence_uri": None,
-                "redaction_count": 0,
+                "latency_ms": latency_ms,
+                "outcome": "ok",
+                "response_hash": args_hash({"response": safe}),
+                "evidence_uri": f"audit://events/{result.correlation_id}",
+                "redaction_count": redactions,
             }
         )
-        raise HTTPException(403, result.reason)
-
-    # Stub connector response — real adapters plug in here.
-    raw = {
-        "ok": True,
-        "connector": req.connector_slug,
-        "tool": req.tool_name,
-        "echo_args": req.arguments,
-        "note": "stub invoke — replace with certified connector adapter",
-    }
-    safe, redactions = redact_payload(raw)
-    latency_ms = int((time.time() - started) * 1000)
-    event = audit.append(
-        {
+        return {
             "correlation_id": result.correlation_id,
-            "actor_id": req.actor,
-            "organization": req.org_id,
-            "tenant": req.tenant_id,
-            "project": req.project_id,
-            "environment": req.environment.value,
-            "connector_slug": req.connector_slug,
-            "connector_version": registry.get(req.connector_slug).version if registry.get(req.connector_slug) else None,
-            "tool_name": req.tool_name,
-            "normalized_arguments_hash": result.args_hash,
-            "policy_decision": result.decision.value,
-            "approval_id": None,
-            "idempotency_key": req.idempotency_key,
-            "latency_ms": latency_ms,
-            "outcome": "ok",
-            "response_hash": args_hash({"response": safe}),
-            "evidence_uri": f"audit://events/{result.correlation_id}",
+            "result": safe,
             "redaction_count": redactions,
+            "audit_event_hash": event["event_hash"],
+            "latency_ms": latency_ms,
+            "run_id": run_id,
+            "org_id": principal.org_id,
         }
-    )
-    return {
-        "correlation_id": result.correlation_id,
-        "result": safe,
-        "redaction_count": redactions,
-        "audit_event_hash": event["event_hash"],
-        "latency_ms": latency_ms,
-        "run_id": run_id,
-    }
 
 
 @app.post("/api/v1/approvals")
-def create_approval(body: ApprovalCreateRequest):
+def create_approval(
+    body: ApprovalCreateRequest,
+    principal: Principal = Depends(require_roles("operator", "approver", "admin")),
+):
+    body.actor = body.actor or principal.subject
+    body.org_id = principal.org_id
+    body.tenant_id = principal.tenant_id
     if not body.correlation_id:
         body.correlation_id = new_correlation_id()
     record = approvals.create_request(body)
@@ -368,12 +438,12 @@ def create_approval(body: ApprovalCreateRequest):
 
 
 @app.get("/api/v1/approvals")
-def list_approvals():
-    return {"approvals": list(approvals.requests.values())}
+def list_approvals(principal: Principal = Depends(get_principal)):
+    return {"approvals": list(approvals.requests.values()), "org_id": principal.org_id}
 
 
 @app.get("/api/v1/approvals/{request_id}")
-def get_approval(request_id: str):
+def get_approval(request_id: str, principal: Principal = Depends(get_principal)):
     req = approvals.requests.get(request_id)
     if not req:
         raise HTTPException(404, "not found")
@@ -381,9 +451,13 @@ def get_approval(request_id: str):
 
 
 @app.post("/api/v1/approvals/{request_id}/decide")
-def decide_approval(request_id: str, body: ApprovalDecision):
+def decide_approval(
+    request_id: str,
+    body: ApprovalDecision,
+    principal: Principal = Depends(require_roles("approver", "admin")),
+):
     try:
-        record = approvals.decide(request_id, body.approver, body.approve, body.note)
+        record = approvals.decide(request_id, body.approver or principal.subject, body.approve, body.note)
     except KeyError:
         raise HTTPException(404, "not found") from None
     except ValueError as exc:
@@ -391,7 +465,7 @@ def decide_approval(request_id: str, body: ApprovalDecision):
     audit.append(
         {
             "correlation_id": record["correlation_id"],
-            "actor_id": body.approver,
+            "actor_id": body.approver or principal.subject,
             "organization": record["org_id"],
             "tenant": record["tenant_id"],
             "project": record["project_id"],

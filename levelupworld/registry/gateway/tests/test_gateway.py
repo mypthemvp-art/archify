@@ -41,15 +41,18 @@ def reset_control_plane():
     yield
 
 
-def test_catalog_lists_ten_core_connectors(client):
+def test_catalog_lists_core_connectors_plus_github_write(client):
     res = client.get("/api/v1/connectors")
     assert res.status_code == 200
     body = res.json()
-    assert body["count"] == 10
+    assert body["count"] >= 11
     slugs = {c["slug"] for c in body["connectors"]}
     assert "github-readonly" in slugs
     assert "policy-approval-gateway" in slugs
     assert "audit-evidence-store" in slugs
+    assert "github-write" in slugs
+    gw = next(c for c in body["connectors"] if c["slug"] == "github-write")
+    assert "production" not in gw["allowed_environments"]
 
 
 def test_read_only_invoke_allowed(client):
@@ -257,3 +260,132 @@ def test_metrics_and_version_detail(client):
     detail = client.get("/api/v1/connectors/git-repository/versions/1.0.0")
     assert detail.status_code == 200
     assert detail.json()["slug"] == "git-repository"
+
+
+def test_healthz_reports_auth_and_rls(client):
+    res = client.get("/healthz")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["ok"] is True
+    assert body["auth_mode"] == "disabled"
+    assert body["database_rls"] is False
+    assert "version" in body
+
+
+def test_whoami_and_dev_token(client):
+    who = client.get("/api/v1/auth/whoami")
+    assert who.status_code == 200
+    assert who.json()["org_id"] == "org_local"
+
+    tok = client.post(
+        "/api/v1/auth/dev-token",
+        json={
+            "subject": "user:dev",
+            "org_id": "org_demo",
+            "roles": ["operator", "approver"],
+        },
+    )
+    assert tok.status_code == 200
+    assert tok.json()["token_type"] == "bearer"
+    assert tok.json()["access_token"]
+
+
+def test_github_write_requires_grant_then_dry_run(client, monkeypatch):
+    monkeypatch.setenv("GITHUB_WRITE_DRY_RUN", "1")
+    args = {
+        "repository": "acme/agent-platform",
+        "head": "feat/demo",
+        "base": "main",
+        "title": "Demo PR",
+        "draft": True,
+    }
+    blocked = client.post(
+        "/api/v1/gateway/invoke",
+        json={
+            "actor": "user:alice",
+            "connector_slug": "github-write",
+            "tool_name": "create_pull_request",
+            "arguments": args,
+            "environment": "staging",
+            "idempotency_key": "gw-1",
+        },
+    )
+    assert blocked.status_code == 401
+
+    # Production is hard-denied by environment allowlist
+    prod = client.post(
+        "/api/v1/policy/evaluate",
+        json={
+            "actor": "user:alice",
+            "connector_slug": "github-write",
+            "tool_name": "create_pull_request",
+            "arguments": args,
+            "environment": "production",
+        },
+    )
+    assert prod.status_code == 200
+    assert prod.json()["decision"] == "deny"
+
+    create = client.post(
+        "/api/v1/approvals",
+        json={
+            "actor": "user:alice",
+            "environment": "staging",
+            "connector_slug": "github-write",
+            "connector_version": "1.0.0",
+            "tool_name": "create_pull_request",
+            "plan_markdown": "Create demo PR",
+            "arguments": args,
+            "idempotency_key": "gw-1",
+            "correlation_id": "00000000-0000-0000-0000-0000000000aa",
+        },
+    )
+    assert create.status_code == 200
+    token = client.post(
+        f"/api/v1/approvals/{create.json()['id']}/decide",
+        json={"approver": "user:boss", "approve": True},
+    ).json()["grant_token"]
+
+    ok = client.post(
+        "/api/v1/gateway/invoke",
+        json={
+            "actor": "user:alice",
+            "tenant_id": "tenant_local",
+            "project_id": "project_local",
+            "environment": "staging",
+            "connector_slug": "github-write",
+            "tool_name": "create_pull_request",
+            "arguments": args,
+            "idempotency_key": "gw-1",
+            "approval_grant": token,
+        },
+    )
+    assert ok.status_code == 200
+    body = ok.json()
+    assert body["result"]["ok"] is True
+    assert body["result"]["dry_run"] is True
+    assert body["result"]["repository"] == "acme/agent-platform"
+
+
+def test_github_write_adapter_rejects_prod_and_bad_repo():
+    from app.adapters import github_write
+
+    with pytest.raises(ValueError, match="forbidden in production"):
+        github_write.validate_args(
+            {"repository": "acme/x", "head": "a", "base": "b", "title": "t"},
+            "production",
+        )
+    with pytest.raises(ValueError, match="repository"):
+        github_write.validate_args(
+            {"repository": "not-a-repo", "head": "a", "base": "b", "title": "t"},
+            "staging",
+        )
+
+
+def test_db_disabled_without_url():
+    from app.db import Database
+
+    d = Database(url=None)
+    assert d.enabled is False
+    with d.session(org_id="org_x", actor_subject="user:x") as conn:
+        assert conn is None

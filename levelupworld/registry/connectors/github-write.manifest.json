@@ -1,0 +1,78 @@
+{
+  "slug": "github-write",
+  "display_name": "GitHub Write (non-prod PR create)",
+  "category": "github",
+  "rank": 11,
+  "description": "Create pull requests in allowlisted non-production repositories behind signed approval grants.",
+  "owner_team": "platform-security",
+  "escalation_contact": "secops@localhost",
+  "trust_tier": "reviewed",
+  "certification_state": "in_lab",
+  "transport": "streamable_http",
+  "version": "1.0.0",
+  "image_digest": "sha256:github-write-dev-digest",
+  "oauth_scopes": [
+    "pull_requests:write",
+    "contents:read"
+  ],
+  "outbound_domains": [
+    "api.github.com"
+  ],
+  "allowed_environments": [
+    "development",
+    "staging"
+  ],
+  "data_classification": "internal",
+  "tools": [
+    {
+      "name": "create_pull_request",
+      "capability": "write",
+      "risk_level": "high",
+      "requires_approval": true,
+      "description": "create_pull_request for GitHub Write (non-prod PR create)",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "repository",
+          "head",
+          "base",
+          "title"
+        ],
+        "properties": {
+          "repository": {
+            "type": "string"
+          },
+          "head": {
+            "type": "string"
+          },
+          "base": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "draft": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Non-prod only; repo allowlist; signed grant; dry-run default",
+  "read_tool_count": 0,
+  "write_tool_count": 1,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:51:53.242Z"
+  },
+  "active_in_production": false
+}

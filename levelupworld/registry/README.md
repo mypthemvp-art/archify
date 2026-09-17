@@ -5,13 +5,15 @@ Catalog and certify MCP connector versions; enforce authorization, tenant/enviro
 ## Quick start
 
 ```bash
-# Generate top-10 connector manifests
+# Generate top-10 + github-write connector manifests
 node levelupworld/registry/scripts/generate-connectors.mjs
+node levelupworld/registry/scripts/certify-connectors.mjs
 
 # Install and run gateway + dashboard
 python3 -m venv levelupworld/registry/.venv
 levelupworld/registry/.venv/bin/pip install -r levelupworld/registry/gateway/requirements.txt
-levelupworld/registry/.venv/bin/uvicorn app.main:app \
+AUTH_MODE=disabled GITHUB_WRITE_DRY_RUN=1 \
+  levelupworld/registry/.venv/bin/uvicorn app.main:app \
   --app-dir levelupworld/registry/gateway \
   --host 127.0.0.1 --port 8787
 
@@ -22,8 +24,19 @@ open http://127.0.0.1:8787/
 Tests:
 
 ```bash
-levelupworld/registry/.venv/bin/pytest -q levelupworld/registry/gateway/tests
+AUTH_MODE=disabled GITHUB_WRITE_DRY_RUN=1 \
+  levelupworld/registry/.venv/bin/pytest -q levelupworld/registry/gateway/tests
 ```
+
+## Weeks 3–6 capabilities
+
+| Capability | How |
+|---|---|
+| IdP / principal | `AUTH_MODE=disabled\|dev\|oidc` — JWT + org/tenant/roles (`app/auth.py`) |
+| Postgres RLS | `DATABASE_URL` + `schema/003_rls_policies.sql`; sessions set `app.org_id` |
+| OpenTelemetry | Soft-dep OTLP (`OTEL_EXPORTER_OTLP_ENDPOINT`) or `OTEL_CONSOLE=1` |
+| Cert CI | `.github/workflows/registry-cert.yml` |
+| First mutation | `github-write.create_pull_request` — non-prod, signed grant, dry-run default |
 
 ## Layout
 
@@ -33,7 +46,8 @@ levelupworld/registry/.venv/bin/pytest -q levelupworld/registry/gateway/tests
 | `docs/BUILD-SEQUENCE.md` | 8-week plan |
 | `docs/APPROVAL-TOKENS.md` | Signed grant design |
 | `schema/001_init.sql` | Postgres schema |
-| `connectors/*.manifest.json` | Top-10 certified/core connectors |
+| `schema/003_rls_policies.sql` | RLS via `app.org_id` |
+| `connectors/*.manifest.json` | Core connectors + `github-write` |
 | `gateway/` | FastAPI registry + policy gateway |
 | `dashboard/` | Catalog / Lab / Ops / Audit / Approvals UI |
 
@@ -41,6 +55,9 @@ levelupworld/registry/.venv/bin/pytest -q levelupworld/registry/gateway/tests
 
 | Method | Path | Purpose |
 |---|---|---|
+| GET | `/healthz` | Liveness + auth/RLS mode |
+| GET | `/api/v1/auth/whoami` | Current principal |
+| POST | `/api/v1/auth/dev-token` | Issue HS256 token (`AUTH_MODE=dev`) |
 | GET | `/api/v1/connectors` | Catalog with filters |
 | GET | `/api/v1/connectors/{slug}` | Connector detail |
 | GET | `/api/v1/connectors/{slug}/versions/{version}` | Pinned version + activations |
@@ -50,7 +67,7 @@ levelupworld/registry/.venv/bin/pytest -q levelupworld/registry/gateway/tests
 | POST | `/api/v1/activations/{id}/approve` | Approve/deny activation |
 | POST | `/api/v1/connectors/{slug}/quarantine` | Emergency gateway quarantine |
 | POST | `/api/v1/policy/evaluate` | Preflight policy decision |
-| POST | `/api/v1/gateway/invoke` | Policy → approval → stub invoke → redact → audit |
+| POST | `/api/v1/gateway/invoke` | Policy → approval → adapter invoke → redact → audit |
 | POST | `/api/v1/approvals` | Create approval request |
 | POST | `/api/v1/approvals/{id}/decide` | Issue/deny signed grant |
 | GET | `/api/v1/metrics/connectors` | Ops metrics by connector |
@@ -60,10 +77,10 @@ levelupworld/registry/.venv/bin/pytest -q levelupworld/registry/gateway/tests
 ## Docs
 
 - [`docs/IMPLEMENTATION-STARTER.md`](docs/IMPLEMENTATION-STARTER.md) — product contract
-- [`docs/CERTIFICATION.md`](docs/CERTIFICATION.md) — certification checklist
+- [`docs/CERTIFICATION.md`](docs/CERTIFICATION.md) — certification checklist + CI gate
 - [`docs/APPROVAL-TOKENS.md`](docs/APPROVAL-TOKENS.md) — signed grants
 - [`docs/BUILD-SEQUENCE.md`](docs/BUILD-SEQUENCE.md) — 8-week delivery plan
-- [`schema/001_init.sql`](schema/001_init.sql) / [`schema/002_implementation_starter.sql`](schema/002_implementation_starter.sql)
+- [`schema/001_init.sql`](schema/001_init.sql) / [`schema/002_implementation_starter.sql`](schema/002_implementation_starter.sql) / [`schema/003_rls_policies.sql`](schema/003_rls_policies.sql)
 
 ## Security defaults
 
@@ -72,3 +89,4 @@ levelupworld/registry/.venv/bin/pytest -q levelupworld/registry/gateway/tests
 - Approvals bind to exact `args_hash`; argument changes invalidate grants.
 - Quarantine disables a version at the gateway even if still listed in Cursor mcp.json.
 - Fail closed for medium/high risk when approval validation fails.
+- `github-write` never allowed in production; live PRs require allowlist + token and still need a grant.

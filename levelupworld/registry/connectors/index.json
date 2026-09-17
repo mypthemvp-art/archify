@@ -10,6 +10,7 @@
     "observability-reader",
     "browser-test-runner",
     "policy-approval-gateway",
-    "audit-evidence-store"
+    "audit-evidence-store",
+    "github-write"
   ]
 }

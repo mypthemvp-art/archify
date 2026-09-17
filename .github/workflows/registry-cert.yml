@@ -1,0 +1,78 @@
+name: Registry Certification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "levelupworld/registry/**"
+      - "levelupworld/scripts/check-contract.mjs"
+      - ".cursor/hooks/**"
+      - ".cursor/mcp.json"
+      - ".github/workflows/registry-cert.yml"
+  pull_request:
+    paths:
+      - "levelupworld/registry/**"
+      - "levelupworld/scripts/check-contract.mjs"
+      - ".cursor/hooks/**"
+      - ".cursor/mcp.json"
+      - ".github/workflows/registry-cert.yml"
+  workflow_dispatch:
+
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: levelupworld/registry/gateway/requirements.txt
+
+      - name: Install gateway dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r levelupworld/registry/gateway/requirements.txt
+          pip install pytest
+
+      - name: Regenerate connector manifests (must be committed)
+        run: |
+          node levelupworld/registry/scripts/generate-connectors.mjs
+          if ! git diff --quiet -- levelupworld/registry/connectors; then
+            echo "::error::connector manifests are stale — regenerate and commit"
+            git diff -- levelupworld/registry/connectors | head -200
+            exit 1
+          fi
+
+      - name: Certification gate (manifests + github-write)
+        run: node levelupworld/registry/scripts/certify-connectors.mjs
+
+      - name: Agent-ops contract checks
+        run: node levelupworld/scripts/check-contract.mjs
+
+      - name: Gateway unit + integration tests
+        run: |
+          export AUTH_MODE=disabled
+          export GITHUB_WRITE_DRY_RUN=1
+          pytest -q levelupworld/registry/gateway/tests
+
+      - name: Sandbox certification + github-write dry-run via API
+        run: |
+          export AUTH_MODE=disabled
+          export GITHUB_WRITE_DRY_RUN=1
+          uvicorn app.main:app --app-dir levelupworld/registry/gateway --host 127.0.0.1 --port 8787 &
+          pid=$!
+          trap 'kill $pid' EXIT
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:8787/healthz && break
+            sleep 0.5
+          done
+          python levelupworld/registry/scripts/ci-smoke-github-write.py http://127.0.0.1:8787

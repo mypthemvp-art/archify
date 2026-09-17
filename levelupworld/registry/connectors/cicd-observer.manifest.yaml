@@ -19,7 +19,7 @@ spec:
   trust:
     tier: 2
     certification: certified
-    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+    lastSecurityReviewAt: 2026-09-17T05:51:53.241Z
   data:
     classifications: [internal]
     outboundDomains: [api.github.com]
