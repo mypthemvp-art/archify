@@ -6,6 +6,8 @@ node_modules/
 .cursor/audit/
 levelupworld/registry/.venv/
 levelupworld/registry/gateway/.venv/
+levelupworld/pilots/**/evidence/runs/*
+!levelupworld/pilots/**/evidence/runs/.gitkeep
 **/__pycache__/
 *.py[cod]
 .pytest_cache/

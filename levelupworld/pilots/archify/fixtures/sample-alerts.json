@@ -1,0 +1,22 @@
+[
+  {
+    "at": "2026-09-17T04:12:00Z",
+    "source": "alertmanager",
+    "event": "HighErrorRate firing on gateway service (p99 errors > 5%)"
+  },
+  {
+    "at": "2026-09-17T04:14:30Z",
+    "source": "ci",
+    "event": "unit-tests job failed on feat/auth-refresh"
+  },
+  {
+    "at": "2026-09-17T04:15:10Z",
+    "source": "deploy",
+    "event": "staging rollout of auth-refresh paused by policy"
+  },
+  {
+    "at": "2026-09-17T04:18:00Z",
+    "source": "oncall",
+    "event": "Incident channel opened; triage copilot engaged (read-only)"
+  }
+]

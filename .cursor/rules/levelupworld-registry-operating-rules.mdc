@@ -16,3 +16,4 @@ alwaysApply: true
 9. Route Cursor through the company MCP gateway; do not wire high-risk third-party connectors directly into project mcp.json.
 10. Treat Cursor hooks as preflight only — the gateway is the authorization authority.
 11. The only mutation connector in Weeks 5–6 is `github-write.create_pull_request`: non-prod environments only, dry-run by default, repository allowlist for live calls, and a signed args_hash-bound grant on every invoke.
+12. Weeks 7–8 pilot enables only Secure PR Guardian + Production Triage Copilot with zero mutate tools; do not expand plugins until `levelupworld/pilots/archify/scripts/certify-pilot.mjs` is green.

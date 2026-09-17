@@ -14,3 +14,12 @@ See [`levelupworld/README.md`](../../../../levelupworld/README.md) and [`levelup
 - `docs/automation-runbooks.md` — quick routing guide
 
 Keep secrets in the OS keychain, Vault, or CI secret manager — never commit them.
+
+## Weeks 7–8 pilot
+
+```bash
+node levelupworld/pilots/archify/scripts/run-pilot.mjs
+node levelupworld/pilots/archify/scripts/certify-pilot.mjs
+```
+
+Pilot MCP config: `.cursor/mcp.pilot.json` · Rule: `.cursor/rules/pilot-secure-pr-and-triage.mdc`

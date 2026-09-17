@@ -47,6 +47,17 @@ Control plane (catalog/certify) + server-side gateway (authz, approvals, redacti
 - Dashboard pages: Catalog · Test Lab · Operations · Audit · Approvals
 - Top-10 connectors: [`registry/connectors/`](registry/connectors/)
 
+## Weeks 7–8 pilot (this repository)
+
+Pilot **Secure PR Guardian** + **Production Triage Copilot** with zero mutate tools:
+
+```bash
+node levelupworld/pilots/archify/scripts/run-pilot.mjs
+node levelupworld/pilots/archify/scripts/certify-pilot.mjs
+```
+
+Details: [`pilots/archify/README.md`](pilots/archify/README.md) · Cursor MCP: [`.cursor/mcp.pilot.json`](../.cursor/mcp.pilot.json)
+
 ## Quick start
 
 1. Discover skills under `.cursor/skills/levelupworld/` or `.cursor/plugins/local/agent-ops/skills/`.

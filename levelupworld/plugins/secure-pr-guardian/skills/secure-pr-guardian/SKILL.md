@@ -21,6 +21,13 @@ Use when an automation blueprint under `.cursor/automations/` matches A003, A004
 4. Emit PR risk score, owners, and ranked remediation without mutating the repository.
 5. Only draft follow-up issues/PRs through approval-gated plan_* tools.
 
+## Archify pilot (Weeks 7–8)
+
+- Pilot exit automations: **A003, A004, A021**
+- Local evidence runner: `node levelupworld/pilots/archify/scripts/run-secure-pr-guardian.mjs`
+- Certify before expanding: `node levelupworld/pilots/archify/scripts/certify-pilot.mjs`
+- MCP: prefer `.cursor/mcp.pilot.json` (no `github-write`)
+
 ## Shared invariants
 
 - Treat every connector as an untrusted capability.

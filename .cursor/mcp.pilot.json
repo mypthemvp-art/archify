@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "agent-ops-gateway": {
+      "command": "node",
+      "args": [
+        ".cursor/plugins/local/agent-ops/mcp-servers/registry-gateway/proxy.mjs"
+      ],
+      "env": {
+        "AGENT_OPS_GATEWAY_URL": "${AGENT_OPS_GATEWAY_URL}"
+      }
+    },
+    "filesystem-workspace": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."]
+    },
+    "git-readonly": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git", "--repository", "."]
+    }
+  }
+}

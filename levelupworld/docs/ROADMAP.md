@@ -15,7 +15,13 @@
 - Deterministic artifacts: Markdown reports, JSON findings, JUnit/SARIF where appropriate, linked evidence.
 - Every automation runnable locally in a disposable repository and in CI.
 
-**Exit:** A003/A004/A021/A024/A040/A047 produce evidence-backed reports with zero mutate tools registered.
+**Exit (Archify pilot):** A003/A004/A021/A024/A040 produce evidence-backed reports with zero mutate tools registered.
+
+- [x] Secure PR Guardian pilot runner + evidence (`levelupworld/pilots/archify`)
+- [x] Production Triage Copilot pilot runner + evidence
+- [x] Pilot certification gate + GitHub Actions (`pilot-cert.yml`)
+- [ ] Database Change Guardian (expand only after pilot human review)
+- [ ] Human review of one real PR + one real CI failure evidence bundle
 
 ## Phase 3 — Controlled writes
 

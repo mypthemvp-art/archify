@@ -1,0 +1,55 @@
+{
+  "pilot_id": "archify-weeks-7-8",
+  "repository": "archify",
+  "status": "in_lab",
+  "version": "1.0.0",
+  "owner_team": "platform-security",
+  "escalation_contact": "secops@localhost",
+  "plugins": [
+    {
+      "id": "secure-pr-guardian",
+      "automations": ["A003", "A004", "A007", "A011", "A021", "A026", "A031", "A068"],
+      "pilot_exit_automations": ["A003", "A004", "A021"]
+    },
+    {
+      "id": "production-triage-copilot",
+      "automations": ["A024", "A040", "A041", "A042", "A043", "A044", "A045", "A046", "A074"],
+      "pilot_exit_automations": ["A024", "A040"]
+    }
+  ],
+  "connectors_allowed": [
+    "github-readonly",
+    "git-repository",
+    "filesystem-sandbox",
+    "cicd-observer",
+    "observability-reader",
+    "docs-fetch-search",
+    "policy-approval-gateway",
+    "audit-evidence-store"
+  ],
+  "connectors_denied": [
+    "github-write",
+    "kubectl-apply",
+    "terraform-apply",
+    "cloud-admin",
+    "db-superuser",
+    "unrestricted-http",
+    "prod-shell"
+  ],
+  "mutation_policy": "none_in_pilot",
+  "environments": ["development", "staging"],
+  "gateway": {
+    "evaluate_required": true,
+    "invoke_mutations": false,
+    "auth_mode_default": "disabled"
+  },
+  "evidence_dir": "levelupworld/pilots/archify/evidence/runs",
+  "definition_of_done": [
+    "Pilot runners emit JSON+Markdown evidence with correlation_id",
+    "Zero mutate tools registered in pilot MCP config",
+    "Policy hook denies kubectl/terraform/force-push and asks on apply_*",
+    "certify-pilot.mjs passes in CI",
+    "Secure PR Guardian A003/A004/A021 produce evidence",
+    "Production Triage Copilot A024/A040 produce evidence"
+  ]
+}

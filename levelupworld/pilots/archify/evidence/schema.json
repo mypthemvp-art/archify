@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agent-ops-pilot-evidence-v1",
+  "title": "Agent-Ops Pilot Evidence Bundle",
+  "type": "object",
+  "required": [
+    "correlation_id",
+    "pilot_id",
+    "plugin",
+    "automations",
+    "actor",
+    "tenant",
+    "environment",
+    "started_at",
+    "finished_at",
+    "mutation",
+    "findings",
+    "summary",
+    "result_status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "pilot_id": { "type": "string" },
+    "plugin": { "type": "string" },
+    "automations": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^A\\d{3}$" },
+      "minItems": 1
+    },
+    "actor": { "type": "string" },
+    "tenant": { "type": "string" },
+    "environment": { "enum": ["development", "staging", "production"] },
+    "started_at": { "type": "string" },
+    "finished_at": { "type": "string" },
+    "mutation": { "const": "none" },
+    "result_status": { "enum": ["passed", "failed", "warn"] },
+    "summary": { "type": "string", "minLength": 1 },
+    "risk_score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "severity", "title", "automation"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "automation": { "type": "string" },
+          "severity": { "enum": ["info", "low", "medium", "high", "critical"] },
+          "title": { "type": "string" },
+          "path": { "type": ["string", "null"] },
+          "evidence": { "type": "string" },
+          "remediation": { "type": "string" },
+          "redacted": { "type": "boolean" }
+        }
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["at", "event"],
+        "additionalProperties": false,
+        "properties": {
+          "at": { "type": "string" },
+          "event": { "type": "string" },
+          "source": { "type": "string" }
+        }
+      }
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rank", "statement", "evidence"],
+        "additionalProperties": false,
+        "properties": {
+          "rank": { "type": "integer", "minimum": 1 },
+          "statement": { "type": "string" },
+          "evidence": { "type": "string" }
+        }
+      }
+    },
+    "arguments_hash": { "type": "string" },
+    "evidence_uri": { "type": "string" },
+    "connectors_used": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

@@ -26,7 +26,7 @@
 
 - [x] Cursor plugin Rules/Skills/hooks + project gateway config
 - [x] Hooks inject correlation IDs and call gateway when configured
-- [ ] Pilot Secure PR Guardian and Production Triage Copilot in one repository
-- [ ] Certify the workflow before expanding
+- [x] Pilot Secure PR Guardian and Production Triage Copilot in one repository (`levelupworld/pilots/archify`)
+- [x] Certify the workflow before expanding (`certify-pilot.mjs` + `.github/workflows/pilot-cert.yml`)
 
-See [`IMPLEMENTATION-STARTER.md`](IMPLEMENTATION-STARTER.md) and [`CERTIFICATION.md`](CERTIFICATION.md).
+See [`IMPLEMENTATION-STARTER.md`](IMPLEMENTATION-STARTER.md), [`CERTIFICATION.md`](CERTIFICATION.md), and [`../../pilots/archify/CERTIFICATION.md`](../../pilots/archify/CERTIFICATION.md).

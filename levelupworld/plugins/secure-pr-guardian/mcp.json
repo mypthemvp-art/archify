@@ -1,3 +1,25 @@
 {
-  "mcpServers": {}
+  "mcpServers": {
+    "agent-ops-gateway": {
+      "command": "node",
+      "args": [
+        "../../../.cursor/plugins/local/agent-ops/mcp-servers/registry-gateway/proxy.mjs"
+      ],
+      "env": {
+        "AGENT_OPS_GATEWAY_URL": "${AGENT_OPS_GATEWAY_URL}",
+        "AGENT_OPS_PILOT_PLUGIN": "secure-pr-guardian"
+      }
+    }
+  },
+  "_pilot": {
+    "note": "Weeks 7–8: gateway-mediated reads only. No github-write.",
+    "allowed_connectors": [
+      "github-readonly",
+      "git-repository",
+      "filesystem-sandbox",
+      "docs-fetch-search",
+      "policy-approval-gateway",
+      "audit-evidence-store"
+    ]
+  }
 }

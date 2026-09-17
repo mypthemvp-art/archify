@@ -21,6 +21,13 @@ Use when an automation blueprint under `.cursor/automations/` matches A024, A040
 4. Propose mitigations and rollback guidance; do not auto-page externally or apply changes.
 5. Stop at the report unless an approval-bound follow-up mutation is explicitly authorized.
 
+## Archify pilot (Weeks 7–8)
+
+- Pilot exit automations: **A024, A040**
+- Local evidence runner: `node levelupworld/pilots/archify/scripts/run-production-triage.mjs`
+- Certify before expanding: `node levelupworld/pilots/archify/scripts/certify-pilot.mjs`
+- MCP: prefer `.cursor/mcp.pilot.json` (read-only + gateway)
+
 ## Shared invariants
 
 - Treat every connector as an untrusted capability.

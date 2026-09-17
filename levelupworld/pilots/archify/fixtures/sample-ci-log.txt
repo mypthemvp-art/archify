@@ -1,0 +1,21 @@
+# Failed unit: authentication middleware rejects expired tokens
+
+FAIL test/auth.test.mjs > rejects expired JWT
+AssertionError: expected 200 to equal 401
+
+  at assertStatus (test/auth.test.mjs:42:10)
+  at async TestContext.<anonymous> (test/auth.test.mjs:88:3)
+
+Stack:
+  Error: jwt expired
+    at verifyToken (src/auth/jwt.js:55:11)
+    at authenticate (src/auth/middleware.js:21:18)
+
+Related files:
+  src/auth/middleware.js
+  src/auth/jwt.js
+  test/auth.test.mjs
+
+CI job: unit-tests
+Commit: abcdef0123456789
+Branch: feat/auth-refresh

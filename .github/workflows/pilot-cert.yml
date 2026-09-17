@@ -1,0 +1,51 @@
+name: Pilot Certification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "levelupworld/pilots/**"
+      - "levelupworld/plugins/secure-pr-guardian/**"
+      - "levelupworld/plugins/production-triage-copilot/**"
+      - ".cursor/mcp.pilot.json"
+      - ".cursor/rules/pilot-secure-pr-and-triage.mdc"
+      - ".cursor/hooks/**"
+      - ".cursor/skills/levelupworld/secure-pr-guardian/**"
+      - ".cursor/skills/levelupworld/production-triage-copilot/**"
+      - ".github/workflows/pilot-cert.yml"
+  pull_request:
+    paths:
+      - "levelupworld/pilots/**"
+      - "levelupworld/plugins/secure-pr-guardian/**"
+      - "levelupworld/plugins/production-triage-copilot/**"
+      - ".cursor/mcp.pilot.json"
+      - ".cursor/rules/pilot-secure-pr-and-triage.mdc"
+      - ".cursor/hooks/**"
+      - ".cursor/skills/levelupworld/secure-pr-guardian/**"
+      - ".cursor/skills/levelupworld/production-triage-copilot/**"
+      - ".github/workflows/pilot-cert.yml"
+  workflow_dispatch:
+
+jobs:
+  certify-pilot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run pilot evidence + certification gate
+        run: node levelupworld/pilots/archify/scripts/certify-pilot.mjs
+
+      - name: Agent-ops contract checks
+        run: node levelupworld/scripts/check-contract.mjs
+
+      - name: Upload latest evidence bundles
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pilot-evidence
+          path: levelupworld/pilots/archify/evidence/runs/
+          if-no-files-found: warn
