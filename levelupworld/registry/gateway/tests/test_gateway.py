@@ -404,6 +404,8 @@ def test_healthz_reports_auth_and_rls(client):
     assert body["ok"] is True
     assert body["auth_mode"] == "disabled"
     assert body["database_rls"] is False
+    assert body["mcp_endpoint"] == "/mcp"
+    assert body["mcp_transport"] == "streamable_http"
     assert "version" in body
 
 
@@ -411,6 +413,11 @@ def test_whoami_and_dev_token(client):
     who = client.get("/api/v1/auth/whoami")
     assert who.status_code == 200
     assert who.json()["org_id"] == "org_local"
+
+    cfg = client.get("/api/v1/auth/config")
+    assert cfg.status_code == 200
+    assert cfg.json()["mode"] == "disabled"
+    assert cfg.json()["dev_token_endpoint"] == "/api/v1/auth/dev-token"
 
     tok = client.post(
         "/api/v1/auth/dev-token",
@@ -423,6 +430,112 @@ def test_whoami_and_dev_token(client):
     assert tok.status_code == 200
     assert tok.json()["token_type"] == "bearer"
     assert tok.json()["access_token"]
+
+
+def test_mcp_streamable_http_initialize_list_call(client):
+    init = client.post(
+        "/mcp",
+        json={"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}},
+    )
+    assert init.status_code == 200
+    assert init.json()["result"]["protocolVersion"]
+    assert init.json()["result"]["serverInfo"]["name"] == "agent-ops-mcp-gateway"
+
+    listed = client.post(
+        "/mcp",
+        json={"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
+    )
+    assert listed.status_code == 200
+    names = {t["name"] for t in listed.json()["result"]["tools"]}
+    assert "mcp__github-readonly__get_pull_request" in names
+    assert "registry_list_connectors" in names
+    assert "gateway_evaluate_policy" in names
+
+    discovery = client.get("/mcp")
+    assert discovery.status_code == 200
+    assert discovery.json()["transport"] == "streamable_http"
+
+    call = client.post(
+        "/mcp",
+        json={
+            "jsonrpc": "2.0",
+            "id": 3,
+            "method": "tools/call",
+            "params": {
+                "name": "mcp__github-readonly__get_pull_request",
+                "arguments": {"number": 42},
+            },
+        },
+    )
+    assert call.status_code == 200
+    payload = call.json()["result"]
+    assert payload.get("isError") is not True
+    text = payload["content"][0]["text"]
+    assert "correlation_id" in text or '"ok": true' in text.replace(" ", "")
+
+    rejected = client.post(
+        "/mcp",
+        json={
+            "jsonrpc": "2.0",
+            "id": 4,
+            "method": "tools/call",
+            "params": {
+                "name": "mcp__github-readonly__get_pull_request",
+                "arguments": {"number": 1, "connector_url": "http://evil.example/mcp"},
+            },
+        },
+    )
+    assert rejected.status_code == 200
+    assert rejected.json()["result"]["isError"] is True
+    assert "must not supply connector URLs" in rejected.json()["result"]["content"][0]["text"]
+
+
+def test_oidc_validator_config_and_public_shape():
+    from app.oidc import OidcValidator
+
+    v = OidcValidator()
+    v.issuer = ""
+    v.jwks_url = ""
+    with pytest.raises(RuntimeError, match="OIDC_ISSUER"):
+        v.validate_config()
+    v.issuer = "https://idp.example/realms/x"
+    v.jwks_url = "https://idp.example/jwks"
+    v.audience = "mcp-gateway"
+    v.validate_config()
+    pub = v.public_config()
+    assert pub["mode"] == "oidc"
+    assert pub["jwks_url_configured"] is True
+    assert pub["issuer"] == "https://idp.example/realms/x"
+
+
+def test_supply_chain_and_mutation_metrics(client):
+    import json
+    import subprocess
+
+    script = ROOT / "scripts" / "ingest-supply-chain.mjs"
+    proc = subprocess.run(["node", str(script)], capture_output=True, text=True, check=False)
+    assert proc.returncode == 0, proc.stderr or proc.stdout
+    summary = json.loads(proc.stdout.strip().splitlines()[-1])
+    assert summary["ok"] is True
+    assert summary["connectors"] >= 11
+    assert "github-write" in summary["review_required"]
+
+    sc = client.get("/api/v1/connectors/github-readonly/supply-chain")
+    assert sc.status_code == 200
+    assert sc.json()["posture"] == "ok"
+    assert sc.json()["signed"] is True
+
+    review = client.get("/api/v1/connectors/github-write/supply-chain")
+    assert review.status_code == 200
+    assert review.json()["posture"] == "review_required"
+    assert review.json()["cve_high"] == 1
+
+    metrics = client.get("/api/v1/metrics/mutations")
+    assert metrics.status_code == 200
+    body = metrics.json()
+    assert "deny_rate" in body
+    assert "expansion_ready" in body
+    assert "guidance" in body
 
 
 def test_github_write_requires_grant_then_dry_run(client, monkeypatch):

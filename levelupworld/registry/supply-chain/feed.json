@@ -1,0 +1,24 @@
+{
+  "connectors": {
+    "github-readonly": {
+      "cve_critical": 0,
+      "cve_high": 0,
+      "signed": true,
+      "source": "fixture-scanner",
+      "last_scanned_at": "2026-09-17T06:00:00Z"
+    },
+    "github-write": {
+      "cve_critical": 0,
+      "cve_high": 1,
+      "signed": true,
+      "source": "fixture-scanner",
+      "last_scanned_at": "2026-09-17T06:00:00Z"
+    },
+    "postgres-readonly": {
+      "cve_critical": 0,
+      "cve_high": 0,
+      "signed": true,
+      "source": "fixture-scanner"
+    }
+  }
+}

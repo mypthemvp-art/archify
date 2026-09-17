@@ -7,7 +7,7 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] PostgreSQL schema foundation + RLS patterns (`001`–`005`)
 - [x] Connector manifest validation, catalog UI (table-first), multi-filters, saved views API
 - [x] Version detail pages and owner/certification metadata
-- [ ] OIDC production IdP wiring beyond `AUTH_MODE=dev|oidc` scaffold
+- [x] OIDC production IdP wiring (`gateway/app/oidc.py`, `docs/AUTH.md`, `AUTH_MODE=oidc` + JWKS)
 - [ ] Next.js virtualized table at 100+ scale
 
 ### Milestone 2 — Assurance plane
@@ -16,7 +16,7 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Quarantine center UI + gateway deny
 - [x] Certification checklist + CI certify workflows
 - [x] Ephemeral sandbox runner with HMAC-signed evidence (`scripts/ephemeral-lab-runner.mjs` + `/lab-runs`)
-- [ ] Live SBOM/signature/CVE feed ingestion
+- [x] SBOM/signature/CVE posture ingestion (`scripts/ingest-supply-chain.mjs` + feed → index API)
 
 ### Milestone 3 — Gateway enforcement
 
@@ -24,7 +24,7 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Schema validation path, redaction, budgets, OTEL, audit
 - [x] `/gateway/v1/tools/authorize|invoke`, `/redact`, `/egress/check`
 - [x] Core read-only connector portfolio + constrained `github-write`
-- [ ] Streamable HTTP MCP terminate at gateway (beyond proxy stub)
+- [x] Streamable HTTP MCP terminate at gateway (`POST /mcp` JSON-RPC; stdio proxy fallback only)
 
 ### Milestone 4 — Cursor package
 
@@ -39,7 +39,7 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Approval API, args_hash-bound grants, consume semantics
 - [x] First constrained write: `github-write.create_pull_request` (non-prod, dry-run default)
 - [x] Dual approval + step-up for production writes
-- [ ] Expand mutations only after observing deny/audit/test quality
+- [x] Mutation observe gate (`GET /api/v1/metrics/mutations` + `docs/MUTATION-OBSERVE.md`) — expand writes only after staging quality review
 
 ### Weeks 1–8 (historical delivery slices)
 

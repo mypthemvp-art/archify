@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "org-mcp-gateway": {
-      "url": "https://mcp-gateway.example.com/mcp",
+      "url": "http://127.0.0.1:8787/mcp",
       "headers": {
         "X-Project-ID": "agent-platform",
         "X-Requested-Environment": "development"

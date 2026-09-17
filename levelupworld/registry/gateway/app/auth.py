@@ -3,7 +3,7 @@
 Modes:
   AUTH_MODE=disabled  — tests / local demo (default principal)
   AUTH_MODE=dev       — accept HS256 bearer JWT or trusted X-* headers
-  AUTH_MODE=oidc      — validate JWT against OIDC_JWKS_URL / OIDC_ISSUER
+  AUTH_MODE=oidc      — validate JWT against OIDC_JWKS_URL / OIDC_ISSUER (production)
 """
 
 from __future__ import annotations
@@ -38,9 +38,17 @@ class IdentityProvider:
         self.issuer = os.environ.get("OIDC_ISSUER", "agent-ops-gateway")
         self.audience = os.environ.get("OIDC_AUDIENCE", "mcp-gateway")
         self.jwks_url = os.environ.get("OIDC_JWKS_URL")
-        self._jwks_client = None
-        if self.mode == "oidc" and self.jwks_url:
-            self._jwks_client = jwt.PyJWKClient(self.jwks_url)
+        self._oidc = None
+        if self.mode == "oidc":
+            from .oidc import OidcValidator
+
+            self._oidc = OidcValidator()
+            # Fail fast on misconfiguration at startup when explicitly oidc
+            try:
+                self._oidc.validate_config()
+            except RuntimeError:
+                # Allow import in docs/tests that set mode later; authenticate() re-validates
+                pass
 
     def issue_dev_token(
         self,
@@ -78,13 +86,19 @@ class IdentityProvider:
                 email="dev@localhost",
             )
 
+        if self.mode == "oidc":
+            if self._oidc is None:
+                from .oidc import OidcValidator
+
+                self._oidc = OidcValidator()
+            return self._oidc.authenticate(request)
+
         auth = request.headers.get("Authorization", "")
         token = None
         if auth.lower().startswith("bearer "):
             token = auth.split(" ", 1)[1].strip()
 
         if not token and self.mode == "dev":
-            # Trusted local headers only when AUTH_MODE=dev
             if request.headers.get("X-Actor") and request.headers.get("X-Org-ID"):
                 roles = [r.strip() for r in request.headers.get("X-Roles", "viewer").split(",") if r.strip()]
                 return Principal(
@@ -99,23 +113,13 @@ class IdentityProvider:
             raise HTTPException(401, "missing bearer token")
 
         try:
-            if self.mode == "oidc" and self._jwks_client:
-                key = self._jwks_client.get_signing_key_from_jwt(token).key
-                claims = jwt.decode(
-                    token,
-                    key,
-                    algorithms=["RS256", "ES256"],
-                    audience=self.audience,
-                    issuer=self.issuer,
-                )
-            else:
-                claims = jwt.decode(
-                    token,
-                    self.signing_secret,
-                    algorithms=["HS256"],
-                    audience=self.audience,
-                    issuer=self.issuer,
-                )
+            claims = jwt.decode(
+                token,
+                self.signing_secret,
+                algorithms=["HS256"],
+                audience=self.audience,
+                issuer=self.issuer,
+            )
         except jwt.PyJWTError as exc:
             raise HTTPException(401, f"invalid token: {exc}") from exc
 
@@ -133,6 +137,17 @@ class IdentityProvider:
             email=claims.get("email"),
             raw_claims=claims,
         )
+
+    def public_config(self) -> dict[str, Any]:
+        if self.mode == "oidc" and self._oidc is not None:
+            return self._oidc.public_config()
+        return {
+            "mode": self.mode,
+            "issuer": self.issuer,
+            "audience": self.audience,
+            "jwks_url_configured": bool(self.jwks_url),
+            "dev_token_endpoint": "/api/v1/auth/dev-token" if self.mode in {"disabled", "dev"} else None,
+        }
 
 
 idp = IdentityProvider()

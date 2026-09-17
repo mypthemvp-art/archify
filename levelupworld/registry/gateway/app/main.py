@@ -34,7 +34,7 @@ DASHBOARD = ROOT / "dashboard"
 
 app = FastAPI(
     title="Agent-Ops MCP Registry Gateway",
-    version="0.3.0",
+    version="0.4.0",
     description="Control plane (registry) + policy gateway for certified MCP connectors.",
 )
 
@@ -60,8 +60,16 @@ def healthz():
         "audit_events": len(audit.events),
         "auth_mode": idp.mode,
         "database_rls": db.enabled,
+        "mcp_endpoint": "/mcp",
+        "mcp_transport": "streamable_http",
         "version": app.version,
     }
+
+
+@app.get("/api/v1/auth/config")
+def auth_config():
+    """Public auth metadata (no secrets)."""
+    return idp.public_config()
 
 
 @app.get("/api/v1/auth/whoami")
@@ -777,3 +785,71 @@ def dashboard_quarantine(request: Request):
         "quarantine.html",
         {"page": "quarantine", "quarantines": active},
     )
+
+
+# ── Streamable HTTP MCP termination (Milestone 3) ─────────────────────────
+
+
+def _mcp_evaluate(req: InvokeRequest) -> dict:
+    result = policy.evaluate(req)
+    return result.model_dump()
+
+
+def _mcp_invoke(req: InvokeRequest, principal: Principal):
+    return invoke(req, principal)
+
+
+from .mcp_transport import build_mcp_router  # noqa: E402
+
+app.include_router(
+    build_mcp_router(
+        registry=registry,
+        control_plane=control_plane,
+        evaluate_fn=_mcp_evaluate,
+        invoke_fn=_mcp_invoke,
+    )
+)
+
+
+@app.get("/api/v1/connectors/{slug}/supply-chain")
+def connector_supply_chain(slug: str):
+    """SBOM / signature / CVE posture from ingested supply-chain index."""
+    index_path = ROOT / "connectors" / "supply-chain-index.json"
+    if not index_path.exists():
+        raise HTTPException(404, "supply-chain index not ingested — run scripts/ingest-supply-chain.mjs")
+    data = __import__("json").loads(index_path.read_text(encoding="utf-8"))
+    item = (data.get("connectors") or {}).get(slug)
+    if not item:
+        raise HTTPException(404, f"no supply-chain record for {slug}")
+    return item
+
+
+@app.get("/api/v1/metrics/mutations")
+def metrics_mutations():
+    """Observe deny/approval/grant quality before expanding mutations (Milestone 5)."""
+    events = audit.events
+    write_events = [
+        e
+        for e in events
+        if e.get("connector_slug") == "github-write"
+        or (e.get("tool_name") or "").startswith(("apply_", "write_", "create_", "delete_"))
+    ]
+    total = len(write_events)
+    allows = sum(1 for e in write_events if e.get("policy_decision") == "allow")
+    denies = sum(1 for e in write_events if e.get("policy_decision") == "deny")
+    approvals_needed = sum(1 for e in write_events if e.get("policy_decision") == "require_approval")
+    consumed = sum(1 for a in approvals.requests.values() if a.get("status") == "consumed")
+    dual = sum(1 for a in approvals.requests.values() if int(a.get("required_approver_count") or 1) >= 2)
+    deny_rate = (denies / total) if total else 0.0
+    return {
+        "window": "process_lifetime",
+        "mutation_shaped_events": total,
+        "allow": allows,
+        "deny": denies,
+        "require_approval": approvals_needed,
+        "deny_rate": round(deny_rate, 4),
+        "grants_consumed": consumed,
+        "dual_approval_requests": dual,
+        "expansion_ready": total >= 10 and deny_rate >= 0 and consumed >= 1,
+        "guidance": "Expand mutations only after observing deny/audit quality in staging; keep github-write dry-run until expansion_ready.",
+    }
