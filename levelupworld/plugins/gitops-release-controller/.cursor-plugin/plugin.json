@@ -1,0 +1,15 @@
+{
+  "name": "gitops-release-controller",
+  "version": "1.0.0",
+  "description": "Structured release control via GitOps: checklists, canary analysis, rollback PR generation, provenance/SBOM verification, Helm readiness, and drift detection. Use for releases or automations A041–A050.",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "gitops",
+    "release",
+    "canary"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "preToolUse": [
+      {
+        "command": "./scripts/policy-pre-tool.mjs"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "./scripts/policy-pre-tool.mjs"
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+---
+description: LevelUpWorld tenancy — fail closed across tenants
+alwaysApply: true
+---
+
+# LevelUpWorld — tenancy
+
+- Assume tenant isolation until evidence proves a shared resource is intentional.
+- Never run cross-tenant queries, joins, or exports without an explicit, approved scope.
+- Connector entitlements must be least-privilege and tenant-bound.
+- Incident blast-radius estimates must separate confirmed vs hypothesized tenant impact.
+- Fail closed when tenant context is missing on a mutate tool.

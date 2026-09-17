@@ -1,0 +1,12 @@
+---
+description: LevelUpWorld infrastructure changes — GitOps over live mutation
+alwaysApply: true
+---
+
+# LevelUpWorld — infrastructure changes
+
+- Prefer GitOps PR generation over direct Kubernetes, Helm, Terraform, or cloud console mutation.
+- Deny production shell, `kubectl apply`, `helm upgrade`, and `terraform apply` from agent sessions unless an approved break-glass path exists outside this platform.
+- Canary promote/rollback recommendations are advisory until a human approves.
+- Provenance and SBOM checks fail closed when attestations are missing.
+- Change-freeze calendars override convenience; exceptions need a named approver and expiry.

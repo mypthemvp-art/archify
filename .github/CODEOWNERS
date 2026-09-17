@@ -2,3 +2,6 @@
 /.github/CODEOWNERS @tt-a1i
 /.github/workflows/** @tt-a1i
 /.github/actions/** @tt-a1i
+/.cursor/** @tt-a1i
+/.cursor-plugin/** @tt-a1i
+/levelupworld/** @tt-a1i

@@ -1,0 +1,15 @@
+{
+  "name": "database-change-guardian",
+  "version": "1.0.0",
+  "description": "Database change safety: tenant-isolation tests, slow-query analysis on replicas, migration expand/contract review, backup/restore evidence, retention and lock-risk checks. Use for migration PRs or automations A031–A040.",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "database",
+    "migrations",
+    "tenancy"
+  ],
+  "license": "MIT"
+}

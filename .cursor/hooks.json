@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "command": ".cursor/hooks/policy-pre-tool.mjs"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/policy-pre-tool.mjs"
+      }
+    ],
+    "beforeMCPExecution": [
+      {
+        "command": ".cursor/hooks/policy-pre-tool.mjs"
+      }
+    ],
+    "beforeSubmitPrompt": [
+      {
+        "command": ".cursor/hooks/policy-pre-tool.mjs"
+      }
+    ]
+  }
+}

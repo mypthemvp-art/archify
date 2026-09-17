@@ -1,0 +1,15 @@
+{
+  "name": "mcp-security-gateway",
+  "version": "1.0.0",
+  "description": "Control-plane skill for MCP tool allowlists, argument schema validation, response redaction, approval proxying, spend/budget caps, injection firewalling, and replay harnesses. Use for gateway policy work or automations A011–A020.",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "mcp",
+    "gateway",
+    "policy"
+  ],
+  "license": "MIT"
+}

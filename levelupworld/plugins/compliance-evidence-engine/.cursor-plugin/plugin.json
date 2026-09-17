@@ -1,0 +1,15 @@
+{
+  "name": "compliance-evidence-engine",
+  "version": "1.0.0",
+  "description": "Maps operational evidence to SOC 2, HIPAA, and NIST controls; prepares access reviews, vendor assessments, and audit remediation tracking. Use for compliance packs or automations A051–A060.",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "compliance",
+    "soc2",
+    "audit"
+  ],
+  "license": "MIT"
+}

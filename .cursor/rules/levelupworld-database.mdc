@@ -1,0 +1,13 @@
+---
+description: LevelUpWorld database safety — replica reads, gated migrations
+alwaysApply: true
+---
+
+# LevelUpWorld — database safety
+
+- Use read replicas / read-only roles for diagnosis; set statement timeouts.
+- Split migration work into `plan_*`, `validate_*`, `apply_*`, and `rollback_*`.
+- Reject long `ACCESS EXCLUSIVE` style changes without an approval-gated window.
+- Require backup/restore evidence before recommending production apply.
+- Never expose superuser/owner credentials to the agent.
+- Redact sampled row payloads; prefer EXPLAIN plans and metadata.
