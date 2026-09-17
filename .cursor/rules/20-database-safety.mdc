@@ -1,0 +1,11 @@
+---
+description: Database safety for agent-operated changes
+alwaysApply: true
+---
+
+# Database safety (20)
+
+- No direct production database write connectors in Cursor.
+- Prefer read-replica / bounded SELECT tools; require dry-run counts and rollback for any schema plan.
+- Migrations go through reviewed PRs and Database Change Guardian — never ad-hoc apply from the agent shell.
+- Fail closed on cross-tenant access; keep `org_id` / tenant scope explicit.

@@ -1,0 +1,11 @@
+---
+description: Release and infrastructure safety
+alwaysApply: true
+---
+
+# Release safety (30)
+
+- Prefer GitOps pull requests over direct Kubernetes/Terraform mutation from Cursor.
+- Block `kubectl apply`, `helm upgrade`, `terraform apply`, force-push, and curl|sh patterns via hooks.
+- Production cloud CLI actions from the agent are prohibited — use controlled release workflows.
+- First constrained mutation remains grant-bound non-prod GitHub PR create (`github-write`) until dual-approval production path is certified.

@@ -91,6 +91,113 @@ def issue_dev_token(body: dict):
     return {"access_token": token, "token_type": "bearer"}
 
 
+# ── Spec aliases: gateway service-to-service API (§5.6) ───────────────────
+
+
+@app.post("/gateway/v1/tools/authorize")
+def gateway_authorize(req: InvokeRequest, principal: Principal = Depends(get_principal)):
+    """Authorize a prospective tool call without executing the connector."""
+    req.actor = req.actor or principal.subject
+    req.org_id = principal.org_id
+    req.tenant_id = principal.tenant_id
+    result = policy.evaluate(req)
+    return {
+        "allow": result.decision == PolicyDecision.allow,
+        "decision": result.decision.value,
+        "reason": result.reason,
+        "correlation_id": result.correlation_id,
+        "args_hash": result.args_hash,
+        "approval_required": result.decision == PolicyDecision.require_approval,
+    }
+
+
+@app.post("/gateway/v1/tools/invoke")
+def gateway_invoke(req: InvokeRequest, principal: Principal = Depends(get_principal)):
+    """Alias of /api/v1/gateway/invoke — never accepts raw connector URLs from clients."""
+    return invoke(req, principal)
+
+
+@app.post("/gateway/v1/redact")
+def gateway_redact(body: dict):
+    payload = body.get("payload", body)
+    safe, count = redact_payload(payload)
+    return {"payload": safe, "redaction_count": count}
+
+
+@app.post("/gateway/v1/egress/check")
+def gateway_egress_check(body: dict):
+    """Allow only domains present on the connector allowlist (or empty = deny live egress)."""
+    url = str(body.get("url") or "")
+    allowlist = body.get("allowlist") or []
+    from urllib.parse import urlparse
+
+    host = (urlparse(url).hostname or "").lower()
+    if not host:
+        return {"allow": False, "reason": "missing host"}
+    if host in {"127.0.0.1", "localhost", "metadata.google.internal"} or host.startswith("169.254."):
+        return {"allow": False, "reason": "blocked private/metadata host"}
+    if allowlist and host not in [str(d).lower() for d in allowlist]:
+        return {"allow": False, "reason": "host not on egress allowlist"}
+    if not allowlist:
+        return {"allow": False, "reason": "empty allowlist fails closed for live egress"}
+    return {"allow": True, "host": host}
+
+
+@app.get("/api/v1/catalog/views")
+def catalog_saved_views():
+    """Built-in saved catalog views (spec §2.2)."""
+    return {
+        "views": [
+            {
+                "id": "certified-readonly-prod",
+                "label": "Certified, read-only, production-active",
+                "query": "operation=read&trustTier=3,4&environment=production&health=healthy,degraded",
+            },
+            {
+                "id": "write-requires-approval",
+                "label": "Write-capable connectors requiring approval",
+                "query": "operation=write,delete,external_communication",
+            },
+            {
+                "id": "quarantined",
+                "label": "Quarantined/revoked versions",
+                "query": "certification_state=quarantined",
+            },
+            {
+                "id": "staging-candidates",
+                "label": "Staging candidates",
+                "query": "trustTier=2,3&environment=staging",
+            },
+            {
+                "id": "cert-expiring",
+                "label": "Production connectors with certification pressure",
+                "query": "trustTier=3,4&environment=production&sort=rank",
+            },
+        ]
+    }
+
+
+@app.post("/api/v1/policy/simulate")
+def policy_simulate(req: InvokeRequest, principal: Principal = Depends(get_principal)):
+    """Evaluate proposed invocation without executing (spec §5.2)."""
+    return evaluate_policy(req, principal)
+
+
+@app.post("/api/v1/approvals/{request_id}/consume")
+def consume_approval(request_id: str, body: dict, principal: Principal = Depends(require_roles("admin", "operator"))):
+    """Gateway-only atomic consume of an approved grant (spec §7.3)."""
+    try:
+        return approvals.consume(
+            request_id,
+            args_hash=body["args_hash"],
+            idempotency_key=body["idempotency_key"],
+        )
+    except KeyError:
+        raise HTTPException(404, "not found") from None
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
+
+
 # ── Registry (control plane) ─────────────────────────────────────────────
 
 
@@ -618,4 +725,14 @@ def dashboard_approvals(request: Request):
             "page": "approvals",
             "approvals": list(approvals.requests.values()),
         },
+    )
+
+
+@app.get("/admin/quarantine", response_class=HTMLResponse)
+def dashboard_quarantine(request: Request):
+    active = [q for q in control_plane.quarantines.values() if q.get("active")]
+    return templates.TemplateResponse(
+        request,
+        "quarantine.html",
+        {"page": "quarantine", "quarantines": active},
     )

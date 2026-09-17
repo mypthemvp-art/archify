@@ -1,0 +1,12 @@
+---
+description: MCP tool policy — gateway is authoritative
+alwaysApply: true
+---
+
+# MCP tool policy (10)
+
+- Prefer a single `org-mcp-gateway` entry in project MCP config; do not wire sensitive connector URLs directly.
+- Hooks are preflight/postflight only; the gateway repeats authz, schema, approval, budget, redaction, and quarantine checks.
+- Never treat a Cursor approval click alone as proof the backend call is unchanged — require args_hash-bound grants for mutations.
+- Reject client-supplied raw connector endpoints, production credentials, arbitrary tenant IDs, or cloud account selection.
+- Catalog/control-plane UI does not authorize runtime tool calls.

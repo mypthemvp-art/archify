@@ -83,10 +83,13 @@ class ApprovalService:
             "tool_name": req["tool_name"],
             "args_hash": req["args_hash"],
             "idempotency_key": req["idempotency_key"],
+            "policy_version": os.environ.get("GATEWAY_POLICY_VERSION", "default/v1"),
             "scope": [f"{req['connector_slug']}:{req['tool_name']}"],
+            "nbf": now,
             "iat": now,
             "exp": exp,
             "approval_request_id": request_id,
+            "required_approvers": [approver],
         }
         token = jwt.encode(claims, self.signing_secret, algorithm="HS256")
         self.grants[grant_id] = {
@@ -148,7 +151,42 @@ class ApprovalService:
             raise ValueError("unknown grant")
         if stored.get("revoked_at"):
             raise ValueError("grant revoked")
-        if stored.get("consumed_at") and stored.get("claims", {}).get("args_hash") != digest:
-            raise ValueError("grant already consumed")
-        stored["consumed_at"] = datetime.now(tz=timezone.utc).isoformat()
+        # Atomic-style consume: only one successful consume for a grant
+        if stored.get("consumed_at"):
+            # Idempotent replay only when same args_hash (already checked) and same idempotency
+            if stored.get("claims", {}).get("idempotency_key") != idempotency_key:
+                raise ValueError("grant already consumed")
+        else:
+            stored["consumed_at"] = datetime.now(tz=timezone.utc).isoformat()
+            req_id = claims.get("approval_request_id")
+            if req_id and req_id in self.requests:
+                self.requests[req_id]["status"] = "consumed"
+                self.requests[req_id]["consumed_at"] = stored["consumed_at"]
         return claims
+
+    def consume(
+        self,
+        request_id: str,
+        *,
+        args_hash: str,
+        idempotency_key: str,
+    ) -> dict[str, Any]:
+        """Gateway-only atomic consumption of an approved request (spec §7.3)."""
+        req = self.requests.get(request_id)
+        if not req:
+            raise KeyError("approval request not found")
+        if req["status"] != "approved":
+            raise ValueError(f"request is {req['status']}")
+        if datetime.fromisoformat(req["expires_at"]) < datetime.now(tz=timezone.utc):
+            req["status"] = "expired"
+            raise ValueError("request expired")
+        if req["args_hash"] != args_hash:
+            raise ValueError("args_hash mismatch")
+        if req["idempotency_key"] != idempotency_key:
+            raise ValueError("idempotency key mismatch")
+        req["status"] = "consumed"
+        req["consumed_at"] = datetime.now(tz=timezone.utc).isoformat()
+        grant_id = req.get("grant_id")
+        if grant_id and grant_id in self.grants:
+            self.grants[grant_id]["consumed_at"] = req["consumed_at"]
+        return req

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Quarantine Center · Agent-Ops{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Quarantine center</h1>
+  <p>
+    Emergency blocks propagate at the gateway within the SLO (&lt; 60s). Local Cursor mcp.json entries are ignored for quarantined versions.
+  </p>
+</section>
+<section class="panel">
+  <h2>Active quarantines</h2>
+  {% if quarantines %}
+  <table>
+    <thead><tr><th>Connector</th><th>Version</th><th>Reason</th><th>Actor</th><th>When</th></tr></thead>
+    <tbody>
+      {% for q in quarantines %}
+      <tr>
+        <td><code>{{ q.slug }}</code></td>
+        <td><code>{{ q.version }}</code></td>
+        <td>{{ q.reason }}</td>
+        <td>{{ q.actor }}</td>
+        <td>{{ q.quarantined_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="note">No active quarantines. Use connector detail → Quarantine when authorized.</p>
+  {% endif %}
+</section>
+<section class="panel">
+  <h2>Procedure</h2>
+  <ol class="checklist">
+    <li>Security reviewer marks version quarantined (dashboard or API).</li>
+    <li>Gateway denylist refreshed; activations disabled.</li>
+    <li>New calls deny with correlation ID.</li>
+    <li>Incident record: affected projects, call history, owner, remediation.</li>
+    <li>Re-entry requires new certification suite + owner approval.</li>
+  </ol>
+</section>
+{% endblock %}

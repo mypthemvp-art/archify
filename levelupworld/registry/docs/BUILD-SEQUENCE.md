@@ -1,42 +1,51 @@
 ## Delivery plan
 
-### Week 1–2: registry read path
+Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md`](INTERACTIVE-MCP-REGISTRY-DASHBOARD.md) §9.
 
-- [x] Registry schema, connector manifest ingestion, catalog UI, connector detail pages
-- [x] Register the ten core connectors as metadata
-- [x] SSO/IdP modes (`AUTH_MODE=disabled|dev|oidc`) + org principal on gateway APIs
-- [x] Connector version pinning fields in manifests
+### Milestone 1 — Registry foundation
 
-### Week 3–4: test and observability plane
+- [x] PostgreSQL schema foundation + RLS patterns (`001`–`005`)
+- [x] Connector manifest validation, catalog UI (table-first), multi-filters, saved views API
+- [x] Version detail pages and owner/certification metadata
+- [ ] OIDC production IdP wiring beyond `AUTH_MODE=dev|oidc` scaffold
+- [ ] Next.js virtualized table at 100+ scale
 
-- [x] Sandbox test-run API stubs + certification suite list
-- [x] OpenTelemetry traces/metrics instrumentation (OTLP soft-dep + console export)
-- [x] Policy-decision and invocation audit tables/APIs
-- [x] Automated certification checks in GitHub Actions (`.github/workflows/registry-cert.yml`)
-- [x] Postgres RLS policies via `app.org_id` GUC (`schema/003_rls_policies.sql` + `db.py`)
+### Milestone 2 — Assurance plane
 
-### Week 5–6: gateway and approvals
+- [x] Security test suite catalog + hard gates (stub runner)
+- [x] Quarantine center UI + gateway deny
+- [x] Certification checklist + CI certify workflows
+- [ ] Ephemeral sandbox runner with synthetic fixtures and signed evidence store
+- [ ] Live SBOM/signature/CVE feed ingestion
 
-- [x] MCP gateway with read-only connectors first (stub adapters)
-- [x] JSON-schema path, output redaction, tool budgets, audit events
-- [x] Approval requests and signed grants with exact args_hash binding
-- [x] First constrained mutation connector: `github-write.create_pull_request` (non-prod, dry-run default, repo allowlist, signed grants)
+### Milestone 3 — Gateway enforcement
 
-### Week 7–8: Cursor package
+- [x] Single gateway entry pattern + policy evaluate/invoke
+- [x] Schema validation path, redaction, budgets, OTEL, audit
+- [x] `/gateway/v1/tools/authorize|invoke`, `/redact`, `/egress/check`
+- [x] Core read-only connector portfolio + constrained `github-write`
+- [ ] Streamable HTTP MCP terminate at gateway (beyond proxy stub)
 
-- [x] Cursor plugin Rules/Skills/hooks + project gateway config
-- [x] Hooks inject correlation IDs and call gateway when configured
-- [x] Pilot Secure PR Guardian and Production Triage Copilot in one repository (`levelupworld/pilots/archify`)
-- [x] Certify the workflow before expanding (`certify-pilot.mjs` + `.github/workflows/pilot-cert.yml`)
+### Milestone 4 — Cursor package
 
-### Phase A–B: multi-tenant dashboard specification
+- [x] Project mcp gateway + pilot configs
+- [x] Hooks preflight/postflight/secret-scan (+ TypeScript examples)
+- [x] Rules baseline `00/10/20/30` + LevelUpWorld operating rules
+- [x] Archify pilot: Secure PR Guardian + Production Triage Copilot
+- [ ] CI proving hooks cannot be bypassed by ordinary project workflows
 
-- [x] Full specification: [`MULTI-TENANT-DASHBOARD-SPEC.md`](MULTI-TENANT-DASHBOARD-SPEC.md)
-- [x] Table-first catalog + multi-filter API (`category`, `operation`, `trustTier`, `environment`, `health`, `sort`)
-- [x] Security test lab suite catalog + hard gates ([`SECURITY-TEST-LAB.md`](SECURITY-TEST-LAB.md))
-- [x] Schema `004_multi_tenant_dashboard.sql` (teams, principals, tags, catalog meta, partition guidance)
-- [x] Hooks pattern aligned to beforeMCP/afterMCP/beforeShell/secret-scan (+ TypeScript examples)
-- [ ] Next.js virtualized catalog at 100+ scale (UI productization)
-- [ ] Live ephemeral lab runners for every suite family
+### Milestone 5 — Controlled mutations
+
+- [x] Approval API, args_hash-bound grants, consume semantics
+- [x] First constrained write: `github-write.create_pull_request` (non-prod, dry-run default)
+- [ ] Dual approval + step-up for production writes
+- [ ] Expand mutations only after observing deny/audit/test quality
+
+### Weeks 1–8 (historical delivery slices)
+
+- [x] Weeks 1–2 registry read path
+- [x] Weeks 3–4 observability + cert CI + RLS
+- [x] Weeks 5–6 gateway approvals + github-write
+- [x] Weeks 7–8 Cursor pilot certification
 
 See [`IMPLEMENTATION-STARTER.md`](IMPLEMENTATION-STARTER.md), [`CERTIFICATION.md`](CERTIFICATION.md), and [`../../pilots/archify/CERTIFICATION.md`](../../pilots/archify/CERTIFICATION.md).

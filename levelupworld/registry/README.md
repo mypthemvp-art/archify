@@ -76,13 +76,15 @@ AUTH_MODE=disabled GITHUB_WRITE_DRY_RUN=1 \
 
 ## Docs
 
-- [`docs/MULTI-TENANT-DASHBOARD-SPEC.md`](docs/MULTI-TENANT-DASHBOARD-SPEC.md) — full multi-tenant dashboard + gateway specification
+- [`docs/INTERACTIVE-MCP-REGISTRY-DASHBOARD.md`](docs/INTERACTIVE-MCP-REGISTRY-DASHBOARD.md) — full Product/Security/Data/API/Hooks specification
+- [`docs/MULTI-TENANT-DASHBOARD-SPEC.md`](docs/MULTI-TENANT-DASHBOARD-SPEC.md) — index into the full spec
 - [`docs/IMPLEMENTATION-STARTER.md`](docs/IMPLEMENTATION-STARTER.md) — product contract
 - [`docs/SECURITY-TEST-LAB.md`](docs/SECURITY-TEST-LAB.md) — suite families + hard gates
 - [`docs/CERTIFICATION.md`](docs/CERTIFICATION.md) — certification checklist + CI gate
 - [`docs/APPROVAL-TOKENS.md`](docs/APPROVAL-TOKENS.md) — signed grants
-- [`docs/BUILD-SEQUENCE.md`](docs/BUILD-SEQUENCE.md) — delivery plan
-- [`schema/001_init.sql`](schema/001_init.sql) … [`schema/004_multi_tenant_dashboard.sql`](schema/004_multi_tenant_dashboard.sql)
+- [`docs/BUILD-SEQUENCE.md`](docs/BUILD-SEQUENCE.md) — milestones M1–M5
+- [`schema/001_init.sql`](schema/001_init.sql) … [`schema/005_full_product_model.sql`](schema/005_full_product_model.sql)
+- [`types/connector-filters.ts`](types/connector-filters.ts) — shareable filter model
 
 ## Security defaults
 

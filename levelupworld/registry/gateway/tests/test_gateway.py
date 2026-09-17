@@ -295,6 +295,46 @@ def test_full_suite_includes_hard_gates(client):
     assert len(body["report"]["results"]) > 8
 
 
+def test_gateway_v1_authorize_redact_egress(client):
+    authz = client.post(
+        "/gateway/v1/tools/authorize",
+        json={
+            "actor": "user:alice",
+            "connector_slug": "github-readonly",
+            "tool_name": "get_pull_request",
+            "arguments": {"number": 1},
+            "environment": "development",
+        },
+    )
+    assert authz.status_code == 200
+    assert authz.json()["allow"] is True
+
+    red = client.post("/gateway/v1/redact", json={"payload": {"token": "abc123456789"}})
+    assert red.status_code == 200
+    assert red.json()["redaction_count"] >= 1
+
+    eg = client.post(
+        "/gateway/v1/egress/check",
+        json={"url": "https://api.github.com/repos/x", "allowlist": ["api.github.com"]},
+    )
+    assert eg.status_code == 200
+    assert eg.json()["allow"] is True
+    blocked = client.post(
+        "/gateway/v1/egress/check",
+        json={"url": "http://169.254.169.254/latest", "allowlist": ["api.github.com"]},
+    )
+    assert blocked.json()["allow"] is False
+
+
+def test_saved_views_and_quarantine_page(client):
+    views = client.get("/api/v1/catalog/views")
+    assert views.status_code == 200
+    assert any(v["id"] == "certified-readonly-prod" for v in views.json()["views"])
+    page = client.get("/admin/quarantine")
+    assert page.status_code == 200
+    assert "Quarantine" in page.text
+
+
 def test_healthz_reports_auth_and_rls(client):
     res = client.get("/healthz")
     assert res.status_code == 200
