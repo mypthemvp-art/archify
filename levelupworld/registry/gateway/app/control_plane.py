@@ -85,25 +85,67 @@ class ControlPlaneStore:
 
     def create_test_run(self, slug: str, version: str, suite: str, org_id: str = "org_local") -> dict[str, Any]:
         run_id = f"run_{uuid.uuid4().hex}"
-        # Deterministic stub: pass core suites except when slug contains 'fail'
-        suites = [
-            "schema_conformance",
-            "auth_negative",
-            "timeout_retry",
-            "prompt_injection",
-            "secret_pii_redaction",
-            "injection_traversal_ssrf",
-            "idempotency",
-            "approval_binding",
+        # Spec families from MULTI-TENANT-DASHBOARD-SPEC / SECURITY-TEST-LAB.md
+        suite_families = {
+            "protocol": ["mcp_init", "tool_discovery", "schema_validation", "malformed_inputs"],
+            "authn": ["missing_token", "expired_token", "wrong_audience", "insufficient_scope"],
+            "authz": ["tenant_escape", "project_env_mismatch", "allowlist_bypass"],
+            "input_safety": ["sql_injection", "path_traversal", "shell_metachar", "bad_url", "oversized"],
+            "ssrf_egress": ["metadata_ip", "private_range", "redirect_chain", "dns_rebinding", "unapproved_host"],
+            "data_protection": ["secret_redaction", "pii_redaction", "output_size_cap", "retention"],
+            "prompt_injection": ["hostile_issue", "hostile_log", "hostile_doc", "hostile_connector_response"],
+            "reliability": ["timeout", "retry", "circuit_breaker", "partial_failure", "duplicate_request"],
+            "approval_binding": ["arg_mutation", "replay", "expiry", "wrong_identity"],
+            "supply_chain": ["pinned_digest", "signature", "sbom", "vuln_policy"],
+            "auditability": ["correlation_id", "policy_evidence", "tamper_evident", "trace_linkage"],
+            # legacy aliases
+            "schema_conformance": ["schema_validation"],
+            "auth_negative": ["missing_token", "expired_token"],
+            "timeout_retry": ["timeout", "retry"],
+            "secret_pii_redaction": ["secret_redaction", "pii_redaction"],
+            "injection_traversal_ssrf": ["sql_injection", "path_traversal", "metadata_ip"],
+            "idempotency": ["duplicate_request"],
+        }
+        hard_gates = [
+            "pinned_digest",
+            "owner_present",
+            "no_embedded_creds",
+            "egress_restricted",
+            "tenant_authz",
+            "write_tools_require_approval",
+            "immutable_audit",
         ]
-        selected = suites if suite == "full" else [suite]
+        if suite == "full":
+            selected_tests: list[str] = []
+            for tests in suite_families.values():
+                selected_tests.extend(tests)
+            # de-dupe preserve order
+            seen: set[str] = set()
+            ordered: list[str] = []
+            for t in selected_tests:
+                if t not in seen:
+                    seen.add(t)
+                    ordered.append(t)
+            selected_tests = ordered
+        else:
+            selected_tests = list(suite_families.get(suite, [suite]))
+
+        force_fail = "fail" in slug
         results = []
         overall = "passed"
-        for name in selected:
-            passed = "fail" not in slug
+        for name in selected_tests:
+            passed = not force_fail
             if not passed:
                 overall = "failed"
-            results.append({"name": name, "status": "passed" if passed else "failed"})
+            results.append({"name": name, "family": suite if suite != "full" else "full", "status": "passed" if passed else "failed"})
+
+        gate_results = []
+        for gate in hard_gates:
+            passed = not force_fail
+            if not passed:
+                overall = "failed"
+            gate_results.append({"gate": gate, "passed": passed})
+
         record = {
             "id": run_id,
             "org_id": org_id,
@@ -111,7 +153,12 @@ class ControlPlaneStore:
             "version": version,
             "suite": suite,
             "status": overall,
-            "report": {"results": results, "certification_gate": overall == "passed"},
+            "report": {
+                "results": results,
+                "hard_gates": gate_results,
+                "certification_gate": overall == "passed",
+                "note": "Ephemeral lab stub — expand to real probes per SECURITY-TEST-LAB.md",
+            },
             "started_at": _now(),
             "finished_at": _now(),
         }

@@ -4,7 +4,26 @@
 
 Convert human approval intent into a **short-lived, server-issued authorization grant** bound to exact tool arguments. Prevents the failure mode where an agent is approved for a benign action, then alters arguments and reuses the approval.
 
-## Grant claims
+For production-impacting writes, do **not** rely only on a Cursor approval click. Combine IDE user-intent confirmation with a backend grant enforceable across Cursor, CLIs, background agents, and any MCP client.
+
+## Bound attributes (must all match)
+
+```text
+actor / workload identity
+organization, project, and tenant
+connector version ID
+exact tool ID
+canonical normalized-arguments hash
+target environment
+idempotency key
+policy version
+not-before and expiration times
+required approver count and identities
+```
+
+The gateway **rejects** execution if any attribute changes and **atomically consumes** the grant (no replay / duplicate execution).
+
+## Grant claims (current gateway JWT)
 
 ```json
 {
@@ -21,12 +40,17 @@ Convert human approval intent into a **short-lived, server-issued authorization 
   "tool_name": "create_pull_request",
   "args_hash": "sha256:…",
   "idempotency_key": "idem_…",
+  "policy_version": "pol_v1",
+  "nbf": 1770000000,
   "scope": ["github:pull_request:create"],
   "iat": 1770000000,
   "exp": 1770000300,
-  "approval_request_id": "apr_…"
+  "approval_request_id": "apr_…",
+  "required_approvers": ["user:boss"]
 }
 ```
+
+`policy_version`, `nbf`, and `required_approvers` are specified for multi-tenant dashboard parity; extend `approvals.py` claims as those fields are enforced in production IdP mode.
 
 ## Canonical args hash
 
@@ -43,14 +67,15 @@ Any change to repository, branches, body, linked issue, tenant/project, environm
 ```text
 verify_grant(grant, request):
   assert signature valid with current gateway keyset
-  assert now < exp and now >= iat
+  assert now < exp and now >= max(iat, nbf)
   assert grant.aud == "mcp-gateway"
   assert grant.sub == request.actor
-  assert grant.tenant/project/environment match request
+  assert grant.org/tenant/project/environment match request
   assert grant.connector_slug/version and tool_name match
   assert grant.args_hash == hash(canonicalize(request.arguments))
   assert grant.idempotency_key == request.idempotency_key
-  assert grant not revoked and not already consumed (or allow idempotent replay with same key)
+  assert grant.policy_version matches active policy (when set)
+  assert grant not revoked and atomically mark consumed
   return allow
 ```
 

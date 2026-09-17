@@ -40,12 +40,14 @@ Governed **Cursor + Open-Source OpenAI/MCP automation catalog** for secure AI-ag
 
 Control plane (catalog/certify) + server-side gateway (authz, approvals, redaction, budgets, audit):
 
+- **Full multi-tenant dashboard spec:** [`registry/docs/MULTI-TENANT-DASHBOARD-SPEC.md`](registry/docs/MULTI-TENANT-DASHBOARD-SPEC.md)
 - Blueprint: [`registry/docs/BLUEPRINT.md`](registry/docs/BLUEPRINT.md)
 - Implementation starter: [`registry/docs/IMPLEMENTATION-STARTER.md`](registry/docs/IMPLEMENTATION-STARTER.md)
+- Security test lab: [`registry/docs/SECURITY-TEST-LAB.md`](registry/docs/SECURITY-TEST-LAB.md)
 - Certification checklist: [`registry/docs/CERTIFICATION.md`](registry/docs/CERTIFICATION.md)
 - Run: see [`registry/README.md`](registry/README.md)
-- Dashboard pages: Catalog · Test Lab · Operations · Audit · Approvals
-- Top-10 connectors: [`registry/connectors/`](registry/connectors/)
+- Dashboard pages: Catalog (table-first) · Test Lab · Operations · Audit · Approvals
+- Top-10 connectors + github-write: [`registry/connectors/`](registry/connectors/)
 
 ## Weeks 7–8 pilot (this repository)
 

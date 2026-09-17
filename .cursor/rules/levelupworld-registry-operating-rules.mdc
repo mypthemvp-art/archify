@@ -17,3 +17,4 @@ alwaysApply: true
 10. Treat Cursor hooks as preflight only — the gateway is the authorization authority.
 11. The only mutation connector in Weeks 5–6 is `github-write.create_pull_request`: non-prod environments only, dry-run by default, repository allowlist for live calls, and a signed args_hash-bound grant on every invoke.
 12. Weeks 7–8 pilot enables only Secure PR Guardian + Production Triage Copilot with zero mutate tools; do not expand plugins until `levelupworld/pilots/archify/scripts/certify-pilot.mjs` is green.
+13. Dashboard is control plane only; gateway is the authorization authority. Catalog UX is table-first with multi-filters at 100+ scale — never soft-fail hard certification gates.

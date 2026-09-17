@@ -76,11 +76,13 @@ AUTH_MODE=disabled GITHUB_WRITE_DRY_RUN=1 \
 
 ## Docs
 
+- [`docs/MULTI-TENANT-DASHBOARD-SPEC.md`](docs/MULTI-TENANT-DASHBOARD-SPEC.md) — full multi-tenant dashboard + gateway specification
 - [`docs/IMPLEMENTATION-STARTER.md`](docs/IMPLEMENTATION-STARTER.md) — product contract
+- [`docs/SECURITY-TEST-LAB.md`](docs/SECURITY-TEST-LAB.md) — suite families + hard gates
 - [`docs/CERTIFICATION.md`](docs/CERTIFICATION.md) — certification checklist + CI gate
 - [`docs/APPROVAL-TOKENS.md`](docs/APPROVAL-TOKENS.md) — signed grants
-- [`docs/BUILD-SEQUENCE.md`](docs/BUILD-SEQUENCE.md) — 8-week delivery plan
-- [`schema/001_init.sql`](schema/001_init.sql) / [`schema/002_implementation_starter.sql`](schema/002_implementation_starter.sql) / [`schema/003_rls_policies.sql`](schema/003_rls_policies.sql)
+- [`docs/BUILD-SEQUENCE.md`](docs/BUILD-SEQUENCE.md) — delivery plan
+- [`schema/001_init.sql`](schema/001_init.sql) … [`schema/004_multi_tenant_dashboard.sql`](schema/004_multi_tenant_dashboard.sql)
 
 ## Security defaults
 

@@ -2,6 +2,8 @@
 
 Production-oriented blueprint for a **self-hosted MCP Registry** that lets a team discover, filter, certify, test, approve, monitor, and revoke MCP connectors used by Cursor and other MCP-capable clients.
 
+**Full multi-tenant specification (authoritative):** [`MULTI-TENANT-DASHBOARD-SPEC.md`](MULTI-TENANT-DASHBOARD-SPEC.md)
+
 This document is the product contract for `levelupworld/registry/`. Executable pieces already scaffolded: Postgres schema, FastAPI control plane + gateway, dashboard pages, top-10 connector manifests, approval grants, and Cursor hooks.
 
 ## Product scope

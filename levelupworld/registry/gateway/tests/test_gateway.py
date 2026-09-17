@@ -262,6 +262,39 @@ def test_metrics_and_version_detail(client):
     assert detail.json()["slug"] == "git-repository"
 
 
+def test_catalog_multi_filters_and_sort(client):
+    res = client.get(
+        "/api/v1/connectors",
+        params={
+            "category": "github",
+            "operation": "read",
+            "trustTier": "3,4",
+            "environment": "development",
+            "sort": "-success_rate_24h",
+            "view": "table",
+        },
+    )
+    assert res.status_code == 200
+    body = res.json()
+    assert body["view"] == "table"
+    assert body["count"] >= 1
+    for c in body["connectors"]:
+        assert c["category"] == "github"
+        assert any(t["capability"] == "read" for t in c["tools"])
+
+
+def test_full_suite_includes_hard_gates(client):
+    run = client.post("/api/v1/connectors/github-readonly/versions/1.0.0/test-runs?suite=full")
+    assert run.status_code == 200
+    body = run.json()
+    assert body["status"] == "passed"
+    gates = {g["gate"] for g in body["report"]["hard_gates"]}
+    assert "pinned_digest" in gates
+    assert "write_tools_require_approval" in gates
+    assert "immutable_audit" in gates
+    assert len(body["report"]["results"]) > 8
+
+
 def test_healthz_reports_auth_and_rls(client):
     res = client.get("/healthz")
     assert res.status_code == 200

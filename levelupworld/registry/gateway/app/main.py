@@ -98,18 +98,47 @@ def issue_dev_token(body: dict):
 def list_connectors(
     category: str | None = None,
     trust_tier: str | None = None,
+    trustTier: str | None = None,
     capability: str | None = None,
+    operation: str | None = None,
     environment: str | None = None,
+    certification_state: str | None = None,
+    transport: str | None = None,
+    data_classification: str | None = None,
+    health: str | None = None,
+    owner: str | None = None,
     q: str | None = None,
+    sort: str | None = None,
+    view: str | None = Query(None, description="table|cards — advisory for UI clients"),
 ):
+    """Multi-filter catalog for 100+ connectors. Comma-separated multi-value filters supported."""
     items = registry.list(
         category=category,
-        trust_tier=trust_tier,
+        trust_tier=trust_tier or trustTier,
         capability=capability,
+        operation=operation,
         environment=environment,
+        certification_state=certification_state,
+        transport=transport,
+        data_classification=data_classification,
+        health=health,
+        owner=owner,
         q=q,
+        sort=sort,
     )
-    return {"count": len(items), "connectors": [c.model_dump() for c in items]}
+    return {
+        "count": len(items),
+        "view": view or "table",
+        "filters": {
+            "category": category,
+            "trust_tier": trust_tier or trustTier,
+            "operation": operation or capability,
+            "environment": environment,
+            "health": health,
+            "sort": sort or "rank",
+        },
+        "connectors": [c.model_dump() for c in items],
+    }
 
 
 @app.get("/api/v1/connectors/{slug}")

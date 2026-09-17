@@ -29,4 +29,14 @@
 - [x] Pilot Secure PR Guardian and Production Triage Copilot in one repository (`levelupworld/pilots/archify`)
 - [x] Certify the workflow before expanding (`certify-pilot.mjs` + `.github/workflows/pilot-cert.yml`)
 
+### Phase A–B: multi-tenant dashboard specification
+
+- [x] Full specification: [`MULTI-TENANT-DASHBOARD-SPEC.md`](MULTI-TENANT-DASHBOARD-SPEC.md)
+- [x] Table-first catalog + multi-filter API (`category`, `operation`, `trustTier`, `environment`, `health`, `sort`)
+- [x] Security test lab suite catalog + hard gates ([`SECURITY-TEST-LAB.md`](SECURITY-TEST-LAB.md))
+- [x] Schema `004_multi_tenant_dashboard.sql` (teams, principals, tags, catalog meta, partition guidance)
+- [x] Hooks pattern aligned to beforeMCP/afterMCP/beforeShell/secret-scan (+ TypeScript examples)
+- [ ] Next.js virtualized catalog at 100+ scale (UI productization)
+- [ ] Live ephemeral lab runners for every suite family
+
 See [`IMPLEMENTATION-STARTER.md`](IMPLEMENTATION-STARTER.md), [`CERTIFICATION.md`](CERTIFICATION.md), and [`../../pilots/archify/CERTIFICATION.md`](../../pilots/archify/CERTIFICATION.md).

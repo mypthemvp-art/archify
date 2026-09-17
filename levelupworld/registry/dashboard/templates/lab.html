@@ -2,26 +2,41 @@
 {% block title %}Connector Test Lab · Agent-Ops{% endblock %}
 {% block content %}
 <section class="hero">
-  <h1>Connector test lab</h1>
-  <p>Every new connector version must pass sandbox certification before activation. Approval-binding tests deny requests when arguments change after approval.</p>
+  <h1>Security test lab</h1>
+  <p>
+    Ephemeral isolated environment only — synthetic credentials, egress allowlists, quotas.
+    Hard gates fail certification outright (not a soft score). See
+    <code>docs/SECURITY-TEST-LAB.md</code>.
+  </p>
 </section>
 <section class="panel">
-  <h2>Required suites</h2>
+  <h2>Suite families</h2>
   <ul class="checklist">
-    <li>Schema-conformance for every MCP tool</li>
-    <li>OAuth and entitlement-negative tests</li>
-    <li>Timeout, retry, circuit-breaker, rate-limit</li>
-    <li>Prompt-injection using hostile web/document/log content</li>
-    <li>Secret and PII redaction</li>
-    <li>SQL injection, path traversal, shell injection, SSRF, unsafe URL</li>
-    <li>Idempotency verification for write actions</li>
-    <li><strong>Approval-binding:</strong> changed args after approval ⇒ deny</li>
+    <li><code>protocol</code> — init, discovery, schema, malformed inputs</li>
+    <li><code>authn</code> / <code>authz</code> — tokens, tenant escape, env mismatch</li>
+    <li><code>input_safety</code> — SQLi, traversal, shell metachar, oversized</li>
+    <li><code>ssrf_egress</code> — metadata IPs, private ranges, DNS rebinding</li>
+    <li><code>data_protection</code> — secret/PII/PHI redaction, size caps</li>
+    <li><code>prompt_injection</code> — hostile issues/logs/docs/responses</li>
+    <li><code>reliability</code> — timeouts, retries, circuit breakers, duplicates</li>
+    <li><code>approval_binding</code> — arg mutation, replay, expiry, wrong identity</li>
+    <li><code>supply_chain</code> — digest, signature, SBOM, vuln policy</li>
+    <li><code>auditability</code> — correlation IDs, tamper-evident evidence, traces</li>
+    <li><code>full</code> — all families + hard gates</li>
+  </ul>
+</section>
+<section class="panel">
+  <h2>Hard fail gates</h2>
+  <ul class="checklist">
+    <li>pinned_digest · owner_present · no_embedded_creds</li>
+    <li>egress_restricted · tenant_authz</li>
+    <li>write_tools_require_approval · immutable_audit</li>
   </ul>
 </section>
 <section class="panel">
   <h2>Connectors under test</h2>
   <table>
-    <thead><tr><th>Connector</th><th>Version</th><th>State</th><th>Trust</th></tr></thead>
+    <thead><tr><th>Connector</th><th>Version</th><th>State</th><th>Trust</th><th>Lab</th></tr></thead>
     <tbody>
       {% for c in connectors %}
       <tr>
@@ -29,10 +44,11 @@
         <td><code>{{ c.version }}</code></td>
         <td>{{ c.certification_state }}</td>
         <td>{{ c.trust_tier.value }}</td>
+        <td><button type="button" onclick="runTests('{{ c.slug }}', '{{ c.version }}')">Run full</button></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-  <p class="note">Automated lab runners land in Week 5 of the build sequence. Use <code>pytest gateway/tests</code> for gateway unit coverage now.</p>
+  <pre id="test-output" class="note">Lab output appears here.</pre>
 </section>
 {% endblock %}

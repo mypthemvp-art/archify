@@ -3,7 +3,10 @@
 {% block content %}
 <section class="hero">
   <h1>Certified connector catalog</h1>
-  <p>Registry metadata for versions, trust, scopes, and health. Invocation decisions happen in the gateway—not in Cursor hooks alone.</p>
+  <p>
+    Control-plane registry for 100+ connectors. Filter like an ops console, not a marketplace.
+    Invocation decisions happen in the <strong>policy gateway</strong> — Cursor hooks are preflight only.
+  </p>
   <div class="stats">
     <div><span>{{ connectors|length }}</span>connectors</div>
     <div><span>{{ summary.tool_calls }}</span>audited calls</div>
@@ -12,23 +15,111 @@
   </div>
 </section>
 
-<section class="filters">
-  <input id="filter-q" type="search" placeholder="Filter by name, owner, description…" />
-  <select id="filter-tier">
-    <option value="">All trust tiers</option>
-    <option>unverified</option><option>sandboxed</option><option>reviewed</option>
-    <option>certified</option><option>production_critical</option>
-  </select>
-  <select id="filter-category">
-    <option value="">All categories</option>
+<section class="filters filters-rich" id="catalog-filters">
+  <input id="filter-q" type="search" placeholder="Name, tool, owner, description…" />
+  <select id="filter-category" multiple size="1" title="Category (comma multi via API)">
+    <option value="">Category</option>
     <option>github</option><option>filesystem</option><option>git</option>
     <option>ci_cd</option><option>documentation</option><option>database</option>
     <option>observability</option><option>browser</option><option>security</option>
-    <option>compliance</option>
+    <option>compliance</option><option>cloud</option><option>kubernetes</option>
   </select>
+  <select id="filter-operation">
+    <option value="">Operation</option>
+    <option value="read">read</option>
+    <option value="write">write</option>
+    <option value="delete">delete</option>
+    <option value="external_communication">external_communication</option>
+  </select>
+  <select id="filter-tier">
+    <option value="">Trust tier</option>
+    <option value="3,4">≥ reviewed (3,4)</option>
+    <option>unverified</option><option>sandboxed</option><option>reviewed</option>
+    <option>certified</option><option>production_critical</option>
+  </select>
+  <select id="filter-environment">
+    <option value="">Environment</option>
+    <option>development</option><option>staging</option><option>production</option>
+  </select>
+  <select id="filter-health">
+    <option value="">Health</option>
+    <option value="healthy">healthy</option>
+    <option value="degraded">degraded</option>
+    <option value="unhealthy">unhealthy</option>
+  </select>
+  <select id="filter-transport">
+    <option value="">Transport</option>
+    <option>stdio</option><option>streamable_http</option><option>sse_legacy</option>
+  </select>
+  <select id="filter-sort">
+    <option value="rank">Sort: rank</option>
+    <option value="name">Sort: name</option>
+    <option value="-activity_24h">Sort: activity 24h</option>
+    <option value="-success_rate_24h">Sort: success rate</option>
+    <option value="p95_latency_ms">Sort: p95 latency</option>
+  </select>
+  <div class="view-toggle" role="group" aria-label="Catalog view">
+    <button type="button" id="view-table" class="active">Table</button>
+    <button type="button" id="view-cards">Cards</button>
+  </div>
 </section>
 
-<section class="grid" id="connector-grid">
+<p class="filter-hint">
+  API shape:
+  <code>/api/v1/connectors?category=database,observability&amp;operation=read&amp;trustTier=3,4&amp;environment=production&amp;health=healthy,degraded&amp;sort=-activity_24h</code>
+</p>
+
+<section class="catalog-table-wrap" id="catalog-table-view">
+  <table class="catalog-table" id="connector-table">
+    <thead>
+      <tr>
+        <th>Connector</th>
+        <th>Trust</th>
+        <th>Cert</th>
+        <th>Ops</th>
+        <th>Env</th>
+        <th>Health</th>
+        <th>Owner</th>
+        <th>Digest</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in connectors %}
+      <tr
+        class="catalog-row"
+        data-tier="{{ c.trust_tier.value }}"
+        data-category="{{ c.category }}"
+        data-cert="{{ c.certification_state }}"
+        data-transport="{{ c.transport }}"
+        data-classification="{{ c.data_classification }}"
+        data-envs="{{ c.allowed_environments|join(',') }}"
+        data-ops="{% for t in c.tools %}{{ t.capability.value }},{% endfor %}"
+        data-health="{{ 'healthy' if c.health.healthy else 'degraded' }}"
+        data-success="{{ c.health.success_rate_24h or 0 }}"
+        data-p95="{{ c.health.p95_latency_ms or 0 }}"
+        data-text="{{ (c.display_name + ' ' + c.slug + ' ' + c.owner_team + ' ' + c.description + ' ' + (c.tools|map(attribute='name')|list|join(' ')))|lower }}"
+      >
+        <td>
+          <a href="/connectors/{{ c.slug }}"><strong>{{ c.display_name }}</strong></a>
+          <div class="muted"><code>{{ c.slug }}@{{ c.version }}</code> · {{ c.category }}</div>
+        </td>
+        <td><span class="badge tier-{{ c.trust_tier.value }}">{{ c.trust_tier.value }}</span></td>
+        <td>{{ c.certification_state }}</td>
+        <td>R{{ c.read_tool_count }} / W{{ c.write_tool_count }} / D{{ c.delete_tool_count }}</td>
+        <td>{{ c.allowed_environments|join(', ') }}</td>
+        <td>
+          {{ 'healthy' if c.health.healthy else 'degraded' }}
+          <div class="muted">{{ ((c.health.success_rate_24h or 0) * 100)|round(1) }}% · p95 {{ c.health.p95_latency_ms }}ms</div>
+        </td>
+        <td>{{ c.owner_team }}</td>
+        <td><code>{{ c.image_digest[:18] }}…</code></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="grid is-hidden" id="connector-grid">
   {% for c in connectors %}
   <article class="card" data-tier="{{ c.trust_tier.value }}" data-category="{{ c.category }}" data-text="{{ (c.display_name + ' ' + c.slug + ' ' + c.owner_team + ' ' + c.description)|lower }}">
     <header>

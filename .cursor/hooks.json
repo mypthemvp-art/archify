@@ -1,17 +1,39 @@
 {
   "version": 1,
   "hooks": {
-    "preToolUse": [
+    "beforeMCPExecution": [
       {
-        "command": ".cursor/hooks/policy-pre-tool.mjs"
+        "command": ".cursor/hooks/preflight-mcp.mjs",
+        "timeoutSeconds": 8,
+        "failClosed": true,
+        "description": "Authorize and bind MCP calls through the registry policy gateway"
+      }
+    ],
+    "afterMCPExecution": [
+      {
+        "command": ".cursor/hooks/postflight-mcp.mjs",
+        "timeoutSeconds": 8,
+        "failClosed": false,
+        "description": "Emit MCP audit completion events"
       }
     ],
     "beforeShellExecution": [
       {
-        "command": ".cursor/hooks/policy-pre-tool.mjs"
+        "command": ".cursor/hooks/preflight-command.mjs",
+        "timeoutSeconds": 5,
+        "failClosed": true,
+        "description": "Block destructive and production infrastructure commands"
       }
     ],
-    "beforeMCPExecution": [
+    "afterShellExecution": [
+      {
+        "command": ".cursor/hooks/secret-scan-output.mjs",
+        "timeoutSeconds": 5,
+        "failClosed": false,
+        "description": "Detect accidental secret material in command output"
+      }
+    ],
+    "preToolUse": [
       {
         "command": ".cursor/hooks/policy-pre-tool.mjs"
       }
@@ -25,16 +47,7 @@
       {
         "command": ".cursor/hooks/post-tool-audit-log.mjs"
       }
-    ],
-    "afterShellExecution": [
-      {
-        "command": ".cursor/hooks/post-tool-audit-log.mjs"
-      }
-    ],
-    "afterMCPExecution": [
-      {
-        "command": ".cursor/hooks/post-tool-audit-log.mjs"
-      }
     ]
-  }
+  },
+  "_spec": "See levelupworld/registry/docs/MULTI-TENANT-DASHBOARD-SPEC.md §7 — matcher fields vary by Cursor release; keep failClosed preflight."
 }
