@@ -1,0 +1,72 @@
+{
+  "slug": "docs-fetch-search",
+  "display_name": "Documentation Fetch/Search",
+  "category": "documentation",
+  "rank": 5,
+  "description": "Search approved documentation and fetch trusted pages.",
+  "owner_team": "platform-security",
+  "escalation_contact": "secops@localhost",
+  "trust_tier": "reviewed",
+  "certification_state": "in_lab",
+  "transport": "streamable_http",
+  "version": "1.0.0",
+  "image_digest": "sha256:docs-fetch-search-dev-digest",
+  "oauth_scopes": [],
+  "outbound_domains": [
+    "docs.github.com",
+    "cursor.com",
+    "modelcontextprotocol.io"
+  ],
+  "allowed_environments": [
+    "development",
+    "staging"
+  ],
+  "data_classification": "public",
+  "tools": [
+    {
+      "name": "search_docs",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "search_docs for Documentation Fetch/Search",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "fetch_page",
+      "capability": "read",
+      "risk_level": "medium",
+      "requires_approval": false,
+      "description": "fetch_page for Documentation Fetch/Search",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Domain/egress allowlist; treat fetched content as untrusted",
+  "read_tool_count": 2,
+  "write_tool_count": 0,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:40:10.951Z"
+  },
+  "active_in_production": false
+}

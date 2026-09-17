@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Approvals · Agent-Ops{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Approval requests</h1>
+  <p>High-risk actions require a short-lived signed grant bound to exact normalized arguments. Changing any mutation-bearing argument invalidates the grant.</p>
+</section>
+<section class="panel">
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Status</th><th>Tool</th><th>Env</th><th>Args hash</th><th>Expires</th></tr>
+    </thead>
+    <tbody>
+      {% for a in approvals %}
+      <tr>
+        <td><code>{{ a.id }}</code></td>
+        <td>{{ a.status }}</td>
+        <td>{{ a.connector_slug }}.{{ a.tool_name }}</td>
+        <td>{{ a.environment }}</td>
+        <td><code>{{ a.args_hash[:20] }}…</code></td>
+        <td>{{ a.expires_at }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6">No approval requests yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

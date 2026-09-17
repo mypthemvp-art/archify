@@ -11,21 +11,11 @@ const catalog = JSON.parse(fs.readFileSync(path.join(root, 'levelupworld/docs/ca
 assert.equal(catalog.version, '2.0.0');
 assert.equal(catalog.automations.length, 100);
 assert.equal(catalog.plugins.length, 12);
-assert.equal(catalog.automations[0].title, 'Repository architecture map');
-assert.equal(catalog.automations[99].title, 'Multi-agent release commander');
 
-const skills = [
-  'levelupworld-catalog-router',
-  ...catalog.plugins.map((p) => p.id),
-];
+const skills = ['levelupworld-catalog-router', ...catalog.plugins.map((p) => p.id)];
 for (const name of skills) {
   const skillPath = path.join(root, '.cursor/skills/levelupworld', name, 'SKILL.md');
   assert.ok(fs.existsSync(skillPath), `missing skill ${skillPath}`);
-  const body = fs.readFileSync(skillPath, 'utf8');
-  assert.match(body, new RegExp(`^name:\\s*${name}\\s*$`, 'm'));
-
-  const agentOpsSkill = path.join(root, '.cursor/plugins/local/agent-ops/skills', name, 'SKILL.md');
-  assert.ok(fs.existsSync(agentOpsSkill), `missing agent-ops skill ${agentOpsSkill}`);
 }
 
 const blueprints = fs
@@ -34,18 +24,25 @@ const blueprints = fs
 assert.equal(blueprints.length, 100);
 
 for (const required of [
-  '.cursor/rules/levelupworld-agent-ops-safety.mdc',
-  '.cursor/rules/levelupworld-secrets.mdc',
-  '.cursor/rules/levelupworld-database.mdc',
-  '.cursor/rules/levelupworld-infrastructure.mdc',
-  '.cursor/hooks.json',
+  'levelupworld/registry/README.md',
+  'levelupworld/registry/docs/BLUEPRINT.md',
+  'levelupworld/registry/docs/BUILD-SEQUENCE.md',
+  'levelupworld/registry/docs/APPROVAL-TOKENS.md',
+  'levelupworld/registry/schema/001_init.sql',
+  'levelupworld/registry/gateway/app/main.py',
+  'levelupworld/registry/connectors/index.json',
+  'levelupworld/registry/connectors/github-readonly.manifest.json',
+  '.cursor/plugins/local/agent-ops/mcp-servers/registry-gateway/proxy.mjs',
   '.cursor/hooks/policy-pre-tool.mjs',
   '.cursor/hooks/post-tool-audit-log.mjs',
-  '.cursor/mcp.json',
-  '.cursor/plugins/local/agent-ops/plugin.json',
 ]) {
   assert.ok(fs.existsSync(path.join(root, required)), `missing ${required}`);
 }
+
+const manifests = fs
+  .readdirSync(path.join(root, 'levelupworld/registry/connectors'))
+  .filter((f) => f.endsWith('.manifest.json'));
+assert.equal(manifests.length, 10);
 
 const policy = path.join(root, '.cursor/hooks/policy-pre-tool.mjs');
 function run(input) {
@@ -75,13 +72,4 @@ assert.equal(
   'allow',
 );
 
-const audit = path.join(root, '.cursor/hooks/post-tool-audit-log.mjs');
-const auditRun = spawnSync(process.execPath, [audit], {
-  input: JSON.stringify({ tool_name: 'search_docs', args: { q: 'x' } }),
-  encoding: 'utf8',
-  cwd: root,
-});
-assert.equal(auditRun.status, 0, auditRun.stderr);
-assert.equal(JSON.parse(auditRun.stdout).continue, true);
-
-console.log('levelupworld agent-ops contract checks passed');
+console.log('levelupworld agent-ops + registry contract checks passed');

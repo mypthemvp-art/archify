@@ -1,0 +1,101 @@
+{
+  "slug": "git-repository",
+  "display_name": "Git Repository",
+  "category": "git",
+  "rank": 3,
+  "description": "Status, diff, log, blame, branch history.",
+  "owner_team": "developer-experience",
+  "escalation_contact": "devex@localhost",
+  "trust_tier": "certified",
+  "certification_state": "certified",
+  "transport": "stdio",
+  "version": "1.0.0",
+  "image_digest": "sha256:git-repository-dev-digest",
+  "oauth_scopes": [],
+  "outbound_domains": [],
+  "allowed_environments": [
+    "development",
+    "staging",
+    "production"
+  ],
+  "data_classification": "internal",
+  "tools": [
+    {
+      "name": "status",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "status for Git Repository",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "diff",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "diff for Git Repository",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "log",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "log for Git Repository",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "blame",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "blame for Git Repository",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Read-only first; prohibit force push and history rewrites",
+  "read_tool_count": 4,
+  "write_tool_count": 0,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:40:10.951Z"
+  },
+  "active_in_production": true
+}

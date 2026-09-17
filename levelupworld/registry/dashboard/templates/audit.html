@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Audit &amp; Evidence · Agent-Ops{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Audit and evidence</h1>
+  <p>Immutable, hash-linked events for SOC 2-style evidence, incident reconstruction, and sandbox action replay.</p>
+</section>
+<section class="panel">
+  <table>
+    <thead>
+      <tr>
+        <th>Correlation</th><th>Decision</th><th>Connector/Tool</th>
+        <th>Args hash</th><th>Redactions</th><th>Event hash</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in events %}
+      <tr>
+        <td><code>{{ e.correlation_id }}</code></td>
+        <td>{{ e.policy_decision }}</td>
+        <td>{{ e.connector_slug }}.{{ e.tool_name }}</td>
+        <td><code>{{ (e.normalized_arguments_hash or '')[:18] }}…</code></td>
+        <td>{{ e.redaction_count }}</td>
+        <td><code>{{ (e.event_hash or '')[:16] }}…</code></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6">Audit log empty.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

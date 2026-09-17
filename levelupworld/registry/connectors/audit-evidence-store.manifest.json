@@ -1,0 +1,88 @@
+{
+  "slug": "audit-evidence-store",
+  "display_name": "Audit/Evidence Store",
+  "category": "compliance",
+  "rank": 10,
+  "description": "Append audit records, retrieve evidence, attach artifact hashes.",
+  "owner_team": "compliance",
+  "escalation_contact": "compliance@localhost",
+  "trust_tier": "production_critical",
+  "certification_state": "certified",
+  "transport": "streamable_http",
+  "version": "1.0.0",
+  "image_digest": "sha256:audit-evidence-store-dev-digest",
+  "oauth_scopes": [
+    "internal:audit:append",
+    "internal:audit:read"
+  ],
+  "outbound_domains": [],
+  "allowed_environments": [
+    "development",
+    "staging",
+    "production"
+  ],
+  "data_classification": "restricted",
+  "tools": [
+    {
+      "name": "append_event",
+      "capability": "write",
+      "risk_level": "medium",
+      "requires_approval": false,
+      "description": "append_event for Audit/Evidence Store",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_evidence",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "get_evidence for Audit/Evidence Store",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "attach_artifact_hash",
+      "capability": "write",
+      "risk_level": "medium",
+      "requires_approval": false,
+      "description": "attach_artifact_hash for Audit/Evidence Store",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Append-only writes; signed/hash-linked audit records",
+  "read_tool_count": 1,
+  "write_tool_count": 2,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:40:10.951Z"
+  },
+  "active_in_production": true
+}

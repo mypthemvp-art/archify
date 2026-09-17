@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Operations · Agent-Ops{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Operations monitoring</h1>
+  <p>Tool-call volume, policy denials, approvals, latency, and budget pressure across tenants and environments.</p>
+  <div class="stats">
+    <div><span>{{ summary.tool_calls }}</span>calls</div>
+    <div><span>{{ summary.allow }}</span>allow</div>
+    <div><span>{{ summary.deny }}</span>deny</div>
+    <div><span>{{ summary.require_approval }}</span>need approval</div>
+    <div><span>{{ summary.p95_latency_ms }}ms</span>p95</div>
+  </div>
+</section>
+<section class="panel">
+  <h2>Recent gateway decisions</h2>
+  <table>
+    <thead>
+      <tr><th>Time</th><th>Decision</th><th>Connector</th><th>Tool</th><th>Actor</th><th>Latency</th></tr>
+    </thead>
+    <tbody>
+      {% for e in events %}
+      <tr>
+        <td>{{ e.timestamp }}</td>
+        <td><span class="badge decision-{{ e.policy_decision }}">{{ e.policy_decision }}</span></td>
+        <td>{{ e.connector_slug }}</td>
+        <td>{{ e.tool_name }}</td>
+        <td>{{ e.actor_id }}</td>
+        <td>{{ e.latency_ms }}ms</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6">No events yet. Call <code>POST /api/v1/gateway/invoke</code> or use the policy evaluate API.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

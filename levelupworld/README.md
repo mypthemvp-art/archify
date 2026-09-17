@@ -36,6 +36,15 @@ Governed **Cursor + Open-Source OpenAI/MCP automation catalog** for secure AI-ag
 11. Privacy Engineering Plugin
 12. Open-Source Maintenance Plugin
 
+## MCP Registry + Policy Gateway
+
+Control plane (catalog/certify) + server-side gateway (authz, approvals, redaction, budgets, audit):
+
+- Blueprint: [`registry/docs/BLUEPRINT.md`](registry/docs/BLUEPRINT.md)
+- Run: see [`registry/README.md`](registry/README.md)
+- Dashboard pages: Catalog · Test Lab · Operations · Audit · Approvals
+- Top-10 connectors: [`registry/connectors/`](registry/connectors/)
+
 ## Quick start
 
 1. Discover skills under `.cursor/skills/levelupworld/` or `.cursor/plugins/local/agent-ops/skills/`.

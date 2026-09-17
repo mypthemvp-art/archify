@@ -4,3 +4,4 @@ node_modules/
 .claude/
 .lore/
 .cursor/audit/
+levelupworld/registry/.venv/

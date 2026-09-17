@@ -1,0 +1,104 @@
+{
+  "slug": "policy-approval-gateway",
+  "display_name": "Policy + Approval Gateway",
+  "category": "security",
+  "rank": 9,
+  "description": "Policy checks, approval requests, grant verification, budget enforcement.",
+  "owner_team": "platform-security",
+  "escalation_contact": "secops@localhost",
+  "trust_tier": "production_critical",
+  "certification_state": "certified",
+  "transport": "streamable_http",
+  "version": "1.0.0",
+  "image_digest": "sha256:policy-approval-gateway-dev-digest",
+  "oauth_scopes": [
+    "internal:policy",
+    "internal:approval"
+  ],
+  "outbound_domains": [],
+  "allowed_environments": [
+    "development",
+    "staging",
+    "production"
+  ],
+  "data_classification": "restricted",
+  "tools": [
+    {
+      "name": "evaluate_policy",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "evaluate_policy for Policy + Approval Gateway",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "create_approval_request",
+      "capability": "write",
+      "risk_level": "high",
+      "requires_approval": false,
+      "description": "create_approval_request for Policy + Approval Gateway",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "verify_grant",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "verify_grant for Policy + Approval Gateway",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "check_budget",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "check_budget for Policy + Approval Gateway",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Internal authenticated service; exact-argument authorization",
+  "read_tool_count": 3,
+  "write_tool_count": 1,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:40:10.951Z"
+  },
+  "active_in_production": true
+}

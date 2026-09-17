@@ -1,5 +1,14 @@
 {
   "mcpServers": {
+    "agent-ops-gateway": {
+      "command": "node",
+      "args": [
+        ".cursor/plugins/local/agent-ops/mcp-servers/registry-gateway/proxy.mjs"
+      ],
+      "env": {
+        "AGENT_OPS_GATEWAY_URL": "${AGENT_OPS_GATEWAY_URL}"
+      }
+    },
     "filesystem-workspace": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "."]
@@ -11,28 +20,6 @@
     "memory": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-memory"]
-    },
-    "github-readonly": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_READONLY_TOKEN}"
-      }
-    },
-    "postgres-readonly": {
-      "command": "uvx",
-      "args": ["mcp-server-postgres", "--read-only"],
-      "env": {
-        "DATABASE_URL": "${POSTGRES_READONLY_URL}"
-      }
-    },
-    "policy-gateway": {
-      "command": "node",
-      "args": [".cursor/plugins/local/agent-ops/mcp-servers/policy-engine/stub-server.mjs"],
-      "env": {
-        "POLICY_MODE": "enforce",
-        "AUDIT_ENDPOINT": "${AUDIT_ENDPOINT}"
-      }
     }
   }
 }

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Connector Test Lab · Agent-Ops{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Connector test lab</h1>
+  <p>Every new connector version must pass sandbox certification before activation. Approval-binding tests deny requests when arguments change after approval.</p>
+</section>
+<section class="panel">
+  <h2>Required suites</h2>
+  <ul class="checklist">
+    <li>Schema-conformance for every MCP tool</li>
+    <li>OAuth and entitlement-negative tests</li>
+    <li>Timeout, retry, circuit-breaker, rate-limit</li>
+    <li>Prompt-injection using hostile web/document/log content</li>
+    <li>Secret and PII redaction</li>
+    <li>SQL injection, path traversal, shell injection, SSRF, unsafe URL</li>
+    <li>Idempotency verification for write actions</li>
+    <li><strong>Approval-binding:</strong> changed args after approval ⇒ deny</li>
+  </ul>
+</section>
+<section class="panel">
+  <h2>Connectors under test</h2>
+  <table>
+    <thead><tr><th>Connector</th><th>Version</th><th>State</th><th>Trust</th></tr></thead>
+    <tbody>
+      {% for c in connectors %}
+      <tr>
+        <td>{{ c.display_name }}</td>
+        <td><code>{{ c.version }}</code></td>
+        <td>{{ c.certification_state }}</td>
+        <td>{{ c.trust_tier.value }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="note">Automated lab runners land in Week 5 of the build sequence. Use <code>pytest gateway/tests</code> for gateway unit coverage now.</p>
+</section>
+{% endblock %}

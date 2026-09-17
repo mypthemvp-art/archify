@@ -1,0 +1,89 @@
+{
+  "slug": "observability-reader",
+  "display_name": "Observability Reader",
+  "category": "observability",
+  "rank": 7,
+  "description": "Metrics, logs, traces, alerts, deployment annotations.",
+  "owner_team": "sre",
+  "escalation_contact": "sre@localhost",
+  "trust_tier": "reviewed",
+  "certification_state": "in_lab",
+  "transport": "streamable_http",
+  "version": "1.0.0",
+  "image_digest": "sha256:observability-reader-dev-digest",
+  "oauth_scopes": [
+    "metrics:read",
+    "logs:read",
+    "traces:read"
+  ],
+  "outbound_domains": [],
+  "allowed_environments": [
+    "development",
+    "staging",
+    "production"
+  ],
+  "data_classification": "confidential",
+  "tools": [
+    {
+      "name": "query_metrics",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "query_metrics for Observability Reader",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "query_logs",
+      "capability": "read",
+      "risk_level": "medium",
+      "requires_approval": false,
+      "description": "query_logs for Observability Reader",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_trace",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "get_trace for Observability Reader",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Read-only; PII redaction and short result windows",
+  "read_tool_count": 3,
+  "write_tool_count": 0,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:40:10.951Z"
+  },
+  "active_in_production": false
+}

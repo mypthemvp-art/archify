@@ -1,0 +1,84 @@
+{
+  "slug": "postgres-readonly",
+  "display_name": "PostgreSQL Read-only",
+  "category": "database",
+  "rank": 6,
+  "description": "Schema inspection, EXPLAIN, bounded queries, migration metadata.",
+  "owner_team": "data-platform",
+  "escalation_contact": "data@localhost",
+  "trust_tier": "certified",
+  "certification_state": "certified",
+  "transport": "stdio",
+  "version": "1.0.0",
+  "image_digest": "sha256:postgres-readonly-dev-digest",
+  "oauth_scopes": [],
+  "outbound_domains": [],
+  "allowed_environments": [
+    "development",
+    "staging"
+  ],
+  "data_classification": "confidential",
+  "tools": [
+    {
+      "name": "list_schema",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "list_schema for PostgreSQL Read-only",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "explain_query",
+      "capability": "read",
+      "risk_level": "medium",
+      "requires_approval": false,
+      "description": "explain_query for PostgreSQL Read-only",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "bounded_select",
+      "capability": "read",
+      "risk_level": "medium",
+      "requires_approval": false,
+      "description": "bounded_select for PostgreSQL Read-only",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Read replica; strict time, row, and query limits",
+  "read_tool_count": 3,
+  "write_tool_count": 0,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:40:10.951Z"
+  },
+  "active_in_production": false
+}

@@ -1,0 +1,84 @@
+{
+  "slug": "filesystem-sandbox",
+  "display_name": "Workspace Filesystem Sandbox",
+  "category": "filesystem",
+  "rank": 2,
+  "description": "Read and search workspace; write only controlled generated artifacts.",
+  "owner_team": "developer-experience",
+  "escalation_contact": "devex@localhost",
+  "trust_tier": "certified",
+  "certification_state": "certified",
+  "transport": "stdio",
+  "version": "1.0.0",
+  "image_digest": "sha256:filesystem-sandbox-dev-digest",
+  "oauth_scopes": [],
+  "outbound_domains": [],
+  "allowed_environments": [
+    "development",
+    "staging"
+  ],
+  "data_classification": "internal",
+  "tools": [
+    {
+      "name": "read_file",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "read_file for Workspace Filesystem Sandbox",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "search_files",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "search_files for Workspace Filesystem Sandbox",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "write_artifact",
+      "capability": "write",
+      "risk_level": "medium",
+      "requires_approval": true,
+      "description": "write_artifact for Workspace Filesystem Sandbox",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Workspace-root restriction; deny parent paths, secret directories, and shell config",
+  "read_tool_count": 2,
+  "write_tool_count": 1,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:40:10.951Z"
+  },
+  "active_in_production": false
+}

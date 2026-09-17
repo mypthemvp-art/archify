@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "connectors": [
+    "github-readonly",
+    "filesystem-sandbox",
+    "git-repository",
+    "cicd-observer",
+    "docs-fetch-search",
+    "postgres-readonly",
+    "observability-reader",
+    "browser-test-runner",
+    "policy-approval-gateway",
+    "audit-evidence-store"
+  ]
+}

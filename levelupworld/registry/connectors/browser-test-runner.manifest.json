@@ -1,0 +1,87 @@
+{
+  "slug": "browser-test-runner",
+  "display_name": "Browser Test Runner",
+  "category": "browser",
+  "rank": 8,
+  "description": "Playwright e2e, accessibility checks, screenshots, test artifacts.",
+  "owner_team": "qa",
+  "escalation_contact": "qa@localhost",
+  "trust_tier": "sandboxed",
+  "certification_state": "in_lab",
+  "transport": "stdio",
+  "version": "1.0.0",
+  "image_digest": "sha256:browser-test-runner-dev-digest",
+  "oauth_scopes": [],
+  "outbound_domains": [
+    "localhost",
+    "staging.example.internal"
+  ],
+  "allowed_environments": [
+    "development",
+    "staging"
+  ],
+  "data_classification": "internal",
+  "tools": [
+    {
+      "name": "run_e2e",
+      "capability": "read",
+      "risk_level": "medium",
+      "requires_approval": false,
+      "description": "run_e2e for Browser Test Runner",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "run_a11y",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "run_a11y for Browser Test Runner",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "capture_screenshot",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "capture_screenshot for Browser Test Runner",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Staging-only target allowlist; no production credentials",
+  "read_tool_count": 3,
+  "write_tool_count": 0,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:40:10.951Z"
+  },
+  "active_in_production": false
+}

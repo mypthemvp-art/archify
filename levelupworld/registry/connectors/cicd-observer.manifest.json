@@ -1,0 +1,89 @@
+{
+  "slug": "cicd-observer",
+  "display_name": "CI/CD Observer",
+  "category": "ci_cd",
+  "rank": 4,
+  "description": "Job status, logs, test results, build artifacts.",
+  "owner_team": "platform-ci",
+  "escalation_contact": "ci@localhost",
+  "trust_tier": "reviewed",
+  "certification_state": "certified",
+  "transport": "streamable_http",
+  "version": "1.0.0",
+  "image_digest": "sha256:cicd-observer-dev-digest",
+  "oauth_scopes": [
+    "actions:read"
+  ],
+  "outbound_domains": [
+    "api.github.com"
+  ],
+  "allowed_environments": [
+    "development",
+    "staging",
+    "production"
+  ],
+  "data_classification": "internal",
+  "tools": [
+    {
+      "name": "get_job_status",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "get_job_status for CI/CD Observer",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_job_logs",
+      "capability": "read",
+      "risk_level": "medium",
+      "requires_approval": false,
+      "description": "get_job_logs for CI/CD Observer",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "list_artifacts",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "list_artifacts for CI/CD Observer",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Read-only; artifact size and retention limits",
+  "read_tool_count": 3,
+  "write_tool_count": 0,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:40:10.951Z"
+  },
+  "active_in_production": false
+}

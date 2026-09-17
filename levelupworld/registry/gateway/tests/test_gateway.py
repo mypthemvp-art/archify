@@ -1,0 +1,177 @@
+"""Unit tests for registry gateway policy, approvals, redaction, and audit chain."""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+import pytest
+from fastapi.testclient import TestClient
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "gateway"))
+
+from app.approvals import ApprovalService  # noqa: E402
+from app.main import app  # noqa: E402
+from app.models import ApprovalCreateRequest, Environment, InvokeRequest  # noqa: E402
+from app.policy import PolicyEngine  # noqa: E402
+from app.registry import Registry  # noqa: E402
+from app.security import args_hash, redact_payload  # noqa: E402
+
+
+@pytest.fixture(scope="module")
+def client():
+    return TestClient(app)
+
+
+def test_catalog_lists_ten_core_connectors(client):
+    res = client.get("/api/v1/connectors")
+    assert res.status_code == 200
+    body = res.json()
+    assert body["count"] == 10
+    slugs = {c["slug"] for c in body["connectors"]}
+    assert "github-readonly" in slugs
+    assert "policy-approval-gateway" in slugs
+    assert "audit-evidence-store" in slugs
+
+
+def test_read_only_invoke_allowed(client):
+    res = client.post(
+        "/api/v1/gateway/invoke",
+        json={
+            "actor": "user:alice",
+            "connector_slug": "github-readonly",
+            "tool_name": "get_pull_request",
+            "arguments": {"number": 1},
+            "environment": "development",
+        },
+    )
+    assert res.status_code == 200
+    body = res.json()
+    assert body["result"]["ok"] is True
+    assert body["correlation_id"]
+
+
+def test_write_requires_approval(client):
+    res = client.post(
+        "/api/v1/gateway/invoke",
+        json={
+            "actor": "user:alice",
+            "connector_slug": "filesystem-sandbox",
+            "tool_name": "write_artifact",
+            "arguments": {"path": "out/report.md", "content": "hi"},
+            "environment": "development",
+            "idempotency_key": "idem-1",
+        },
+    )
+    assert res.status_code == 401
+    assert res.json()["error"] == "approval_required"
+
+
+def test_approval_binding_rejects_changed_args(client):
+    create = client.post(
+        "/api/v1/approvals",
+        json={
+            "actor": "user:alice",
+            "environment": "staging",
+            "connector_slug": "filesystem-sandbox",
+            "connector_version": "1.0.0",
+            "tool_name": "write_artifact",
+            "plan_markdown": "Write report artifact",
+            "arguments": {"path": "out/report.md", "content": "safe"},
+            "idempotency_key": "idem-bind-1",
+            "correlation_id": "00000000-0000-0000-0000-000000000099",
+        },
+    )
+    assert create.status_code == 200
+    req_id = create.json()["id"]
+    decide = client.post(
+        f"/api/v1/approvals/{req_id}/decide",
+        json={"approver": "user:boss", "approve": True},
+    )
+    assert decide.status_code == 200
+    token = decide.json()["grant_token"]
+
+    # Same args → allow
+    ok = client.post(
+        "/api/v1/gateway/invoke",
+        json={
+            "actor": "user:alice",
+            "tenant_id": "tenant_local",
+            "project_id": "project_local",
+            "environment": "staging",
+            "connector_slug": "filesystem-sandbox",
+            "tool_name": "write_artifact",
+            "arguments": {"path": "out/report.md", "content": "safe"},
+            "idempotency_key": "idem-bind-1",
+            "approval_grant": token,
+        },
+    )
+    assert ok.status_code == 200
+
+    # Changed content → deny (args_hash mismatch)
+    create2 = client.post(
+        "/api/v1/approvals",
+        json={
+            "actor": "user:alice",
+            "environment": "staging",
+            "connector_slug": "filesystem-sandbox",
+            "connector_version": "1.0.0",
+            "tool_name": "write_artifact",
+            "plan_markdown": "Write report artifact",
+            "arguments": {"path": "out/report.md", "content": "safe"},
+            "idempotency_key": "idem-bind-2",
+            "correlation_id": "00000000-0000-0000-0000-000000000098",
+        },
+    )
+    req2 = create2.json()["id"]
+    token2 = client.post(
+        f"/api/v1/approvals/{req2}/decide",
+        json={"approver": "user:boss", "approve": True},
+    ).json()["grant_token"]
+
+    bad = client.post(
+        "/api/v1/gateway/invoke",
+        json={
+            "actor": "user:alice",
+            "tenant_id": "tenant_local",
+            "project_id": "project_local",
+            "environment": "staging",
+            "connector_slug": "filesystem-sandbox",
+            "tool_name": "write_artifact",
+            "arguments": {"path": "out/report.md", "content": "EVIL"},
+            "idempotency_key": "idem-bind-2",
+            "approval_grant": token2,
+        },
+    )
+    assert bad.status_code == 403
+    assert "args_hash mismatch" in bad.json()["detail"]
+
+
+def test_redaction_and_args_hash():
+    assert args_hash({"b": 1, "a": 2}) == args_hash({"a": 2, "b": 1})
+    redacted, count = redact_payload({"token": "abc123456", "email": "a@b.co"})
+    assert count >= 1
+    assert "abc123456" not in str(redacted)
+
+
+def test_denylist_connector():
+    reg = Registry()
+    eng = PolicyEngine(reg, ApprovalService())
+    result = eng.evaluate(
+        InvokeRequest(
+            actor="user:x",
+            connector_slug="kubectl-apply",
+            tool_name="apply",
+            arguments={},
+            environment=Environment.production,
+        )
+    )
+    assert result.decision.value == "deny"
+
+
+def test_dashboard_pages(client):
+    for path in ["/", "/lab", "/ops", "/audit", "/approvals"]:
+        res = client.get(path)
+        assert res.status_code == 200
+        assert "Agent-Ops" in res.text

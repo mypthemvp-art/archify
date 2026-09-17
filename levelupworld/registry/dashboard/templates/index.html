@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Connector Catalog · Agent-Ops{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Certified connector catalog</h1>
+  <p>Registry metadata for versions, trust, scopes, and health. Invocation decisions happen in the gateway—not in Cursor hooks alone.</p>
+  <div class="stats">
+    <div><span>{{ connectors|length }}</span>connectors</div>
+    <div><span>{{ summary.tool_calls }}</span>audited calls</div>
+    <div><span>{{ summary.deny }}</span>denials</div>
+    <div><span>{{ summary.pending_approvals }}</span>pending approvals</div>
+  </div>
+</section>
+
+<section class="filters">
+  <input id="filter-q" type="search" placeholder="Filter by name, owner, description…" />
+  <select id="filter-tier">
+    <option value="">All trust tiers</option>
+    <option>unverified</option><option>sandboxed</option><option>reviewed</option>
+    <option>certified</option><option>production_critical</option>
+  </select>
+  <select id="filter-category">
+    <option value="">All categories</option>
+    <option>github</option><option>filesystem</option><option>git</option>
+    <option>ci_cd</option><option>documentation</option><option>database</option>
+    <option>observability</option><option>browser</option><option>security</option>
+    <option>compliance</option>
+  </select>
+</section>
+
+<section class="grid" id="connector-grid">
+  {% for c in connectors %}
+  <article class="card" data-tier="{{ c.trust_tier.value }}" data-category="{{ c.category }}" data-text="{{ (c.display_name + ' ' + c.slug + ' ' + c.owner_team + ' ' + c.description)|lower }}">
+    <header>
+      <h2>{{ c.display_name }}</h2>
+      <span class="badge tier-{{ c.trust_tier.value }}">{{ c.trust_tier.value }}</span>
+    </header>
+    <p class="meta">
+      <code>{{ c.slug }}@{{ c.version }}</code>
+      · <code>{{ c.image_digest[:22] }}…</code>
+    </p>
+    <p>{{ c.description }}</p>
+    <ul class="facts">
+      <li>Cert: <strong>{{ c.certification_state }}</strong></li>
+      <li>Tools: R{{ c.read_tool_count }} / W{{ c.write_tool_count }} / D{{ c.delete_tool_count }}</li>
+      <li>Owner: {{ c.owner_team }}</li>
+      <li>Escalation: {{ c.escalation_contact }}</li>
+      <li>24h success: {{ ((c.health.success_rate_24h or 0) * 100)|round(1) }}% · p95 {{ c.health.p95_latency_ms }}ms</li>
+      <li>Prod active: {{ 'yes' if c.active_in_production else 'no' }}</li>
+    </ul>
+    <p class="safety">{{ c.safety }}</p>
+  </article>
+  {% endfor %}
+</section>
+{% endblock %}

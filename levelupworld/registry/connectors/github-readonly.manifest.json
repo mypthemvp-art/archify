@@ -1,0 +1,107 @@
+{
+  "slug": "github-readonly",
+  "display_name": "GitHub Read-only",
+  "category": "github",
+  "rank": 1,
+  "description": "Search source, inspect commits, PRs, issues, CODEOWNERS, Actions metadata.",
+  "owner_team": "platform-security",
+  "escalation_contact": "secops@localhost",
+  "trust_tier": "certified",
+  "certification_state": "certified",
+  "transport": "stdio",
+  "version": "1.0.0",
+  "image_digest": "sha256:github-readonly-dev-digest",
+  "oauth_scopes": [
+    "repo:status",
+    "public_repo",
+    "read:org"
+  ],
+  "outbound_domains": [
+    "api.github.com"
+  ],
+  "allowed_environments": [
+    "development",
+    "staging",
+    "production"
+  ],
+  "data_classification": "internal",
+  "tools": [
+    {
+      "name": "search_code",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "search_code for GitHub Read-only",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_pull_request",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "get_pull_request for GitHub Read-only",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "list_issues",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "list_issues for GitHub Read-only",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_actions_run",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "get_actions_run for GitHub Read-only",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "correlation_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Repository allowlist; read-only OAuth scopes",
+  "read_tool_count": 4,
+  "write_tool_count": 0,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:40:10.951Z"
+  },
+  "active_in_production": true
+}
