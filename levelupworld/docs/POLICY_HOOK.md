@@ -1,45 +1,46 @@
-# Pre-tool policy hook (pseudocode)
+# Pre-tool policy hook
 
 Project implementation: [`.cursor/hooks/policy-pre-tool.mjs`](../../.cursor/hooks/policy-pre-tool.mjs)  
-Wired from [`.cursor/hooks.json`](../../.cursor/hooks.json) on `preToolUse`, `beforeShellExecution`, `beforeMCPExecution`, and `beforeSubmitPrompt`.
+Post-tool audit: [`.cursor/hooks/post-tool-audit-log.mjs`](../../.cursor/hooks/post-tool-audit-log.mjs)  
+Wired from [`.cursor/hooks.json`](../../.cursor/hooks.json).
+
+## Pseudocode (catalog baseline)
+
+```ts
+export async function beforeToolCall(ctx: ToolCallContext) {
+  const risk = classifyToolRisk(ctx.tool.name, ctx.arguments);
+  denyIfContainsSecret(ctx.arguments);
+  denyIfOutsideTenantScope(ctx.identity, ctx.arguments);
+  requireReadOnlyByDefault(ctx.tool);
+  requireApprovalForMutation(ctx, risk);
+  enforceBudget(ctx.runId, { maxTools: 20, maxDurationSeconds: 900 });
+  return { allow: true, correlationId: crypto.randomUUID() };
+}
+```
+
+## Runtime behavior
 
 ```text
 on hook_event(event):
   cid ← event.correlation_id or new_uuid()
-
-  if event.command matches DENY_SHELL_PATTERNS:
-      return deny("dangerous shell", cid)
-      # examples: kubectl apply, helm upgrade, terraform apply,
-      #           DROP/TRUNCATE, force-push, curl|sh, aws iam
-
-  if event.tool_name matches DENY_TOOL_NAMES:
-      if tool is apply_* or rollback_*:
-          if has_bound_approval(event.approval):
-              # token, args_hash, tenant, environment,
-              # idempotency_key, expires_at (not expired)
-              return allow()
-          else:
-              return ask("approval required", cid)
-      else:
-          return deny("denylisted tool", cid)
-
-  if args suggest privileged prod database:
-      return ask("confirm least-privilege / replica", cid)
-
-  return allow()
+  deny if arguments embed raw secret-looking material
+  deny if shell matches kubectl apply / helm upgrade / terraform apply / DROP / force-push / curl|sh ...
+  deny absolute denylist tools (prod_shell, unrestricted_http, db_superuser, cloud_admin)
+  if mutation-shaped tool or high risk:
+      allow only with bound approval {token, args_hash, tenant, environment, idempotency_key, expires_at}
+      otherwise ask
+  ask if privileged prod database context is detected
+  allow + return correlationId
 ```
 
 ## Approval binding
 
-An approval object is valid only when all fields are present and `expires_at` is in the future:
+Valid approval objects require all of:
 
-- `token` — short-lived human approval token
-- `args_hash` — hash of the exact tool arguments
-- `tenant` — tenant binding
-- `environment` — e.g. `staging` / `production`
-- `idempotency_key` — dedupe key for the mutation
-- `expires_at` — ISO-8601 expiry
+- `token`, `args_hash`, `tenant`, `environment`, `idempotency_key`, `expires_at` (future)
 
-## Design intent
+## Audit evidence
 
-Hooks are the last line of defense inside the agent loop. They complement MCP Security Gateway allowlists and Cursor Rules; they do not replace them.
+`post-tool-audit-log.mjs` appends JSONL records under `.cursor/audit/tool-events.jsonl` with:
+
+`correlation_id`, `actor`, `tenant`, `tool`, `arguments_hash`, `approval_id`, `result_status`, `result_hash`, `evidence_uri`

@@ -1,15 +1,14 @@
 {
   "name": "secure-pr-guardian",
-  "version": "1.0.0",
-  "description": "Read-first pull request security reviews: secret scanning, vulnerability triage, API review, threat-model deltas, CI hardening, and PR risk summaries. Use when reviewing PRs for security risk or when Secure PR Guardian automations A001–A010 run.",
+  "version": "2.0.0",
+  "description": "Secure PR Guardian: Immediate leverage for every repository",
   "author": {
     "name": "LevelUpWorld"
   },
   "keywords": [
     "levelupworld",
-    "pr",
-    "security",
-    "secrets"
+    "agent-ops",
+    "secure-pr-guardian"
   ],
   "license": "MIT"
 }

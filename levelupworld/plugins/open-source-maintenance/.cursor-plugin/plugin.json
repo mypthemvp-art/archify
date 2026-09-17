@@ -1,0 +1,14 @@
+{
+  "name": "open-source-maintenance",
+  "version": "2.0.0",
+  "description": "Open-Source Maintenance Plugin: Issue/PR hygiene and dependency triage for OSS maintainers",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "agent-ops",
+    "open-source-maintenance"
+  ],
+  "license": "MIT"
+}

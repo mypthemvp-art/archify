@@ -1,0 +1,14 @@
+{
+  "name": "featureops",
+  "version": "2.0.0",
+  "description": "FeatureOps Plugin: Approval-gate rollout percentage changes",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "agent-ops",
+    "featureops"
+  ],
+  "license": "MIT"
+}

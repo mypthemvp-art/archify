@@ -1,0 +1,14 @@
+{
+  "name": "privacy-engineering",
+  "version": "2.0.0",
+  "description": "Privacy Engineering Plugin: Data-flow, retention, HIPAA, and redaction workflows",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "agent-ops",
+    "privacy-engineering"
+  ],
+  "license": "MIT"
+}

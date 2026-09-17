@@ -1,0 +1,14 @@
+{
+  "name": "accessibility-qa",
+  "version": "2.0.0",
+  "description": "Accessibility QA Plugin: Store a11y/visual/e2e artifacts as CI evidence",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "agent-ops",
+    "accessibility-qa"
+  ],
+  "license": "MIT"
+}

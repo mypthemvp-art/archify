@@ -1,56 +1,26 @@
 {
-  "name": "levelupworld",
+  "name": "levelupworld-agent-ops",
   "owner": {
     "name": "LevelUpWorld",
     "email": "security@localhost"
   },
   "metadata": {
-    "description": "Governed Cursor plugins for PR security, MCP gateway controls, production triage, database change safety, GitOps releases, and compliance evidence.",
-    "version": "1.0.0",
+    "description": "Governed Cursor plugins for secure AI-agent SaaS automations across PR security, MCP gateway, triage, database, GitOps, compliance, feature flags, a11y, repo intelligence, cost, privacy, and OSS maintenance.",
+    "version": "2.0.0",
     "pluginRoot": "levelupworld/plugins"
   },
   "plugins": [
-    {
-      "name": "secure-pr-guardian",
-      "source": "secure-pr-guardian",
-      "description": "Read-first PR security automations: secrets, vulns, API review, threat-model delta, CI hardening, risk summary.",
-      "category": "security",
-      "tags": ["pr", "security", "secrets", "levelupworld"]
-    },
-    {
-      "name": "mcp-security-gateway",
-      "source": "mcp-security-gateway",
-      "description": "Control plane for MCP allowlists, redaction, approval proxy, budgets, and injection firewall.",
-      "category": "security",
-      "tags": ["mcp", "gateway", "policy", "levelupworld"]
-    },
-    {
-      "name": "production-triage-copilot",
-      "source": "production-triage-copilot",
-      "description": "Read-only incident and CI triage with timelines, clusters, traces, SLO burn, and Kubernetes diagnostics.",
-      "category": "operations",
-      "tags": ["incident", "slo", "kubernetes", "levelupworld"]
-    },
-    {
-      "name": "database-change-guardian",
-      "source": "database-change-guardian",
-      "description": "Migration and tenant-isolation safety reviews with plan-only GitOps outputs.",
-      "category": "database",
-      "tags": ["migrations", "postgres", "tenancy", "levelupworld"]
-    },
-    {
-      "name": "gitops-release-controller",
-      "source": "gitops-release-controller",
-      "description": "Release checklist, canary analysis, rollback PR generation, provenance and drift detection.",
-      "category": "release",
-      "tags": ["gitops", "helm", "canary", "levelupworld"]
-    },
-    {
-      "name": "compliance-evidence-engine",
-      "source": "compliance-evidence-engine",
-      "description": "SOC 2, HIPAA, NIST mapping and audit evidence packs from operational artifacts.",
-      "category": "compliance",
-      "tags": ["soc2", "hipaa", "nist", "audit", "levelupworld"]
-    }
+    { "name": "secure-pr-guardian", "source": "secure-pr-guardian", "category": "security", "tags": ["levelupworld", "pr"] },
+    { "name": "mcp-security-gateway", "source": "mcp-security-gateway", "category": "security", "tags": ["levelupworld", "mcp"] },
+    { "name": "production-triage-copilot", "source": "production-triage-copilot", "category": "operations", "tags": ["levelupworld", "incident"] },
+    { "name": "database-change-guardian", "source": "database-change-guardian", "category": "database", "tags": ["levelupworld", "migrations"] },
+    { "name": "gitops-release-controller", "source": "gitops-release-controller", "category": "release", "tags": ["levelupworld", "gitops"] },
+    { "name": "compliance-evidence-engine", "source": "compliance-evidence-engine", "category": "compliance", "tags": ["levelupworld", "audit"] },
+    { "name": "featureops", "source": "featureops", "category": "product", "tags": ["levelupworld", "flags"] },
+    { "name": "accessibility-qa", "source": "accessibility-qa", "category": "quality", "tags": ["levelupworld", "a11y"] },
+    { "name": "repository-intelligence", "source": "repository-intelligence", "category": "engineering", "tags": ["levelupworld", "architecture"] },
+    { "name": "cloud-cost-governor", "source": "cloud-cost-governor", "category": "finops", "tags": ["levelupworld", "cost"] },
+    { "name": "privacy-engineering", "source": "privacy-engineering", "category": "privacy", "tags": ["levelupworld", "pii"] },
+    { "name": "open-source-maintenance", "source": "open-source-maintenance", "category": "oss", "tags": ["levelupworld", "maintenance"] }
   ]
 }

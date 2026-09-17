@@ -1,15 +1,14 @@
 {
   "name": "production-triage-copilot",
-  "version": "1.0.0",
-  "description": "Read-only production and CI triage: failed-CI analysis, incident timelines, error clustering, trace review, SLO burn analysis, and Kubernetes diagnostics. Use during incidents or automations A021–A030.",
+  "version": "2.0.0",
+  "description": "Production Triage Copilot: Read-only by default for incidents and CI failures",
   "author": {
     "name": "LevelUpWorld"
   },
   "keywords": [
     "levelupworld",
-    "incident",
-    "slo",
-    "kubernetes"
+    "agent-ops",
+    "production-triage-copilot"
   ],
   "license": "MIT"
 }

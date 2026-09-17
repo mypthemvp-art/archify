@@ -1,0 +1,14 @@
+{
+  "name": "agent-ops",
+  "version": "2.0.0",
+  "description": "LevelUpWorld agent-ops package: rules, skills, hooks, and MCP starter for secure Cursor automations.",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "agent-ops",
+    "mcp",
+    "cursor"
+  ]
+}

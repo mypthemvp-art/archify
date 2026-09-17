@@ -1,0 +1,13 @@
+{
+  "name": "agent-ops",
+  "version": "2.0.0",
+  "description": "Composable policy-gated Cursor plugin packaging LevelUpWorld rules, skills, hooks, and MCP starters.",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "agent-ops"
+  ],
+  "license": "MIT"
+}

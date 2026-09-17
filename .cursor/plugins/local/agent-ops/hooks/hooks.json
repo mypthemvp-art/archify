@@ -1,0 +1,7 @@
+{
+  "hooks": {
+    "preToolUse": [{ "command": "./hooks/pre-tool-policy-check.mjs" }],
+    "beforeShellExecution": [{ "command": "./hooks/pre-tool-policy-check.mjs" }],
+    "postToolUse": [{ "command": "./hooks/post-tool-audit-log.mjs" }]
+  }
+}

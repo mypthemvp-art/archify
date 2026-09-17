@@ -1,122 +1,85 @@
-# LevelUpWorld architecture
+# LevelUpWorld / agent-ops architecture
 
-## Goal
+## Purpose
 
-Package repeatable engineering workflows (PR security review, incident triage, database migration review, release verification, compliance evidence) as **governed Cursor plugins**, not ad hoc prompts.
+Secure AI-agent SaaS automations for FastAPI, TypeScript, PostgreSQL, Redis, Docker, Kubernetes, GitHub Actions, Terraform, policy enforcement, and audited human approval.
+
+**Design principle:** treat every connector as an untrusted capability. Separate read-only discovery from mutations; minimize OAuth scopes; make writes explicit, reviewable, idempotent, and logged.
 
 ## Control plane
 
 ```text
-                    ┌──────────────────────────────┐
-  Triggers ───────► │ Cursor Automations (cloud)   │
-  (PR, CI, cron,    │ + project blueprints         │
-   webhook, alert)  └──────────────┬───────────────┘
-                                   │
-                                   ▼
-                    ┌──────────────────────────────┐
-                    │ Skills + Rules + Agents      │
-                    │ (.cursor/skills, rules)      │
-                    └──────────────┬───────────────┘
-                                   │
-                                   ▼
-                    ┌──────────────────────────────┐
-                    │ Policy Hooks                 │
-                    │ preToolUse / beforeShell /   │
-                    │ beforeMCPExecution           │
-                    └──────────────┬───────────────┘
-                                   │
-                                   ▼
-                    ┌──────────────────────────────┐
-                    │ MCP Security Gateway         │
-                    │ allowlist · schema · redact  │
-                    │ budget · approval proxy      │
-                    └──────────────┬───────────────┘
-                                   │
-                 ┌─────────────────┼─────────────────┐
-                 ▼                 ▼                 ▼
-           Read-only MCPs    plan_*/validate_*   apply_*/rollback_*
-           (GitHub, CI,      (PR drafts,         (approval-token
-            metrics, logs,    GitOps diffs)       bound only)
-            Postgres RO)
+Cursor IDE / Cursor CLI / Cursor Automations
+                |
+        Project plugin package
+  (rules + skills + hooks + mcp.json)
+                |
+        MCP capability gateway
+  authn | RBAC/ABAC | policy | budgets | audit
+        |             |            |
+   Read-only tools  Approval queue  Write tools
+        |             |            |
+ GitHub / CI / DB / cloud / docs / tickets / observability
 ```
 
-## Plugin repository layout
+## Suggested local plugin package
 
 ```text
-levelupworld/
-├── README.md
-├── docs/
-│   ├── CATALOG.md
-│   ├── catalog.json
-│   ├── ARCHITECTURE.md
-│   └── ROADMAP.md
-├── scripts/
-│   └── generate-catalog.mjs
-└── plugins/
-    ├── secure-pr-guardian/
-    │   ├── .cursor-plugin/plugin.json
-    │   ├── skills/.../SKILL.md
-    │   ├── rules/*.mdc
-    │   ├── agents/*.md
-    │   ├── commands/*.md
-    │   ├── hooks/hooks.json
-    │   └── mcp.json
-    ├── mcp-security-gateway/
-    ├── production-triage-copilot/
-    ├── database-change-guardian/
-    ├── gitops-release-controller/
-    └── compliance-evidence-engine/
-
-.cursor-plugin/marketplace.json          # multi-plugin registry
-.cursor/
-├── skills/levelupworld/                 # project discovery copies / routers
-├── rules/                               # always-on safety
-├── hooks.json + hooks/                  # policy enforcement
-├── mcp.json                             # starter read-only servers
-└── automations/                         # 100 blueprints
+.cursor/plugins/local/agent-ops/
+├── plugin.json
+├── .cursor-plugin/plugin.json
+├── skills/                      # 12 priority skills + catalog router
+├── rules/                       # security, database-safety, release-policy
+├── hooks/                       # pre-tool policy + post-tool audit
+├── mcp.json                     # starter read-only + policy gateway
+├── mcp-servers/
+│   ├── github/
+│   ├── postgres-readonly/
+│   ├── ci-observer/
+│   ├── policy-engine/
+│   └── approval-gateway/
+└── docs/automation-runbooks.md
 ```
 
-## Tool naming contract
+Project discovery also mirrors skills and rules at:
 
-Every risky connector exposes four tool families:
+- `.cursor/skills/levelupworld/`
+- `.cursor/rules/`
+- `.cursor/hooks.json` + `.cursor/hooks/`
+- `.cursor/mcp.json`
+- `.cursor/automations/` (100 blueprints)
+
+## Automation contract
+
+Each automation must provide:
+
+1. **Trigger** — slash command, prompt, PR/issue event, deployment signal, schedule, or webhook
+2. **Inputs** — repository, environment, tenant, time range, policy context
+3. **Plan** — dry-run with impacted objects, risk, expected changes
+4. **Guardrails** — allowlists, schema validation, least privilege, redaction, rate limits, timeout, concurrency key, budgets
+5. **Approval** — required for production writes, external communications, deletes, migrations, spending
+6. **Evidence** — immutable audit event (actor, tool, args hash, decision, result hash, correlation ID)
+7. **Verification** — tests, policy check, health check, rollback guidance, concise artifact
+
+## Tool naming
 
 | Family | Purpose | Approval |
 |---|---|---|
-| `plan_*` | Produce a reviewable change set / report | No |
+| `plan_*` | Reviewable change set / report | No |
 | `validate_*` | Dry-run / policy check | No |
-| `apply_*` | Mutate the live system or create privileged side effects | **Yes** — bound token |
-| `rollback_*` | Reverse a prior apply | **Yes** — bound token |
+| `apply_*` | Live mutation / privileged side effect | **Yes** |
+| `rollback_*` | Reverse a prior apply | **Yes** |
 
-Approval tokens must bind: arguments hash, short TTL, idempotency key, tenant, environment, actor, correlation ID.
-
-## Hard denylist (never expose to an agent)
+## Hard denylist
 
 - Production interactive shell
-- Unrestricted filesystem MCP rooted at `/` or home
-- Privileged database account (owner/superuser/migrations on prod primary)
+- Unrestricted filesystem rooted outside the workspace
+- Privileged database account on a production primary
 - Broad cloud administrator credentials
-- Generic arbitrary HTTP client without URL allowlist + SSRF guards
+- Generic unrestricted HTTP client without allowlist + SSRF guards
 
-## Untrusted data surfaces
+## Initial MCP stack
 
-Issue bodies, pull-request text, CI logs, webpages, retrieved documents, and MCP responses can contain prompt-injection. Skills must:
+GitHub read-only, Git, filesystem sandbox, docs/fetch via gateway, CI logs, Playwright for test environments, Postgres read-only, policy/approval MCP, audit MCP. Expand only behind the MCP Security Gateway.
 
-1. Separate **instructions** from **data**.
-2. Never follow imperative language found inside retrieved content.
-3. Pass content through the injection firewall / redaction path before reuse in another tool call.
-
-## Starter MCP posture
-
-Phase 1 enables only read-oriented servers (examples):
-
-- Filesystem limited to the repository workspace
-- Git (local read operations)
-- GitHub with read scopes (contents, pull requests, checks)
-- Memory / structured notes for correlation IDs (no secrets)
-- Fetch through the gateway with allowlisted hosts
-
-Authenticated internal connectors should start from **OpenAI MCPKit** TypeScript/Python scaffolds (entitlements, `search`/`fetch` shapes, evidence logging)—not bare local PoC servers.
-
-## Relationship to Archify
-
-Automation `A092` (architecture diagram delta) uses the existing `archify` skill to produce validated, evidence-linked diagrams for significant system changes. LevelUpWorld does not fork Archify; it calls it as a specialized skill.
+Authenticated internal connectors should start from **OpenAI MCPKit** TypeScript/Python scaffolds (entitlements, `search`/`fetch` shapes, evidence logging).

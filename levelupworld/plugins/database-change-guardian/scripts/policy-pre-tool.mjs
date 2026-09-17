@@ -9,10 +9,7 @@ const repoPolicy = path.resolve(
   '../../../../.cursor/hooks/policy-pre-tool.mjs',
 );
 const body = fs.readFileSync(0, 'utf8');
-const result = spawnSync(process.execPath, [repoPolicy], {
-  input: body,
-  encoding: 'utf8',
-});
+const result = spawnSync(process.execPath, [repoPolicy], { input: body, encoding: 'utf8' });
 process.stdout.write(result.stdout || '');
 process.stderr.write(result.stderr || '');
 process.exit(result.status ?? 1);

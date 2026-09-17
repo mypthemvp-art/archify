@@ -1,48 +1,50 @@
-# LevelUpWorld
+# LevelUpWorld / agent-ops
 
-Governed **Cursor automations platform** for this repository: 100 narrowly scoped automation blueprints composed from MCP connectors, Cursor Rules / Skills / Hooks / Plugins, and approval-gated operational workflows.
+Governed **Cursor + Open-Source OpenAI/MCP automation catalog** for secure AI-agent SaaS development.
 
-The strongest approach is **not** to install 100 broad-permission tools at once. Build a small plugin platform that composes least-privilege capabilities behind an MCP Security Gateway.
+**Design principle:** treat every connector as an untrusted capability. Separate read-only discovery from mutations; minimize OAuth scopes; make writes explicit, reviewable, idempotent, and logged.
 
-## What landed in this repo
+## What landed
 
 | Path | Purpose |
 |---|---|
-| [`docs/CATALOG.md`](docs/CATALOG.md) | Full 100-automation catalog |
-| [`docs/catalog.json`](docs/catalog.json) | Machine-readable catalog |
-| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Recommended architecture + plugin layout |
-| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Four-phase implementation plan + definition of done |
-| [`docs/POLICY_HOOK.md`](docs/POLICY_HOOK.md) | Pre-tool policy-hook pseudocode + approval binding |
-| [`plugins/`](plugins/) | Six highest-priority Cursor plugins |
-| [`.cursor-plugin/marketplace.json`](../.cursor-plugin/marketplace.json) | Multi-plugin marketplace manifest |
+| [`docs/CATALOG.md`](docs/CATALOG.md) | Exact 100 automation blueprints |
+| [`docs/catalog.json`](docs/catalog.json) | Machine-readable catalog v2 |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Control plane + plugin layout |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Four-phase plan + definition of done |
+| [`docs/POLICY_HOOK.md`](docs/POLICY_HOOK.md) | Pre-tool policy pseudocode |
+| [`plugins/`](plugins/) | Twelve priority Cursor plugins |
+| [`.cursor/plugins/local/agent-ops/`](../.cursor/plugins/local/agent-ops/) | Packaged local plugin (rules/skills/hooks/mcp-servers) |
 | [`.cursor/skills/levelupworld/`](../.cursor/skills/levelupworld/) | Project skill instruction routines |
 | [`.cursor/rules/`](../.cursor/rules/) | Mandatory safety Rules |
-| [`.cursor/hooks.json`](../.cursor/hooks.json) + [`hooks/`](../.cursor/hooks/) | Pre-tool policy hooks |
-| [`.cursor/mcp.json`](../.cursor/mcp.json) | Starter read-only MCP configuration |
-| [`.cursor/automations/`](../.cursor/automations/) | 100 automation blueprints (config-as-code ready) |
+| [`.cursor/hooks.json`](../.cursor/hooks.json) | Policy + audit hooks |
+| [`.cursor/mcp.json`](../.cursor/mcp.json) | Starter read-only + policy MCP config |
+| [`.cursor/automations/`](../.cursor/automations/) | 100 automation blueprints |
 
-## Highest-priority plugins
+## Build the 12 plugins first
 
-1. **Secure PR Guardian** — secret scan, vuln triage, API review, threat-model delta, CI hardening, PR risk summary
-2. **MCP Security Gateway** — permission lint, redaction, approval proxy, spend governor, injection firewall, replay harness
-3. **Production Triage Copilot** — failed-CI, incident timeline, error clustering, traces, SLO burn, K8s diagnostics
-4. **Database Change Guardian** — tenant isolation, slow queries, migration safety, backup evidence, retention
-5. **GitOps Release Controller** — release checklist, canary, rollback PRs, provenance, Helm readiness, drift
-6. **Compliance Evidence Engine** — SOC 2 / HIPAA / NIST mapping, access reviews, vendor assessments, remediation tracking
+1. Secure PR Guardian
+2. MCP Security Gateway *(before broad connectors)*
+3. Production Triage Copilot
+4. Database Change Guardian
+5. GitOps Release Controller
+6. Compliance Evidence Engine
+7. FeatureOps Plugin
+8. Accessibility QA Plugin
+9. Repository Intelligence Plugin
+10. Cloud Cost Governor
+11. Privacy Engineering Plugin
+12. Open-Source Maintenance Plugin
 
-## Quick start for agents
+## Quick start
 
-1. Discover skills under `.cursor/skills/levelupworld/` (catalog router + six priority skills).
-2. Obey always-on Rules in `.cursor/rules/levelupworld-*.mdc`.
-3. For a scheduled/event workflow, open the matching blueprint in `.cursor/automations/aNNN-*.md` and follow its mutation class (`none` / `plan` / `apply`).
-4. Prefer Archify (`archify` skill) when an automation needs an architecture / workflow / incident diagram (`A092`).
-
-## Regenerate catalog
+1. Discover skills under `.cursor/skills/levelupworld/` or `.cursor/plugins/local/agent-ops/skills/`.
+2. Obey Rules in `.cursor/rules/` (also mirrored under `agent-ops/rules/`).
+3. Open a blueprint in `.cursor/automations/` and create a Cursor Automation via `/automate`.
+4. Keep secrets in OS keychain / Vault / CI — never commit them.
 
 ```bash
 node levelupworld/scripts/generate-catalog.mjs
+node levelupworld/scripts/scaffold-plugins.mjs
+node levelupworld/scripts/check-contract.mjs
 ```
-
-## Sources (research baseline)
-
-Cursor automations / skills / hooks / plugins docs; OpenAI MCPKit authenticated scaffolds; official MCP reference servers. MCP standardizes the tool interface but does **not** make a connector safe—permissions, validation, approval gates, logging, and hostile-content handling remain our responsibility.

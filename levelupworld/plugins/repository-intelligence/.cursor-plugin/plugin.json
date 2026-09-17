@@ -1,0 +1,14 @@
+{
+  "name": "repository-intelligence",
+  "version": "2.0.0",
+  "description": "Repository Intelligence Plugin: Architecture, debt, docs, and onboarding intelligence",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "agent-ops",
+    "repository-intelligence"
+  ],
+  "license": "MIT"
+}

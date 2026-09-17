@@ -1,9 +1,7 @@
 # MCP Security Gateway
 
-LevelUpWorld Cursor plugin (`mcp-security-gateway`).
+LevelUpWorld / agent-ops plugin (`mcp-security-gateway`).
 
 - Skill: `skills/mcp-security-gateway/SKILL.md`
-- Automations: A011–A020 (see `../../docs/CATALOG.md`)
-- Safety rule: `rules/safety.mdc`
-
-Install via the repository marketplace manifest at `.cursor-plugin/marketplace.json`, or use the mirrored project skill under `.cursor/skills/levelupworld/mcp-security-gateway/`.
+- Automations: A091, A092, A093, A094, A095, A096, A097, A098, A099
+- Also mirrored at `.cursor/skills/levelupworld/mcp-security-gateway/` and packaged under `.cursor/plugins/local/agent-ops/`

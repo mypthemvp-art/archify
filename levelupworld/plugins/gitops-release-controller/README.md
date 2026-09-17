@@ -1,9 +1,7 @@
 # GitOps Release Controller
 
-LevelUpWorld Cursor plugin (`gitops-release-controller`).
+LevelUpWorld / agent-ops plugin (`gitops-release-controller`).
 
 - Skill: `skills/gitops-release-controller/SKILL.md`
-- Automations: A041–A050 (see `../../docs/CATALOG.md`)
-- Safety rule: `rules/safety.mdc`
-
-Install via the repository marketplace manifest at `.cursor-plugin/marketplace.json`, or use the mirrored project skill under `.cursor/skills/levelupworld/gitops-release-controller/`.
+- Automations: A036, A037, A038, A039, A070, A075, A076, A077, A078, A079, A100
+- Also mirrored at `.cursor/skills/levelupworld/gitops-release-controller/` and packaged under `.cursor/plugins/local/agent-ops/`

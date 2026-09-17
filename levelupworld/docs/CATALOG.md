@@ -1,233 +1,157 @@
-# LevelUpWorld — 100 Cursor Automations Catalog
+# Cursor + Open-Source OpenAI/MCP Automation Catalog
 
-> Implementation-oriented catalog for a small, governed plugin platform that composes narrowly scoped MCP capabilities with Cursor Rules, Skills, Hooks, Plugins, and approval-gated Automations.
+## Purpose
 
-Generated from `scripts/generate-catalog.mjs` · version 1.0.0 · 100 automations
+This catalog proposes **100 production-oriented automations** for Cursor using MCP connectors, Cursor plugins, rules, skills, hooks, and scheduled/event-driven automations. It is designed for secure AI-agent SaaS development: FastAPI, TypeScript, PostgreSQL, Redis, Docker, Kubernetes, GitHub Actions, Terraform, policy enforcement, and audited human approval.
 
-## How to use this catalog
+**Important design principle:** Treat every connector as an untrusted capability. Separate read-only discovery from mutations; minimize OAuth scopes; make writes explicit, reviewable, idempotent, and logged.
 
-- Do **not** install 100 broad-permission tools at once.
-- Build the six highest-priority plugins first; keep later connectors behind the MCP Security Gateway.
-- Start every workflow as read-only discovery; only `apply_*` tools may mutate, and only with a bound human approval.
-- Wire skills under `.cursor/skills/levelupworld/` and automation blueprints under `.cursor/automations/`.
+Generated version `2.0.0` · 100 automations
+
+## Automation contract
+
+1. **Trigger** — slash command, prompt, PR/issue event, deployment signal, schedule, or webhook
+2. **Inputs** — repository, environment, tenant, time range, and policy context
+3. **Plan** — structured dry-run output with impacted objects, risk, and expected changes
+4. **Guardrails** — allowlists, schema validation, least privilege, secret redaction, rate limits, timeout, concurrency key, and cost/token budget
+5. **Approval** — required for production writes, external communications, deletes, migrations, or spending
+6. **Evidence** — immutable audit event containing actor, tool, arguments hash, decision, result hash, and correlation ID
+7. **Verification** — tests, policy check, health check, rollback guidance, and a concise artifact
+
+## The 12 plugins to build first
+
+| Priority | Plugin | Automations | Why |
+|---:|---|---|---|
+| 1 | Secure PR Guardian (`secure-pr-guardian`) | A003, A004, A007, A011, A021, A026, A031, A068 | Immediate leverage for every repository |
+| 2 | MCP Security Gateway (`mcp-security-gateway`) | A091, A092, A093, A094, A095, A096, A097, A098, A099 | Build before enabling broad third-party connectors |
+| 3 | Production Triage Copilot (`production-triage-copilot`) | A024, A040, A041, A042, A043, A044, A045, A046, A074 | Read-only by default for incidents and CI failures |
+| 4 | Database Change Guardian (`database-change-guardian`) | A010, A046, A047, A048, A049 | Require explicit approval for all schema writes |
+| 5 | GitOps Release Controller (`gitops-release-controller`) | A036, A037, A038, A039, A070, A075, A076, A077, A078, A079, A100 | Separate plan from execution for releases |
+| 6 | Compliance Evidence Engine (`compliance-evidence-engine`) | A080, A081, A082, A083, A084, A085, A086, A087, A088, A089, A090 | Map control -> evidence source -> freshness -> owner |
+| 7 | FeatureOps Plugin (`featureops`) | A053, A054 | Approval-gate rollout percentage changes |
+| 8 | Accessibility QA Plugin (`accessibility-qa`) | A055, A056, A057 | Store a11y/visual/e2e artifacts as CI evidence |
+| 9 | Repository Intelligence Plugin (`repository-intelligence`) | A001, A002, A022, A029, A030, A058, A060 | Architecture, debt, docs, and onboarding intelligence |
+| 10 | Cloud Cost Governor (`cloud-cost-governor`) | A045, A069, A071, A072, A073 | Recommendations only until measured savings are proven |
+| 11 | Privacy Engineering Plugin (`privacy-engineering`) | A005, A049, A051, A082, A084, A095 | Data-flow, retention, HIPAA, and redaction workflows |
+| 12 | Open-Source Maintenance Plugin (`open-source-maintenance`) | A013, A061, A062, A063, A064, A065, A066, A067, A088 | Issue/PR hygiene and dependency triage for OSS maintainers |
+
+## 100 automation blueprints
+
+| # | ID | Automation | Trigger | Connector / plugin capability | Output and guardrail | Mutation | Primary plugin |
+|---:|---|---|---|---|---|---|---|
+| 1 | A001 | Repository architecture map | On demand or weekly | filesystem, git, GitHub | Mermaid/Archify map + ownership; read-only | `none` | `repository-intelligence` |
+| 2 | A002 | Dependency inventory | On commit | filesystem, package registries | SBOM diff; no writes | `none` | `repository-intelligence` |
+| 3 | A003 | License compliance gate | PR opened | dependency scanner, policy MCP | Pass/fail report; block restricted licenses | `none` | `secure-pr-guardian` |
+| 4 | A004 | Secret exposure scan | PR opened | git, secret scanner | Findings + revoke checklist; never echo secrets | `none` | `secure-pr-guardian` |
+| 5 | A005 | PII data-flow mapper | Weekly | code search, docs, database schema read | DFD and risk register; read-only | `none` | `privacy-engineering` |
+| 6 | A006 | Threat-model generator | Feature branch | filesystem, memory, policy | STRIDE document; human review required | `plan` | `unassigned` |
+| 7 | A007 | Secure API endpoint review | PR opened | GitHub, filesystem, policy | Auth/input/rate-limit checklist | `none` | `secure-pr-guardian` |
+| 8 | A008 | Authentication regression audit | PR opened | test runner, code search | Test plan and failures; no deployment | `none` | `unassigned` |
+| 9 | A009 | RBAC policy diff reviewer | Policy change | policy engine, git | Permission delta; approval for privilege expansion | `plan` | `unassigned` |
+| 10 | A010 | Tenant-isolation test builder | Schema or API change | Postgres read, test runner | Generated tests; sanitize tenant IDs | `plan` | `database-change-guardian` |
+| 11 | A011 | OWASP change review | PR opened | GitHub, code scan | Ranked remediation plan | `plan` | `secure-pr-guardian` |
+| 12 | A012 | CSP/header verifier | CI failed or PR | browser/test, config reader | Header evidence; no production mutation | `none` | `unassigned` |
+| 13 | A013 | Dependency vulnerability triage | Daily | GitHub advisories, SBOM | Prioritized issue drafts; approval to create issues | `plan` | `open-source-maintenance` |
+| 14 | A014 | Container hardening audit | Dockerfile changed | filesystem, image scanner | Base-image and privilege findings | `none` | `unassigned` |
+| 15 | A015 | Kubernetes manifest review | Manifest changed | filesystem, policy engine | Admission-style violations; deny dangerous defaults | `none` | `unassigned` |
+| 16 | A016 | Terraform plan reviewer | Plan artifact ready | Terraform plan reader, policy | Resource blast-radius summary; no apply | `none` | `unassigned` |
+| 17 | A017 | IAM least-privilege analyzer | Weekly | cloud read API, policy | Unused/excess grants; approval for revoke | `plan` | `unassigned` |
+| 18 | A018 | Key-rotation tracker | Daily | vault read metadata, ticketing | Rotation calendar; no secret values | `none` | `unassigned` |
+| 19 | A019 | Audit-log completeness test | CI | application tests, database read | Missing event coverage report | `none` | `unassigned` |
+| 20 | A020 | Cryptographic signing verifier | Release candidate | git, CI, key metadata | Signature/attestation status | `none` | `unassigned` |
+| 21 | A021 | PR summary and risk score | PR opened/updated | GitHub, git, code analysis | Summary, risk, tests, owners; read-only | `none` | `secure-pr-guardian` |
+| 22 | A022 | Change-impact explorer | On demand | git, code graph, GitHub | Callers, services, migrations, dashboards | `none` | `repository-intelligence` |
+| 23 | A023 | Reviewer recommender | PR opened | CODEOWNERS, git blame, GitHub | Suggested reviewers; no automatic assignment by default | `none` | `unassigned` |
+| 24 | A024 | Failing-test root-cause assistant | CI failure | CI logs, git diff, test artifacts | Ranked hypotheses with evidence | `none` | `production-triage-copilot` |
+| 25 | A025 | Flaky-test detector | Nightly | CI history, test artifacts | Flake score and quarantine proposal | `plan` | `unassigned` |
+| 26 | A026 | Test-gap generator | PR opened | coverage, filesystem | Missing unit/integration/e2e test suggestions | `plan` | `secure-pr-guardian` |
+| 27 | A027 | Snapshot-change explainer | PR opened | git, test artifacts | Semantic diff; require review of snapshots | `none` | `unassigned` |
+| 28 | A028 | Build-time regression investigator | CI trend | CI metrics, git history | Suspect changes and optimization plan | `plan` | `unassigned` |
+| 29 | A029 | Code-quality debt radar | Weekly | static analysis, GitHub | Ranked refactor backlog | `plan` | `repository-intelligence` |
+| 30 | A030 | Dead-code candidate report | Weekly | code graph, coverage | Candidate list; never auto-delete | `plan` | `repository-intelligence` |
+| 31 | A031 | API breaking-change detector | PR opened | OpenAPI, git | Versioning/migration guidance | `none` | `secure-pr-guardian` |
+| 32 | A032 | OpenAPI contract test generator | API spec changed | OpenAPI, test runner | Tests and negative-case coverage | `plan` | `unassigned` |
+| 33 | A033 | SDK regeneration assistant | API spec merged | OpenAPI generator, GitHub | PR draft; approval to create/update branch | `plan` | `unassigned` |
+| 34 | A034 | Changelog composer | Release candidate | git, PR labels, issues | Human-readable release notes | `plan` | `unassigned` |
+| 35 | A035 | Semantic version adviser | Release candidate | git, API diff | Proposed version with rationale | `plan` | `unassigned` |
+| 36 | A036 | Release checklist executor | Tag proposed | GitHub, CI, policy, docs | Gated checklist; no tag/publish without approval | `plan` | `gitops-release-controller` |
+| 37 | A037 | Canary-analysis report | Deployment event | metrics, logs, traces | Compare baseline/canary; rollback recommendation | `plan` | `gitops-release-controller` |
+| 38 | A038 | Rollback-plan generator | Deploy request | GitOps, CI, cloud read | Exact rollback steps; approval before execution | `plan` | `gitops-release-controller` |
+| 39 | A039 | Post-release verifier | Deployment completed | health checks, metrics, logs | SLO and error-budget validation | `none` | `gitops-release-controller` |
+| 40 | A040 | Incident timeline constructor | Incident webhook | Slack/alerts/logs/traces | Timestamped chronology; redact PII | `none` | `production-triage-copilot` |
+| 41 | A041 | Error-cluster triage | New error spike | Sentry/observability, GitHub | Grouped fingerprints and likely owner | `none` | `production-triage-copilot` |
+| 42 | A042 | Log-to-code correlation | Alert fired | logs, traces, git | Relevant commit/PR candidates | `none` | `production-triage-copilot` |
+| 43 | A043 | Distributed-trace explainer | On demand | tracing backend | Critical path and latency bottleneck | `none` | `production-triage-copilot` |
+| 44 | A044 | SLO burn-rate responder | Burn alert | metrics, runbooks, paging | Evidence-based mitigation plan; no auto-page externally | `plan` | `production-triage-copilot` |
+| 45 | A045 | Capacity forecast | Weekly | metrics, cost data | Utilization forecast and scale recommendations | `plan` | `production-triage-copilot` |
+| 46 | A046 | Database slow-query review | Daily | Postgres read-only, telemetry | Query plan findings; approval for indexes | `plan` | `production-triage-copilot` |
+| 47 | A047 | Migration safety analyzer | Migration PR | Postgres schema, migration files | Lock/rollback/backfill assessment | `plan` | `database-change-guardian` |
+| 48 | A048 | Backup-restore drill assistant | Monthly | backup metadata, runbook, CI sandbox | Drill report; isolate test restore environment | `plan` | `database-change-guardian` |
+| 49 | A049 | Data-retention enforcement audit | Weekly | schemas, object storage metadata, policy | Expired-data exceptions report | `none` | `database-change-guardian` |
+| 50 | A050 | Data-quality anomaly detector | Scheduled | warehouse/read replica, metrics | Anomaly report; no destructive repair | `none` | `unassigned` |
+| 51 | A051 | Product telemetry schema reviewer | Event schema change | analytics schema, privacy policy | PII/minimization review | `none` | `privacy-engineering` |
+| 52 | A052 | Funnel regression investigator | Metric alert | analytics read, deployments | Correlated release and segment analysis | `none` | `unassigned` |
+| 53 | A053 | Feature-flag hygiene bot | Weekly | Unleash/flag service, GitHub | Stale flag list and removal PR draft | `plan` | `featureops` |
+| 54 | A054 | Experiment analysis brief | Experiment completed | analytics read, flag platform | Guardrail metrics + decision template | `plan` | `featureops` |
+| 55 | A055 | UX accessibility test runner | PR opened | Playwright, axe, browser | WCAG-oriented findings with screenshots/artifacts | `none` | `accessibility-qa` |
+| 56 | A056 | Visual-regression review | UI PR | Playwright, visual baseline | Diff review; approval to update baseline | `plan` | `accessibility-qa` |
+| 57 | A057 | Browser e2e journey executor | Nightly | Playwright/browser MCP | Journey result and failure artifacts | `none` | `accessibility-qa` |
+| 58 | A058 | Documentation drift detector | Weekly | code, docs, OpenAPI | Drift report and suggested patches | `plan` | `repository-intelligence` |
+| 59 | A059 | Runbook quality reviewer | Incident closed | docs, incident artifacts | Missing diagnosis/rollback/escalation steps | `plan` | `unassigned` |
+| 60 | A060 | Developer onboarding guide generator | Repo bootstrap | filesystem, GitHub, docs | Setup guide validated against CI | `plan` | `repository-intelligence` |
+| 61 | A061 | Issue intake classifier | New GitHub issue | GitHub, policy, memory | Labels, severity, reproduction prompts; no auto-close | `plan` | `open-source-maintenance` |
+| 62 | A062 | Issue-to-implementation planner | Approved issue | GitHub, code graph | Scoped plan, files, tests, risks | `plan` | `open-source-maintenance` |
+| 63 | A063 | PR-to-issue linker | PR opened | GitHub | Missing references and release impact | `plan` | `open-source-maintenance` |
+| 64 | A064 | Stale-PR caretaker | Daily | GitHub | Status summary; approval to comment/close | `plan` | `open-source-maintenance` |
+| 65 | A065 | Merge-conflict resolver draft | Conflict detected | git, GitHub, CI | Candidate resolution branch; never force-push | `plan` | `open-source-maintenance` |
+| 66 | A066 | Commit-message policy bot | Commit/PR | git, policy | Conventional-commit validation | `none` | `open-source-maintenance` |
+| 67 | A067 | Repository housekeeping | Weekly | GitHub, git | Branch/artifact cleanup proposal; approval for deletion | `plan` | `open-source-maintenance` |
+| 68 | A068 | CI workflow hardening review | Workflow change | GitHub Actions, policy | Pinning, permissions, provenance findings | `none` | `secure-pr-guardian` |
+| 69 | A069 | CI cost optimizer | Weekly | CI metrics/billing, workflows | Cache/parallelism/right-sizing plan | `plan` | `cloud-cost-governor` |
+| 70 | A070 | Supply-chain provenance verifier | Release candidate | CI attestations, registry | SBOM, signatures, provenance status | `none` | `gitops-release-controller` |
+| 71 | A071 | Cloud cost anomaly triage | Daily | cloud billing read, metrics | Cost drivers and remediation candidates | `plan` | `cloud-cost-governor` |
+| 72 | A072 | Resource-rightsizing planner | Weekly | cloud metrics, IaC | CPU/memory recommendations; no automatic resize | `plan` | `cloud-cost-governor` |
+| 73 | A073 | Orphan-resource detector | Weekly | cloud inventory, IaC state | Candidate cleanup plan; human approval needed | `plan` | `cloud-cost-governor` |
+| 74 | A074 | Kubernetes event triage | Cluster alert | Kubernetes read, logs, metrics | Pod/node/event diagnosis; read-only | `none` | `production-triage-copilot` |
+| 75 | A075 | Helm upgrade readiness | Release candidate | Helm diff, cluster read, policy | Compatibility/risk report | `none` | `gitops-release-controller` |
+| 76 | A076 | GitOps drift detector | Scheduled | cluster read, Git repo | Drift evidence and reconciliation PR suggestion | `plan` | `gitops-release-controller` |
+| 77 | A077 | Certificate-expiry responder | Daily | cert metadata, ticketing | Renewal timeline; no key material exposure | `plan` | `gitops-release-controller` |
+| 78 | A078 | DNS/edge configuration audit | Weekly | cloud edge read, policy | TLS/cache/WAF/security finding list | `none` | `gitops-release-controller` |
+| 79 | A079 | Disaster-recovery readiness score | Monthly | backups, IaC, runbooks, CI | RTO/RPO evidence scorecard | `none` | `gitops-release-controller` |
+| 80 | A080 | Compliance evidence collector | Scheduled | GitHub, CI, cloud, policy | Control-to-evidence package; immutable indexing | `none` | `compliance-evidence-engine` |
+| 81 | A081 | SOC 2 control monitor | Weekly | policy, CI, identity/cloud read | Exception dashboard and owner routing | `none` | `compliance-evidence-engine` |
+| 82 | A082 | HIPAA safeguards checker | Scheduled | data flows, access logs, policy | Safeguard gaps; no PHI extraction | `none` | `compliance-evidence-engine` |
+| 83 | A083 | NIST control mapping assistant | Release/assessment | policy library, system inventory | Mapped controls and evidence gaps | `none` | `compliance-evidence-engine` |
+| 84 | A084 | Privacy request workflow coordinator | Ticket opened | ticketing, data inventory, approval | Data-location plan; approval for disclosure/deletion | `plan` | `compliance-evidence-engine` |
+| 85 | A085 | Access-review campaign assistant | Quarterly | IAM read, HR directory read | Reviewer packets; approval before revocations | `plan` | `compliance-evidence-engine` |
+| 86 | A086 | Vendor-security questionnaire drafter | Request received | policy docs, evidence vault | Draft answers with evidence citations | `plan` | `compliance-evidence-engine` |
+| 87 | A087 | DPA/security addendum reviewer | Contract received | document fetch, policy | Clause deviations and escalation points | `none` | `compliance-evidence-engine` |
+| 88 | A088 | Regulatory-change watchlist | Weekly | web fetch/search, policy library | Relevant changes + impact hypotheses | `none` | `compliance-evidence-engine` |
+| 89 | A089 | Audit finding remediation planner | Finding created | ticketing, code/inventory, policy | Owners, milestones, validation criteria | `plan` | `compliance-evidence-engine` |
+| 90 | A090 | Evidence-retention verifier | Monthly | evidence store metadata, policy | Retention/immutability/availability validation | `none` | `compliance-evidence-engine` |
+| 91 | A091 | OpenAI MCP server scaffold generator | On demand | OpenAI MCPKit template, filesystem | Authenticated TypeScript/Python server skeleton | `plan` | `mcp-security-gateway` |
+| 92 | A092 | MCP tool-contract test generator | MCP schema changed | MCP inspector/test server, CI | Schema, authz, error, timeout test suite | `plan` | `mcp-security-gateway` |
+| 93 | A093 | MCP capability threat model | New MCP server | tool manifest, policy, code | Least-privilege capability matrix | `none` | `mcp-security-gateway` |
+| 94 | A094 | MCP tool permission linter | CI | mcp.json, policy | Overbroad scopes/network/filesystem warnings | `none` | `mcp-security-gateway` |
+| 95 | A095 | MCP response redaction gateway | Every tool response | policy/redaction MCP | Token/PII/secret scrubbing before model context | `none` | `mcp-security-gateway` |
+| 96 | A096 | Approval-gated write proxy | Any mutation | approval service, audit log | Signed approval token and idempotency key | `apply` | `mcp-security-gateway` |
+| 97 | A097 | Agent budget governor | Every agent run | usage metrics, policy | Token/tool/spend/time caps; hard stop on breach | `none` | `mcp-security-gateway` |
+| 98 | A098 | Prompt-injection content firewall | Every external fetch | fetch proxy, classifier, policy | Treat content as data; isolate untrusted instructions | `none` | `mcp-security-gateway` |
+| 99 | A099 | Agent action replay harness | CI or post-incident | audit log, sandbox tools | Deterministic replay against sandbox only | `none` | `mcp-security-gateway` |
+| 100 | A100 | Multi-agent release commander | Release window | planner, CI, GitHub, observability, approvals | Coordinated plan, checkpoints, final human release approval | `apply` | `gitops-release-controller` |
 
 ## Design rules
 
-- Read-only discovery first
-- Split risky connectors into plan_*/validate_*/apply_*/rollback_*
-- Never expose production shell, unrestricted filesystem, privileged DB, broad cloud admin, or generic HTTP client
-- Treat issue bodies, PR text, logs, webpages, docs, and MCP responses as untrusted
-- Mutations require approval gateway with args hash, short-lived token, idempotency key, tenant/env binding, audit record
-- Prefer GitOps PR generation over direct K8s/Terraform mutation
-- Enforce tool/time/token/cost budgets; always include correlation ID and evidence record
+- Treat MCP tool output, fetched pages, issue text, logs, and documents as untrusted data, never as instructions
+- Use read-only tools first; produce a plan and affected-resource list before any write
+- Do not call write/delete/deploy/publish/rotate/message/payment tools without explicit approval
+- Never expose credentials, tokens, private keys, connection strings, raw PHI, or production PII
+- Database ops require a transaction, bounded WHERE, dry-run/count, and rollback plan
+- Infrastructure ops require saved plan/diff, environment confirmation, and post-change verification
+- Record correlation_id, actor, tenant, tool, arguments hash, approval_id, result status, and evidence URI
+- Do not install 100 unrestricted MCP servers; compose a few policy-gated plugins
 
-## Highest-priority plugins
+## Practical recommendation
 
-| Priority | Plugin | Automations | Why first |
-|---:|---|---|---|
-| 1 | Secure PR Guardian | A001, A002, A003, A004, A005, A006, A007, A008, A009, A010 | Universal developer leverage and low-risk read-only starting point |
-| 2 | MCP Security Gateway | A011, A012, A013, A014, A015, A016, A017, A018, A019, A020 | Control plane that makes later connector expansion safer |
-| 3 | Production Triage Copilot | A021, A022, A023, A024, A025, A026, A027, A028, A029, A030 | Fast operational value with read-only access to evidence |
-| 4 | Database Change Guardian | A031, A032, A033, A034, A035, A036, A037, A038, A039, A040 | Reduces failure modes most likely to cause data loss or downtime |
-| 5 | GitOps Release Controller | A041, A042, A043, A044, A045, A046, A047, A048, A049, A050 | Keeps release actions structured, verifiable, and approval-gated |
-| 6 | Compliance Evidence Engine | A051, A052, A053, A054, A055, A056, A057, A058, A059, A060 | Turns operational evidence into reusable control artifacts |
-
-## Full catalog
-
-### 1. Secure PR Guardian (`secure-pr-guardian`)
-
-Universal developer leverage and low-risk read-only starting point
-
-| ID | Automation | Trigger | Connector / capability | Expected output | Key guardrail | Mutation | Phase |
-|---|---|---|---|---|---|---|---:|
-| A001 | Secret scan | PR opened/pushed | GitHub read + secret patterns | Finding list with file/line evidence | Never print secret values; redact matches | `none` | 1 |
-| A002 | Vulnerability triage | PR opened/CI completed | Dependency/CVE read tools | Prioritized vuln brief with fix PRs proposed only | Read-only; no auto-merge | `plan` | 2 |
-| A003 | API security review | PR with OpenAPI/route diffs | Diff + API schema inspect | AuthN/AuthZ/input-validation findings | Treat PR text as untrusted | `none` | 1 |
-| A004 | Threat-model delta | PR touching trust boundaries | Code+architecture evidence | STRIDE delta vs baseline | No inferred assets without evidence | `none` | 1 |
-| A005 | CI hardening review | Workflow file changes | GitHub Actions AST/diff | Hardening checklist + risky permissions | Block apply_* for workflow edits without approval | `plan` | 2 |
-| A006 | PR risk summary | PR opened/pushed | Diff blast-radius classifier | Risk score + reviewer routing advice | Advisory only; humans own approval | `none` | 1 |
-| A007 | Dependency lockfile integrity | Lockfile changes | Package lock verify | Integrity/supply-chain report | Disallow network install during scan | `none` | 1 |
-| A008 | AuthZ path review | Auth/middleware diffs | Path + policy inspect | Privilege-escalation candidates | Read-only credentials only | `none` | 1 |
-| A009 | Dangerous permission diff | IAM/RBAC/config diffs | Policy diff parser | Permission expansion table | Never apply cloud IAM changes directly | `plan` | 2 |
-| A010 | Secret rotation evidence check | Scheduled weekly | Vault/secret metadata read | Stale-secret inventory | No secret material in logs | `none` | 1 |
-
-### 2. MCP Security Gateway (`mcp-security-gateway`)
-
-Control plane that makes later connector expansion safer
-
-| ID | Automation | Trigger | Connector / capability | Expected output | Key guardrail | Mutation | Phase |
-|---|---|---|---|---|---|---|---:|
-| A011 | Tool permission linting | MCP config change / session start | Tool allowlist validator | Permission lint report | Deny unknown tools by default | `none` | 1 |
-| A012 | Response redaction | afterMCPExecution | PII/secret redactor | Sanitized tool output + audit hash | Immutable original stored offline only | `none` | 1 |
-| A013 | Approval proxy | apply_* tool requested | Approval token verifier | Allow/deny with args hash binding | Short-lived tokens; env+tenant bind | `apply` | 4 |
-| A014 | Spend governor | Scheduled / per-session | Token/cost budget meter | Budget burn report + hard stop | Enforce tool/time/token/cost caps | `none` | 1 |
-| A015 | Injection firewall | beforeSubmitPrompt / beforeMCP | Prompt-injection detector | Block or quarantine decision | Treat retrieved content as hostile | `none` | 1 |
-| A016 | Replay harness | PR / nightly | Recorded MCP traffic replay | Deterministic policy regression receipt | No live prod credentials in harness | `none` | 1 |
-| A017 | Entitlement matrix check | Connector deploy | Tenant entitlement map | Missing/overbroad entitlement findings | Fail closed on unknown tenant | `none` | 1 |
-| A018 | Argument schema validation | preToolUse | JSON Schema enforcer | Schema violation events | Reject extra properties on mutate tools | `none` | 1 |
-| A019 | Audit trail export | Scheduled daily | Immutable audit store read | Daily evidence pack | Append-only; no rewrite API | `none` | 1 |
-| A020 | Hostile content quarantine | Web fetch / issue ingest | Content sandbox classifier | Quarantine ticket + safe excerpt | Never execute fetched scripts | `none` | 1 |
-
-### 3. Production Triage Copilot (`production-triage-copilot`)
-
-Fast operational value with read-only access to evidence
-
-| ID | Automation | Trigger | Connector / capability | Expected output | Key guardrail | Mutation | Phase |
-|---|---|---|---|---|---|---|---:|
-| A021 | Failed-CI analysis | CI completed (failure) | CI logs read | Root-cause hypotheses + next checks | No force-push or secret dump | `none` | 1 |
-| A022 | Incident timeline | PagerDuty/webhook alert | Metrics/logs/deploy events read | Linked evidence timeline | Stop before mutations | `none` | 1 |
-| A023 | Error clustering | Alert or schedule | Log aggregation query | Clustered error groups | Read replica / read API only | `none` | 1 |
-| A024 | Trace review | High-latency alert | Distributed trace fetch | Critical path diagnosis | No prod shell | `none` | 1 |
-| A025 | SLO burn analysis | Scheduled SLO check | SLO/error-budget APIs | Burn-rate brief + proposed mitigations | Mutations require approval | `plan` | 2 |
-| A026 | Kubernetes diagnostics | Cluster alert | K8s read-only API | Pod/node diagnosis + rollback plan draft | Prefer GitOps PR over kubectl apply | `plan` | 2 |
-| A027 | Deployment correlation | Incident open | Deploy + PR history read | Suspect changes ranked | Cite commits; no blame without evidence | `none` | 1 |
-| A028 | On-call handoff brief | Schedule shift change | Open incidents + runbooks | Handoff summary | No credential material | `none` | 1 |
-| A029 | Alert noise reduction | Weekly schedule | Alert history analytics | Noise/tuning recommendations | Do not silence alerts automatically | `plan` | 2 |
-| A030 | Blast-radius estimate | Incident triage | Service dependency graph read | Impacted tenants/services map | Tenant isolation assumed until proven | `none` | 1 |
-
-### 4. Database Change Guardian (`database-change-guardian`)
-
-Reduces failure modes most likely to cause data loss or downtime
-
-| ID | Automation | Trigger | Connector / capability | Expected output | Key guardrail | Mutation | Phase |
-|---|---|---|---|---|---|---|---:|
-| A031 | Tenant-isolation tests | Migration PR | SQL policy + fixture runner | Isolation test report | Never use privileged prod writer | `none` | 1 |
-| A032 | Slow-query analysis | Schedule / alert | Postgres EXPLAIN on replica | Slow query pack with indexes proposed | Replica only; statement timeout | `plan` | 2 |
-| A033 | Migration safety review | Migration PR | DDL classifier | Expand/contract safety verdict | Split plan_/validate_/apply_/rollback_ | `plan` | 2 |
-| A034 | Backup/restore evidence | Pre-release gate | Backup catalog read | Restore-point evidence sheet | No destructive restore in prod | `none` | 1 |
-| A035 | Retention policy checks | Weekly schedule | Table retention metadata | Retention compliance gaps | Read-only catalog queries | `none` | 1 |
-| A036 | Index impact review | Index DDL in PR | Planner stats read | Write amplification estimate | No online apply without approval | `plan` | 2 |
-| A037 | Lock/timeout risk | Migration PR | Lock simulator / heuristics | Lock risk score + window advice | Disallow long ACCESS EXCLUSIVE without gate | `plan` | 2 |
-| A038 | Schema drift detection | Nightly | Schema diff vs Git | Drift report + reconcile PR draft | GitOps PR only for fixes | `plan` | 2 |
-| A039 | PII column classification | Schema change | Column classifier | PII inventory delta | Redact sample values | `none` | 1 |
-| A040 | Rollback rehearsal plan | Release candidate | Migration graph analysis | Ordered rollback runbook | apply_rollback_* approval-gated | `plan` | 2 |
-
-### 5. GitOps Release Controller (`gitops-release-controller`)
-
-Keeps release actions structured, verifiable, and approval-gated
-
-| ID | Automation | Trigger | Connector / capability | Expected output | Key guardrail | Mutation | Phase |
-|---|---|---|---|---|---|---|---:|
-| A041 | Release checklist | Tag/release PR | Checklist skill + CI status | Signed checklist receipt | No direct cluster mutation | `none` | 1 |
-| A042 | Canary analysis | Canary deploy event | Metrics compare baseline | Promote/hold/rollback recommendation | Human approve promote | `plan` | 2 |
-| A043 | Rollback PR generation | Failed canary / incident | GitOps manifest diff | Rollback PR + evidence links | PR only; CI deploys | `plan` | 2 |
-| A044 | Provenance verification | Release artifact built | SLSA/provenance attest read | Provenance pass/fail | Fail closed on missing attestations | `none` | 1 |
-| A045 | Helm readiness check | Chart change PR | helm template/lint dry-run | Readiness report | No helm upgrade to prod from agent | `none` | 1 |
-| A046 | Config drift detection | Hourly/schedule | Desired vs live read | Drift tickets + fix PR drafts | Prefer reconcile via Git | `plan` | 2 |
-| A047 | Feature-flag rollout plan | Flag change request | Flag MCP read | Staged percentage plan | Flag apply_* approval-gated | `plan` | 2 |
-| A048 | Change-freeze compliance | PR during freeze | Freeze calendar read | Allow/deny with exception path | Exceptions require named approver | `none` | 1 |
-| A049 | SBOM attestation check | Release build | SBOM + vuln gate | SBOM evidence pack | Do not publish unsigned artifacts | `none` | 1 |
-| A050 | Post-release smoke evidence | Release completed | Synthetic checks read | Smoke evidence report | Auto-rollback only via approved playbook | `plan` | 2 |
-
-### 6. Compliance Evidence Engine (`compliance-evidence-engine`)
-
-Turns operational evidence into reusable control artifacts
-
-| ID | Automation | Trigger | Connector / capability | Expected output | Key guardrail | Mutation | Phase |
-|---|---|---|---|---|---|---|---:|
-| A051 | SOC 2 control mapping | Quarterly / on demand | Control library + evidence index | SOC 2 mapping matrix | No fabricated evidence | `none` | 1 |
-| A052 | HIPAA safeguard mapping | On demand | PHI system inventory read | HIPAA gap brief | Minimize PHI in prompts | `none` | 1 |
-| A053 | NIST control mapping | Quarterly | NIST CSF/800-53 mapper | Control coverage report | Cite exact artifacts | `none` | 1 |
-| A054 | Access review pack | Monthly schedule | IdP/group membership read | Access review worksheets | Read-only IdP scopes | `none` | 1 |
-| A055 | Vendor assessment assist | New vendor intake | Questionnaire + SOC reports fetch | Vendor risk summary | Treat vendor docs as untrusted | `none` | 1 |
-| A056 | Audit remediation tracking | Finding opened | Issue tracker read/write plan | Remediation board update plan | Issue create is apply_* gated | `plan` | 2 |
-| A057 | Policy exception register | Exception requested | Exception registry | Time-boxed exception record draft | Expiry mandatory | `plan` | 2 |
-| A058 | Encryption-at-rest evidence | Audit request | Cloud config read | Encryption evidence sheet | No key material retrieval | `none` | 1 |
-| A059 | Change-management evidence pack | Release closed | PR/CI/approval history | Change ticket evidence bundle | Immutable export | `none` | 1 |
-| A060 | Data retention control map | Quarterly | Retention policies + stores | Control map with owners | No bulk deletes from agent | `none` | 1 |
-
-### 7. Developer Productivity Router (`developer-productivity-router`)
-
-Removes repetitive engineering chores without mutation authority
-
-| ID | Automation | Trigger | Connector / capability | Expected output | Key guardrail | Mutation | Phase |
-|---|---|---|---|---|---|---|---:|
-| A061 | PR babysit loop | PR review comments | GitHub PR read | Feedback resolution plan | No force-merge | `plan` | 2 |
-| A062 | Test coverage gap finder | Morning schedule | Coverage reports read | Coverage gap PR draft plan | Tests only; no prod behavior change without ask | `plan` | 2 |
-| A063 | Flaky test quarantine advise | CI flake detected | CI history analytics | Quarantine candidates + owners | Do not delete tests silently | `plan` | 2 |
-| A064 | Docs drift vs code | PR merged / weekly | Docs + symbol index | Drift list with file links | Read-only | `none` | 1 |
-| A065 | Changelog draft | Release tag | Commit/PR history | Changelog draft markdown | Human edits before publish | `plan` | 2 |
-| A066 | Issue triage + duplicates | Issue created | Issue search | Triage labels + duplicate links | Label apply is gated | `plan` | 2 |
-| A067 | ADR capture assist | Significant design PR | Repo ADR templates | ADR draft | No inventing stakeholder decisions | `plan` | 2 |
-| A068 | Codeowners risk routing | PR opened | CODEOWNERS + blast radius | Reviewer assignment advice | Advisory; respect CODEOWNERS | `none` | 1 |
-| A069 | Weekly engineering digest | Monday schedule | Merged PRs + incidents | Slack/Notion digest draft | No secrets in digest | `plan` | 2 |
-| A070 | Stale branch hygiene report | Weekly schedule | Branch age scan | Stale branch report | No branch deletion without approval | `plan` | 2 |
-
-### 8. Platform Observability Analyst (`platform-observability-analyst`)
-
-Correlates metrics, logs, and traces into actionable briefs
-
-| ID | Automation | Trigger | Connector / capability | Expected output | Key guardrail | Mutation | Phase |
-|---|---|---|---|---|---|---|---:|
-| A071 | Log pattern mining | Nightly | Log search read | Top new patterns report | Redact PII in samples | `none` | 1 |
-| A072 | Metric anomaly brief | Anomaly webhook | Metrics API | Anomaly brief with baselines | Read-only | `none` | 1 |
-| A073 | Trace hotspot map | Weekly | Trace analytics | Hotspot services ranked | No sampling config mutation | `none` | 1 |
-| A074 | Capacity forecast | Weekly | Utilization metrics | Capacity forecast memo | Advisory only | `none` | 1 |
-| A075 | Cloud cost anomaly | Daily | Billing export read | Cost anomaly + owners | No purchase/apply quotas | `plan` | 2 |
-| A076 | Queue backlog diagnosis | Backlog alert | Queue depth + consumer lag | Diagnosis + scale plan draft | Scale apply_* gated | `plan` | 2 |
-| A077 | Cache hit-rate analysis | Weekly | Cache metrics | Hit-rate + TTLs advice | No flush without approval | `plan` | 2 |
-| A078 | CDN / error-budget report | Weekly | CDN + SLO APIs | Edge error-budget report | Read-only | `none` | 1 |
-| A079 | Synthetic check failure triage | Synthetic fail | Check history + deps | Failure triage note | Do not disable checks automatically | `plan` | 2 |
-| A080 | Dashboard provenance check | Monthly | Dashboard as-code diff | Orphan/untracked dashboards | GitOps for dashboard changes | `plan` | 2 |
-
-### 9. Secure Connector Factory (`secure-connector-factory`)
-
-OpenAI MCPKit-aligned authenticated connector blueprints
-
-| ID | Automation | Trigger | Connector / capability | Expected output | Key guardrail | Mutation | Phase |
-|---|---|---|---|---|---|---|---:|
-| A081 | Authenticated MCP scaffold | New connector request | openai-mcpkit blueprints | TS/Python scaffold + auth stubs | No embedded long-lived secrets | `plan` | 2 |
-| A082 | Tenant isolation connector test | Connector PR | Isolation test harness | Pass/fail isolation receipt | Fail closed across tenants | `none` | 1 |
-| A083 | search/fetch tool shape lint | Connector PR | Tool schema linter | Shape compliance report | Require citation-friendly fetch | `none` | 1 |
-| A084 | Entitlement matrix generation | Connector design | Role × tool matrix builder | Entitlement matrix artifact | Least privilege default | `plan` | 2 |
-| A085 | Evidence logging schema check | Connector PR | Audit schema validator | Schema conformance receipt | Correlation ID mandatory | `none` | 1 |
-| A086 | Tunnel-client readiness | Secure MCP expose | openai/tunnel-client checklist | Readiness checklist result | Customer-run tunnel only | `none` | 1 |
-| A087 | Connector contract freeze | Release candidate | OpenAPI/MCP tool freeze | Frozen contract bundle | Semver breaks require review | `plan` | 2 |
-| A088 | Hostile fixture corpus run | Nightly | Injection fixture pack | Firewall regression receipt | Fixtures never hit prod | `none` | 1 |
-| A089 | Rate-limit and budget probe | Pre-prod | Load + budget probe | Limit effectiveness report | Caps enforced in gateway | `none` | 1 |
-| A090 | Connector decommission checklist | Retirement request | Inventory + dependency scan | Decommission plan + evidence | Revoke creds via human-approved path | `plan` | 2 |
-
-### 10. Knowledge & Docs Copilot (`knowledge-docs-copilot`)
-
-Keeps runbooks, diagrams, and policies evidence-linked
-
-| ID | Automation | Trigger | Connector / capability | Expected output | Key guardrail | Mutation | Phase |
-|---|---|---|---|---|---|---|---:|
-| A091 | Runbook freshness audit | Monthly | Runbook + last-incident dates | Stale runbook list | Do not delete runbooks | `plan` | 2 |
-| A092 | Architecture diagram delta | Significant system PR | Archify skill + repo evidence | Validated Archify HTML + receipt | Showcase validate before handoff | `plan` | 2 |
-| A093 | API docs vs OpenAPI drift | API PR / weekly | OpenAPI + docs diff | Drift findings | Read-only | `none` | 1 |
-| A094 | Security policy Q&A with citations | On demand | Policy corpus fetch | Answer with citations only | Refuse if uncited | `none` | 1 |
-| A095 | Onboarding path verification | Quarterly | Onboarding docs + scripts | Broken-step report | No credential creation | `none` | 1 |
-| A096 | Incident postmortem drafter | Incident resolved | Timeline + actions | Postmortem draft | Human owns blame-free edit | `plan` | 2 |
-| A097 | Decision log indexer | ADR merged | ADR corpus index | Searchable decision index | No silent ADR rewrites | `none` | 1 |
-| A098 | External doc fetch with injection guard | Research request | Web fetch via gateway | Safe summary + sources | Sandbox untrusted HTML/MD | `none` | 1 |
-| A099 | Memory / knowledge-base hygiene | Weekly | Memory store inventory | Stale/conflicting memory report | No unrestricted memory wipe | `plan` | 2 |
-| A100 | Catalog self-audit | Monthly | This catalog + plugin coverage | Coverage & guardrail audit | Track phase roadmap status | `none` | 1 |
-
-## Illustrative workflow — production incident triage
-
-1. Trigger on an alert webhook or scheduled SLO burn-rate check (`A022`, `A025`).
-2. Query metrics, traces, logs, recent deploys, and relevant GitHub PRs with **read-only** credentials (`A023`–`A027`).
-3. Construct an incident timeline, cluster errors, identify likely changes, estimate blast radius (`A022`, `A023`, `A030`).
-4. Produce a structured report with linked evidence, proposed mitigations, and a rollback plan (`A043`).
-5. Stop unless an authorized person approves a follow-up mutation (incident issue, feature flag, rollback PR).
-
-## Phased build roadmap
-
-| Phase | Goal | Automation mutation classes |
-|---:|---|---|
-| 1 | Read-only foundations | `none` |
-| 2 | Plan-only PR/GitOps generation | `plan` |
-| 3 | Gateway + approval proxy hardening | gateway controls for future `apply` |
-| 4 | Scheduled/event-driven controlled operations | gated `apply` |
-
-## Production readiness definition of done
-
-- [ ] MCP Security Gateway enforces allowlists, schema validation, redaction, budgets, and approval tokens.
-- [ ] Every mutate tool is split into `plan_*` / `validate_*` / `apply_*` / `rollback_*`.
-- [ ] Cursor Rules cover secrets, tenancy, database safety, infrastructure changes, and audit events.
-- [ ] Policy hooks block disallowed shell/MCP/tool calls in project `.cursor/hooks.json`.
-- [ ] Priority plugins 1–6 ship as skills with automation blueprints and correlation-ID evidence records.
-- [ ] No production shell, unrestricted filesystem, privileged DB, broad cloud admin, or generic HTTP client is exposed to agents.
-- [ ] Catalog self-audit (`A100`) passes monthly.
+Do not install 100 unrestricted MCP servers into one Cursor profile. Build a small number of composable, policy-gated plugins and expose only the tools needed for the current repository or environment. A high-quality initial stack is: GitHub read-only, Git, filesystem sandbox, official docs/fetch, CI logs, Playwright for test environments, Postgres read-only, a policy/approval MCP, and an audit MCP.
 

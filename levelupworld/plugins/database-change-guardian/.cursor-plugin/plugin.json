@@ -1,15 +1,14 @@
 {
   "name": "database-change-guardian",
-  "version": "1.0.0",
-  "description": "Database change safety: tenant-isolation tests, slow-query analysis on replicas, migration expand/contract review, backup/restore evidence, retention and lock-risk checks. Use for migration PRs or automations A031–A040.",
+  "version": "2.0.0",
+  "description": "Database Change Guardian: Require explicit approval for all schema writes",
   "author": {
     "name": "LevelUpWorld"
   },
   "keywords": [
     "levelupworld",
-    "database",
-    "migrations",
-    "tenancy"
+    "agent-ops",
+    "database-change-guardian"
   ],
   "license": "MIT"
 }

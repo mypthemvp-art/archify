@@ -1,0 +1,14 @@
+{
+  "name": "cloud-cost-governor",
+  "version": "2.0.0",
+  "description": "Cloud Cost Governor: Recommendations only until measured savings are proven",
+  "author": {
+    "name": "LevelUpWorld"
+  },
+  "keywords": [
+    "levelupworld",
+    "agent-ops",
+    "cloud-cost-governor"
+  ],
+  "license": "MIT"
+}

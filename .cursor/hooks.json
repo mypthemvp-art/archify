@@ -20,6 +20,21 @@
       {
         "command": ".cursor/hooks/policy-pre-tool.mjs"
       }
+    ],
+    "postToolUse": [
+      {
+        "command": ".cursor/hooks/post-tool-audit-log.mjs"
+      }
+    ],
+    "afterShellExecution": [
+      {
+        "command": ".cursor/hooks/post-tool-audit-log.mjs"
+      }
+    ],
+    "afterMCPExecution": [
+      {
+        "command": ".cursor/hooks/post-tool-audit-log.mjs"
+      }
     ]
   }
 }

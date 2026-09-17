@@ -1,53 +1,49 @@
-# LevelUpWorld implementation roadmap
+# LevelUpWorld / agent-ops roadmap
 
-## Phase 1 — Read-only foundations
+## Phase 1 — Foundation
 
-**Goal:** deliver value with discovery tools only.
+- Plugin skeleton (`agent-ops`) and shared Rules with the safety baseline.
+- Authenticated MCP gateway using OpenAI MCPKit / FastMCP patterns.
+- Audit events, tenant context, capability allowlists, read/write separation, approval service.
+- Start with GitHub read-only, workspace filesystem, CI logs, documentation fetch, Postgres read replica.
 
-- Install project Rules + catalog router skill + Secure PR Guardian + Production Triage Copilot (read paths).
-- Enable workspace-scoped filesystem, git, and read-only GitHub MCP entries in `.cursor/mcp.json`.
-- Ship policy hooks that deny shell patterns associated with production mutation and deny unknown MCP tools.
-- Activate automations with `mutation: none` (see `catalog.json`).
+**Exit:** policy hooks enforce denylist; read-only MCP servers configured; catalog router + gateway skill available.
 
-**Exit criteria:** PR risk summary and failed-CI analysis run end-to-end with evidence records and zero mutate tools registered.
+## Phase 2 — Highest-value workflows
 
-## Phase 2 — Plan-only GitOps
+- Implement Secure PR Guardian, Production Triage Copilot, and Database Change Guardian.
+- Deterministic artifacts: Markdown reports, JSON findings, JUnit/SARIF where appropriate, linked evidence.
+- Every automation runnable locally in a disposable repository and in CI.
 
-**Goal:** agents may draft reviewable changes, never apply them.
+**Exit:** A003/A004/A021/A024/A040/A047 produce evidence-backed reports with zero mutate tools registered.
 
-- Add Database Change Guardian + GitOps Release Controller plan skills.
-- Allow `plan_*` / `validate_*` tools that open PRs or write proposal markdown in-repo.
-- Keep cluster/DB/cloud apply paths unimplemented or permanently denied.
+## Phase 3 — Controlled writes
 
-**Exit criteria:** migration safety and rollback PR drafts land as PRs with human review required by CODEOWNERS.
+- GitHub issue/PR creation through approval-gated tools.
+- Feature-flag creation/updates with staged rollout limits (FeatureOps).
+- GitOps pull-request generation — **no** direct cluster mutation from Cursor.
 
-## Phase 3 — Gateway hardening
+**Exit:** `apply_*` requires bound approval token; GitOps PRs are the only infra mutation path.
 
-**Goal:** make connector expansion safe.
+## Phase 4 — Scheduled / event automations
 
-- Productionize MCP Security Gateway: allowlists, JSON Schema validation, redaction, spend governor, injection firewall, replay harness.
-- Require correlation IDs and immutable audit events for every tool call.
-- Add Compliance Evidence Engine read packs.
+- Cursor Automations for daily security/cost/observability summaries and event-triggered incident triage.
+- Bind schedules to a service identity with narrow scopes and a per-run budget.
+- External notifications only through a dedicated notification tool with policy checks and delivery audit.
 
-**Exit criteria:** hostile fixture corpus (`A088`) and permission lint (`A011`) pass in CI-like replay.
+**Exit:** production readiness checklist below is fully checked for each enabled automation.
 
-## Phase 4 — Controlled apply operations
+## Definition of done
 
-**Goal:** scheduled/event-driven mutations with approval gates.
+An automation is production-ready only when it has:
 
-- Implement approval proxy (`A013`) with args-hash tokens.
-- Enable a minimal set of `apply_*` / `rollback_*` tools (feature flags, incident issues, GitOps merge after checks)—never raw prod shell.
-- Enforce tool/time/token/cost budgets on every scheduled automation.
-
-**Exit criteria:** production readiness checklist below is fully checked.
-
-## Production readiness definition of done
-
-- [ ] MCP Security Gateway enforces allowlists, schema validation, redaction, budgets, and approval tokens.
-- [ ] Every mutate tool is split into `plan_*` / `validate_*` / `apply_*` / `rollback_*`.
-- [ ] Cursor Rules cover secrets, tenancy, database safety, infrastructure changes, and audit events.
-- [ ] Policy hooks block disallowed shell/MCP/tool calls via `.cursor/hooks.json`.
-- [ ] Priority plugins 1–6 ship as skills with automation blueprints and correlation-ID evidence records.
-- [ ] No production shell, unrestricted filesystem, privileged DB, broad cloud admin, or generic HTTP client is exposed.
-- [ ] Catalog self-audit (`A100`) passes on a monthly cadence.
-- [ ] Incident triage workflow stops at the report unless a human approves a follow-up mutation.
+- [ ] Documented tool contract and threat model
+- [ ] Unit, integration, and adversarial prompt-injection tests
+- [ ] Least-privilege credentials with a rotation path
+- [ ] Explicit approval binding for mutations
+- [ ] Idempotency and concurrency handling
+- [ ] Structured audit trail and searchable correlation IDs
+- [ ] Dry-run path and clear rollback/runbook
+- [ ] Timeouts, retries, rate limits, and token/cost budgets
+- [ ] Sandbox/staging validation before production availability
+- [ ] Owner, SLO, deprecation policy, and incident response path
