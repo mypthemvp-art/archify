@@ -1,0 +1,52 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: cicd-observer
+  version: 1.0.0
+  ownerTeam: platform-ci
+  source:
+    repository: https://github.com/your-org/mcp-cicd-observer
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: streamable-http
+    endpoint: https://mcp-gateway.example.com/connectors/cicd-observer
+  runtime:
+    image: ghcr.io/your-org/mcp-cicd-observer@sha256:cicd-observer-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-cicd-observer:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-cicd-observer:attestation
+  trust:
+    tier: 2
+    certification: certified
+    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+  data:
+    classifications: [internal]
+    outboundDomains: [api.github.com]
+    retention: none
+  auth:
+    mode: oauth
+    scopes: [actions:read]
+    credentialSource: workload-identity
+  tools:
+    - name: get_job_status
+      operation: read
+      risk: low
+      policy: cicd-observer.get_job_status
+    - name: get_job_logs
+      operation: read
+      risk: medium
+      policy: cicd-observer.get_job_logs
+    - name: list_artifacts
+      operation: read
+      risk: low
+      policy: cicd-observer.list_artifacts
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging, production]
+  status:
+    health: healthy
+    activated: false

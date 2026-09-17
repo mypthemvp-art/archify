@@ -19,9 +19,10 @@ DENY_CONNECTORS = {
 
 
 class PolicyEngine:
-    def __init__(self, registry: Registry, approvals: ApprovalService):
+    def __init__(self, registry: Registry, approvals: ApprovalService, control_plane=None):
         self.registry = registry
         self.approvals = approvals
+        self.control_plane = control_plane
 
     def evaluate(self, req: InvokeRequest) -> PolicyResult:
         correlation_id = req.correlation_id or new_correlation_id()
@@ -41,6 +42,15 @@ class PolicyEngine:
             return PolicyResult(
                 decision=PolicyDecision.deny,
                 reason=f"unknown connector '{req.connector_slug}'",
+                correlation_id=correlation_id,
+                args_hash=digest,
+                risk_level="high",
+            )
+
+        if self.control_plane and self.control_plane.is_quarantined(conn.slug, conn.version):
+            return PolicyResult(
+                decision=PolicyDecision.deny,
+                reason="connector version is quarantined at the gateway",
                 correlation_id=correlation_id,
                 args_hash=digest,
                 risk_level="high",

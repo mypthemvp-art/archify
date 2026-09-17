@@ -24,6 +24,23 @@ def client():
     return TestClient(app)
 
 
+@pytest.fixture(autouse=True)
+def reset_control_plane():
+    from app.main import control_plane, registry
+
+    control_plane.activations.clear()
+    control_plane.quarantines.clear()
+    control_plane.test_runs.clear()
+    control_plane.policy_decisions.clear()
+    # Restore any certification_state mutated by quarantine UX
+    for conn in registry.connectors.values():
+        if conn.certification_state == "quarantined":
+            # default certified/in_lab from manifests — reload
+            pass
+    registry.reload()
+    yield
+
+
 def test_catalog_lists_ten_core_connectors(client):
     res = client.get("/api/v1/connectors")
     assert res.status_code == 200
@@ -171,7 +188,72 @@ def test_denylist_connector():
 
 
 def test_dashboard_pages(client):
-    for path in ["/", "/lab", "/ops", "/audit", "/approvals"]:
+    for path in ["/", "/lab", "/ops", "/audit", "/approvals", "/connectors/github-readonly"]:
         res = client.get(path)
         assert res.status_code == 200
         assert "Agent-Ops" in res.text
+
+
+def test_quarantine_blocks_invoke(client):
+    q = client.post(
+        "/api/v1/connectors/docs-fetch-search/quarantine",
+        json={"version": "1.0.0", "reason": "test", "actor": "user:secops"},
+    )
+    assert q.status_code == 200
+    res = client.post(
+        "/api/v1/gateway/invoke",
+        json={
+            "actor": "user:alice",
+            "connector_slug": "docs-fetch-search",
+            "tool_name": "search_docs",
+            "arguments": {"q": "mcp"},
+            "environment": "development",
+        },
+    )
+    assert res.status_code == 403
+    assert "quarantined" in res.json()["detail"]
+
+
+def test_activation_and_test_run(client):
+    run = client.post("/api/v1/connectors/github-readonly/versions/1.0.0/test-runs?suite=full")
+    assert run.status_code == 200
+    assert run.json()["status"] == "passed"
+    got = client.get(f"/api/v1/test-runs/{run.json()['id']}")
+    assert got.status_code == 200
+
+    act = client.post(
+        "/api/v1/activations",
+        json={
+            "slug": "github-readonly",
+            "version": "1.0.0",
+            "project_id": "agent-platform",
+            "environment": "staging",
+            "actor": "user:alice",
+        },
+    )
+    assert act.status_code == 200
+    approved = client.post(
+        f"/api/v1/activations/{act.json()['id']}/approve",
+        json={"approver": "user:boss", "approve": True},
+    )
+    assert approved.status_code == 200
+    assert approved.json()["enabled"] is True
+
+
+def test_metrics_and_version_detail(client):
+    client.post(
+        "/api/v1/policy/evaluate",
+        json={
+            "actor": "user:alice",
+            "connector_slug": "git-repository",
+            "tool_name": "status",
+            "arguments": {},
+            "environment": "development",
+        },
+    )
+    metrics = client.get("/api/v1/metrics/connectors")
+    assert metrics.status_code == 200
+    assert "connectors" in metrics.json()
+    detail = client.get("/api/v1/connectors/git-repository/versions/1.0.0")
+    assert detail.status_code == 200
+    assert detail.json()["slug"] == "git-repository"

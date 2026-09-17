@@ -286,6 +286,66 @@ for (const c of connectors) {
     active_in_production: ['github-readonly', 'git-repository', 'policy-approval-gateway', 'audit-evidence-store'].includes(c.slug),
   };
   fs.writeFileSync(path.join(dir, `${c.slug}.manifest.json`), `${JSON.stringify(manifest, null, 2)}\n`);
+
+  // Signed registry.mcp manifest (YAML) for supply-chain activation checks
+  const trustTier = {
+    unverified: 0,
+    sandboxed: 1,
+    reviewed: 2,
+    certified: 3,
+    production_critical: 4,
+  };
+  const yamlTools = tools
+    .map(
+      (t) => `    - name: ${t.name}
+      operation: ${t.capability}
+      risk: ${t.risk_level}
+      policy: ${c.slug}.${t.name}
+${t.requires_approval ? '      approval: required\n' : ''}`,
+    )
+    .join('');
+  const yaml = `apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: ${c.slug}
+  version: ${c.version}
+  ownerTeam: ${c.owner_team}
+  source:
+    repository: https://github.com/your-org/mcp-${c.slug}
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: ${c.transport === 'stdio' ? 'stdio' : 'streamable-http'}
+    endpoint: https://mcp-gateway.example.com/connectors/${c.slug}
+  runtime:
+    image: ghcr.io/your-org/mcp-${c.slug}@${c.image_digest}
+    sbomUri: oci://ghcr.io/your-org/mcp-${c.slug}:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-${c.slug}:attestation
+  trust:
+    tier: ${trustTier[c.trust_tier] ?? 1}
+    certification: ${c.certification_state}
+    lastSecurityReviewAt: ${new Date().toISOString()}
+  data:
+    classifications: [${c.data_classification}]
+    outboundDomains: [${c.outbound_domains.map((d) => d).join(', ')}]
+    retention: none
+  auth:
+    mode: ${c.oauth_scopes.length ? 'oauth' : 'workload-identity'}
+    scopes: [${c.oauth_scopes.join(', ')}]
+    credentialSource: workload-identity
+  tools:
+${yamlTools}  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [${c.allowed_environments.join(', ')}]
+  status:
+    health: healthy
+    activated: ${manifest.active_in_production}
+`;
+  fs.writeFileSync(path.join(dir, `${c.slug}.manifest.yaml`), yaml);
 }
 
 fs.writeFileSync(path.join(dir, 'index.json'), `${JSON.stringify({ version: '1.0.0', connectors: connectors.map((c) => c.slug) }, null, 2)}\n`);

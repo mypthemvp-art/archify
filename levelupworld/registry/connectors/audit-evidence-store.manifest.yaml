@@ -1,0 +1,52 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: audit-evidence-store
+  version: 1.0.0
+  ownerTeam: compliance
+  source:
+    repository: https://github.com/your-org/mcp-audit-evidence-store
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: streamable-http
+    endpoint: https://mcp-gateway.example.com/connectors/audit-evidence-store
+  runtime:
+    image: ghcr.io/your-org/mcp-audit-evidence-store@sha256:audit-evidence-store-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-audit-evidence-store:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-audit-evidence-store:attestation
+  trust:
+    tier: 4
+    certification: certified
+    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+  data:
+    classifications: [restricted]
+    outboundDomains: []
+    retention: none
+  auth:
+    mode: oauth
+    scopes: [internal:audit:append, internal:audit:read]
+    credentialSource: workload-identity
+  tools:
+    - name: append_event
+      operation: write
+      risk: medium
+      policy: audit-evidence-store.append_event
+    - name: get_evidence
+      operation: read
+      risk: low
+      policy: audit-evidence-store.get_evidence
+    - name: attach_artifact_hash
+      operation: write
+      risk: medium
+      policy: audit-evidence-store.attach_artifact_hash
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging, production]
+  status:
+    health: healthy
+    activated: true

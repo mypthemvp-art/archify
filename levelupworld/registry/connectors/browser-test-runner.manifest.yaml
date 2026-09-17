@@ -1,0 +1,52 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: browser-test-runner
+  version: 1.0.0
+  ownerTeam: qa
+  source:
+    repository: https://github.com/your-org/mcp-browser-test-runner
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: stdio
+    endpoint: https://mcp-gateway.example.com/connectors/browser-test-runner
+  runtime:
+    image: ghcr.io/your-org/mcp-browser-test-runner@sha256:browser-test-runner-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-browser-test-runner:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-browser-test-runner:attestation
+  trust:
+    tier: 1
+    certification: in_lab
+    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+  data:
+    classifications: [internal]
+    outboundDomains: [localhost, staging.example.internal]
+    retention: none
+  auth:
+    mode: workload-identity
+    scopes: []
+    credentialSource: workload-identity
+  tools:
+    - name: run_e2e
+      operation: read
+      risk: medium
+      policy: browser-test-runner.run_e2e
+    - name: run_a11y
+      operation: read
+      risk: low
+      policy: browser-test-runner.run_a11y
+    - name: capture_screenshot
+      operation: read
+      risk: low
+      policy: browser-test-runner.capture_screenshot
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging]
+  status:
+    health: healthy
+    activated: false

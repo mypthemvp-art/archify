@@ -26,15 +26,22 @@ assert.equal(blueprints.length, 100);
 for (const required of [
   'levelupworld/registry/README.md',
   'levelupworld/registry/docs/BLUEPRINT.md',
+  'levelupworld/registry/docs/IMPLEMENTATION-STARTER.md',
+  'levelupworld/registry/docs/CERTIFICATION.md',
   'levelupworld/registry/docs/BUILD-SEQUENCE.md',
   'levelupworld/registry/docs/APPROVAL-TOKENS.md',
   'levelupworld/registry/schema/001_init.sql',
+  'levelupworld/registry/schema/002_implementation_starter.sql',
   'levelupworld/registry/gateway/app/main.py',
+  'levelupworld/registry/gateway/app/control_plane.py',
   'levelupworld/registry/connectors/index.json',
   'levelupworld/registry/connectors/github-readonly.manifest.json',
+  'levelupworld/registry/connectors/github-readonly.manifest.yaml',
   '.cursor/plugins/local/agent-ops/mcp-servers/registry-gateway/proxy.mjs',
   '.cursor/hooks/policy-pre-tool.mjs',
   '.cursor/hooks/post-tool-audit-log.mjs',
+  '.cursor/rules/levelupworld-registry-operating-rules.mdc',
+  '.cursor/mcp.gateway.example.json',
 ]) {
   assert.ok(fs.existsSync(path.join(root, required)), `missing ${required}`);
 }
@@ -43,6 +50,10 @@ const manifests = fs
   .readdirSync(path.join(root, 'levelupworld/registry/connectors'))
   .filter((f) => f.endsWith('.manifest.json'));
 assert.equal(manifests.length, 10);
+const yamls = fs
+  .readdirSync(path.join(root, 'levelupworld/registry/connectors'))
+  .filter((f) => f.endsWith('.manifest.yaml'));
+assert.equal(yamls.length, 10);
 
 const policy = path.join(root, '.cursor/hooks/policy-pre-tool.mjs');
 function run(input) {

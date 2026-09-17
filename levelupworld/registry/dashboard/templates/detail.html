@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}{{ connector.display_name }} · Agent-Ops{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="meta"><a href="/">← Catalog</a></p>
+  <h1>{{ connector.display_name }}</h1>
+  <p>
+    <code>{{ connector.slug }}@{{ connector.version }}</code>
+    · <span class="badge tier-{{ connector.trust_tier.value }}">{{ connector.trust_tier.value }}</span>
+    · cert <strong>{{ connector.certification_state }}</strong>
+    {% if quarantined %}<span class="badge decision-deny">quarantined</span>{% endif %}
+  </p>
+  <p>{{ connector.description }}</p>
+</section>
+
+<section class="tabs">
+  <details open>
+    <summary>Overview</summary>
+    <div class="panel">
+      <ul class="facts">
+        <li>Owner: {{ connector.owner_team }} · Escalation: {{ connector.escalation_contact }}</li>
+        <li>Transport: {{ connector.transport }}</li>
+        <li>Digest: <code>{{ connector.image_digest }}</code></li>
+        <li>Data classification: {{ connector.data_classification }}</li>
+        <li>OAuth scopes: {{ connector.oauth_scopes|join(', ') or 'none' }}</li>
+        <li>Outbound domains: {{ connector.outbound_domains|join(', ') or 'none' }}</li>
+        <li>Environments: {{ connector.allowed_environments|join(', ') }}</li>
+        <li>Safety: {{ connector.safety }}</li>
+        <li>Prod active: {{ 'yes' if connector.active_in_production else 'no' }}</li>
+      </ul>
+    </div>
+  </details>
+
+  <details open>
+    <summary>Tools</summary>
+    <div class="panel">
+      <table>
+        <thead><tr><th>Tool</th><th>Capability</th><th>Risk</th><th>Approval</th><th>Description</th></tr></thead>
+        <tbody>
+          {% for t in connector.tools %}
+          <tr>
+            <td><code>{{ t.name }}</code></td>
+            <td>{{ t.capability.value }}</td>
+            <td>{{ t.risk_level }}</td>
+            <td>{{ 'required' if t.requires_approval else 'no' }}</td>
+            <td>{{ t.description }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details>
+    <summary>Security</summary>
+    <div class="panel">
+      <p>Trust tier <strong>{{ connector.trust_tier.value }}</strong> · certification <strong>{{ connector.certification_state }}</strong>.</p>
+      <p>See <code>levelupworld/registry/docs/CERTIFICATION.md</code> for the full gate. Quarantine disables the version at the gateway immediately.</p>
+      <form method="post" action="/api/v1/connectors/{{ connector.slug }}/quarantine" onsubmit="return quarantine(event)">
+        <input type="hidden" name="version" value="{{ connector.version }}" />
+        <button type="submit" class="danger">Emergency quarantine</button>
+      </form>
+    </div>
+  </details>
+
+  <details>
+    <summary>Test lab</summary>
+    <div class="panel">
+      <button type="button" onclick="runTests('{{ connector.slug }}','{{ connector.version }}')">Run full certification suite</button>
+      <pre id="test-output" class="note">No run yet.</pre>
+    </div>
+  </details>
+
+  <details>
+    <summary>Activation</summary>
+    <div class="panel">
+      <p>Request activation into a Cursor project/environment. Production requires certified status.</p>
+      <button type="button" onclick="requestActivation('{{ connector.slug }}','{{ connector.version }}')">Request staging activation</button>
+      <pre id="activation-output" class="note">{{ activations | tojson }}</pre>
+    </div>
+  </details>
+
+  <details>
+    <summary>Audit</summary>
+    <div class="panel">
+      <table>
+        <thead><tr><th>Time</th><th>Decision</th><th>Tool</th><th>Correlation</th></tr></thead>
+        <tbody>
+          {% for e in events %}
+          <tr>
+            <td>{{ e.timestamp }}</td>
+            <td>{{ e.policy_decision }}</td>
+            <td>{{ e.tool_name }}</td>
+            <td><code>{{ e.correlation_id }}</code></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4">No invocations for this connector yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+{% endblock %}

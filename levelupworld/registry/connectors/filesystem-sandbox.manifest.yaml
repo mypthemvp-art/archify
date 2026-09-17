@@ -1,0 +1,53 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: filesystem-sandbox
+  version: 1.0.0
+  ownerTeam: developer-experience
+  source:
+    repository: https://github.com/your-org/mcp-filesystem-sandbox
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: stdio
+    endpoint: https://mcp-gateway.example.com/connectors/filesystem-sandbox
+  runtime:
+    image: ghcr.io/your-org/mcp-filesystem-sandbox@sha256:filesystem-sandbox-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-filesystem-sandbox:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-filesystem-sandbox:attestation
+  trust:
+    tier: 3
+    certification: certified
+    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+  data:
+    classifications: [internal]
+    outboundDomains: []
+    retention: none
+  auth:
+    mode: workload-identity
+    scopes: []
+    credentialSource: workload-identity
+  tools:
+    - name: read_file
+      operation: read
+      risk: low
+      policy: filesystem-sandbox.read_file
+    - name: search_files
+      operation: read
+      risk: low
+      policy: filesystem-sandbox.search_files
+    - name: write_artifact
+      operation: write
+      risk: medium
+      policy: filesystem-sandbox.write_artifact
+      approval: required
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging]
+  status:
+    health: healthy
+    activated: false

@@ -1,0 +1,56 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: git-repository
+  version: 1.0.0
+  ownerTeam: developer-experience
+  source:
+    repository: https://github.com/your-org/mcp-git-repository
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: stdio
+    endpoint: https://mcp-gateway.example.com/connectors/git-repository
+  runtime:
+    image: ghcr.io/your-org/mcp-git-repository@sha256:git-repository-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-git-repository:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-git-repository:attestation
+  trust:
+    tier: 3
+    certification: certified
+    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+  data:
+    classifications: [internal]
+    outboundDomains: []
+    retention: none
+  auth:
+    mode: workload-identity
+    scopes: []
+    credentialSource: workload-identity
+  tools:
+    - name: status
+      operation: read
+      risk: low
+      policy: git-repository.status
+    - name: diff
+      operation: read
+      risk: low
+      policy: git-repository.diff
+    - name: log
+      operation: read
+      risk: low
+      policy: git-repository.log
+    - name: blame
+      operation: read
+      risk: low
+      policy: git-repository.blame
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging, production]
+  status:
+    health: healthy
+    activated: true

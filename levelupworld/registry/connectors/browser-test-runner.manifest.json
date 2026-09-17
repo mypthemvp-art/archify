@@ -81,7 +81,7 @@
     "error_rate_24h": 0.01,
     "policy_denial_rate_24h": 0.02,
     "healthy": true,
-    "last_health_at": "2026-09-17T05:40:10.951Z"
+    "last_health_at": "2026-09-17T05:43:58.557Z"
   },
   "active_in_production": false
 }

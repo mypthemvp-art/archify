@@ -1,0 +1,56 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: github-readonly
+  version: 1.0.0
+  ownerTeam: platform-security
+  source:
+    repository: https://github.com/your-org/mcp-github-readonly
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: stdio
+    endpoint: https://mcp-gateway.example.com/connectors/github-readonly
+  runtime:
+    image: ghcr.io/your-org/mcp-github-readonly@sha256:github-readonly-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-github-readonly:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-github-readonly:attestation
+  trust:
+    tier: 3
+    certification: certified
+    lastSecurityReviewAt: 2026-09-17T05:43:58.556Z
+  data:
+    classifications: [internal]
+    outboundDomains: [api.github.com]
+    retention: none
+  auth:
+    mode: oauth
+    scopes: [repo:status, public_repo, read:org]
+    credentialSource: workload-identity
+  tools:
+    - name: search_code
+      operation: read
+      risk: low
+      policy: github-readonly.search_code
+    - name: get_pull_request
+      operation: read
+      risk: low
+      policy: github-readonly.get_pull_request
+    - name: list_issues
+      operation: read
+      risk: low
+      policy: github-readonly.list_issues
+    - name: get_actions_run
+      operation: read
+      risk: low
+      policy: github-readonly.get_actions_run
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging, production]
+  status:
+    health: healthy
+    activated: true

@@ -1,0 +1,52 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: observability-reader
+  version: 1.0.0
+  ownerTeam: sre
+  source:
+    repository: https://github.com/your-org/mcp-observability-reader
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: streamable-http
+    endpoint: https://mcp-gateway.example.com/connectors/observability-reader
+  runtime:
+    image: ghcr.io/your-org/mcp-observability-reader@sha256:observability-reader-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-observability-reader:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-observability-reader:attestation
+  trust:
+    tier: 2
+    certification: in_lab
+    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+  data:
+    classifications: [confidential]
+    outboundDomains: []
+    retention: none
+  auth:
+    mode: oauth
+    scopes: [metrics:read, logs:read, traces:read]
+    credentialSource: workload-identity
+  tools:
+    - name: query_metrics
+      operation: read
+      risk: low
+      policy: observability-reader.query_metrics
+    - name: query_logs
+      operation: read
+      risk: medium
+      policy: observability-reader.query_logs
+    - name: get_trace
+      operation: read
+      risk: low
+      policy: observability-reader.get_trace
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging, production]
+  status:
+    health: healthy
+    activated: false

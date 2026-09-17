@@ -43,24 +43,32 @@ levelupworld/registry/.venv/bin/pytest -q levelupworld/registry/gateway/tests
 |---|---|---|
 | GET | `/api/v1/connectors` | Catalog with filters |
 | GET | `/api/v1/connectors/{slug}` | Connector detail |
+| GET | `/api/v1/connectors/{slug}/versions/{version}` | Pinned version + activations |
+| POST | `/api/v1/connectors/{slug}/versions/{version}/test-runs` | Sandbox certification suite |
+| GET | `/api/v1/test-runs/{id}` | Test run report |
+| POST | `/api/v1/activations` | Request project/env activation |
+| POST | `/api/v1/activations/{id}/approve` | Approve/deny activation |
+| POST | `/api/v1/connectors/{slug}/quarantine` | Emergency gateway quarantine |
 | POST | `/api/v1/policy/evaluate` | Preflight policy decision |
-| POST | `/api/v1/gateway/invoke` | Policy → (approval) → stub invoke → redact → audit |
+| POST | `/api/v1/gateway/invoke` | Policy → approval → stub invoke → redact → audit |
 | POST | `/api/v1/approvals` | Create approval request |
 | POST | `/api/v1/approvals/{id}/decide` | Issue/deny signed grant |
-| GET | `/api/v1/audit/events` | Immutable evidence trail |
-| GET | `/api/v1/ops/summary` | Monitoring counters |
+| GET | `/api/v1/metrics/connectors` | Ops metrics by connector |
+| GET | `/api/v1/audit/invocations` | Immutable evidence trail |
+| GET | `/api/v1/policies/{policyKey}/decisions` | Policy decision log |
 
-## Cursor integration
+## Docs
 
-Point project MCP at the gateway (not each powerful connector). Pre-tool hooks call `/api/v1/policy/evaluate`; post-tool hooks rely on gateway audit. See:
-
-- `.cursor/hooks/policy-pre-tool.mjs` (calls gateway when `AGENT_OPS_GATEWAY_URL` is set)
-- `.cursor/mcp.json`
-- `.cursor/plugins/local/agent-ops/`
+- [`docs/IMPLEMENTATION-STARTER.md`](docs/IMPLEMENTATION-STARTER.md) — product contract
+- [`docs/CERTIFICATION.md`](docs/CERTIFICATION.md) — certification checklist
+- [`docs/APPROVAL-TOKENS.md`](docs/APPROVAL-TOKENS.md) — signed grants
+- [`docs/BUILD-SEQUENCE.md`](docs/BUILD-SEQUENCE.md) — 8-week delivery plan
+- [`schema/001_init.sql`](schema/001_init.sql) / [`schema/002_implementation_starter.sql`](schema/002_implementation_starter.sql)
 
 ## Security defaults
 
 - Gateway is the authority; hooks are preflight only.
 - Read-only connectors first; deny kubectl/terraform/cloud-admin/db-superuser/unrestricted-http/prod-shell.
 - Approvals bind to exact `args_hash`; argument changes invalidate grants.
+- Quarantine disables a version at the gateway even if still listed in Cursor mcp.json.
 - Fail closed for medium/high risk when approval validation fails.

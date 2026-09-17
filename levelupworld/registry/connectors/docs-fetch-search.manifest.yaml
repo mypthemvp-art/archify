@@ -1,0 +1,48 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: docs-fetch-search
+  version: 1.0.0
+  ownerTeam: platform-security
+  source:
+    repository: https://github.com/your-org/mcp-docs-fetch-search
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: streamable-http
+    endpoint: https://mcp-gateway.example.com/connectors/docs-fetch-search
+  runtime:
+    image: ghcr.io/your-org/mcp-docs-fetch-search@sha256:docs-fetch-search-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-docs-fetch-search:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-docs-fetch-search:attestation
+  trust:
+    tier: 2
+    certification: in_lab
+    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+  data:
+    classifications: [public]
+    outboundDomains: [docs.github.com, cursor.com, modelcontextprotocol.io]
+    retention: none
+  auth:
+    mode: workload-identity
+    scopes: []
+    credentialSource: workload-identity
+  tools:
+    - name: search_docs
+      operation: read
+      risk: low
+      policy: docs-fetch-search.search_docs
+    - name: fetch_page
+      operation: read
+      risk: medium
+      policy: docs-fetch-search.fetch_page
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging]
+  status:
+    health: healthy
+    activated: false

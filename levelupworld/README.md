@@ -41,6 +41,8 @@ Governed **Cursor + Open-Source OpenAI/MCP automation catalog** for secure AI-ag
 Control plane (catalog/certify) + server-side gateway (authz, approvals, redaction, budgets, audit):
 
 - Blueprint: [`registry/docs/BLUEPRINT.md`](registry/docs/BLUEPRINT.md)
+- Implementation starter: [`registry/docs/IMPLEMENTATION-STARTER.md`](registry/docs/IMPLEMENTATION-STARTER.md)
+- Certification checklist: [`registry/docs/CERTIFICATION.md`](registry/docs/CERTIFICATION.md)
 - Run: see [`registry/README.md`](registry/README.md)
 - Dashboard pages: Catalog · Test Lab · Operations · Audit · Approvals
 - Top-10 connectors: [`registry/connectors/`](registry/connectors/)

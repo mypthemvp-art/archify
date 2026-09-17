@@ -32,7 +32,7 @@
   {% for c in connectors %}
   <article class="card" data-tier="{{ c.trust_tier.value }}" data-category="{{ c.category }}" data-text="{{ (c.display_name + ' ' + c.slug + ' ' + c.owner_team + ' ' + c.description)|lower }}">
     <header>
-      <h2>{{ c.display_name }}</h2>
+      <h2><a href="/connectors/{{ c.slug }}">{{ c.display_name }}</a></h2>
       <span class="badge tier-{{ c.trust_tier.value }}">{{ c.trust_tier.value }}</span>
     </header>
     <p class="meta">

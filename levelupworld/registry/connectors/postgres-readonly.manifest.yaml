@@ -1,0 +1,52 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: postgres-readonly
+  version: 1.0.0
+  ownerTeam: data-platform
+  source:
+    repository: https://github.com/your-org/mcp-postgres-readonly
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: stdio
+    endpoint: https://mcp-gateway.example.com/connectors/postgres-readonly
+  runtime:
+    image: ghcr.io/your-org/mcp-postgres-readonly@sha256:postgres-readonly-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-postgres-readonly:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-postgres-readonly:attestation
+  trust:
+    tier: 3
+    certification: certified
+    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+  data:
+    classifications: [confidential]
+    outboundDomains: []
+    retention: none
+  auth:
+    mode: workload-identity
+    scopes: []
+    credentialSource: workload-identity
+  tools:
+    - name: list_schema
+      operation: read
+      risk: low
+      policy: postgres-readonly.list_schema
+    - name: explain_query
+      operation: read
+      risk: medium
+      policy: postgres-readonly.explain_query
+    - name: bounded_select
+      operation: read
+      risk: medium
+      policy: postgres-readonly.bounded_select
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging]
+  status:
+    health: healthy
+    activated: false

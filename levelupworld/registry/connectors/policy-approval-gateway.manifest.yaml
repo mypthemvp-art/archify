@@ -1,0 +1,56 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: policy-approval-gateway
+  version: 1.0.0
+  ownerTeam: platform-security
+  source:
+    repository: https://github.com/your-org/mcp-policy-approval-gateway
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: streamable-http
+    endpoint: https://mcp-gateway.example.com/connectors/policy-approval-gateway
+  runtime:
+    image: ghcr.io/your-org/mcp-policy-approval-gateway@sha256:policy-approval-gateway-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-policy-approval-gateway:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-policy-approval-gateway:attestation
+  trust:
+    tier: 4
+    certification: certified
+    lastSecurityReviewAt: 2026-09-17T05:43:58.557Z
+  data:
+    classifications: [restricted]
+    outboundDomains: []
+    retention: none
+  auth:
+    mode: oauth
+    scopes: [internal:policy, internal:approval]
+    credentialSource: workload-identity
+  tools:
+    - name: evaluate_policy
+      operation: read
+      risk: low
+      policy: policy-approval-gateway.evaluate_policy
+    - name: create_approval_request
+      operation: write
+      risk: high
+      policy: policy-approval-gateway.create_approval_request
+    - name: verify_grant
+      operation: read
+      risk: low
+      policy: policy-approval-gateway.verify_grant
+    - name: check_budget
+      operation: read
+      risk: low
+      policy: policy-approval-gateway.check_budget
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging, production]
+  status:
+    health: healthy
+    activated: true
