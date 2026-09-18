@@ -1,0 +1,5905 @@
+{
+  "generated_at": "2026-09-18T00:00:00Z",
+  "purpose": "Next.js virtualized catalog fixture. Not a certification source. Gateway enforces the certified portfolio.",
+  "count": 120,
+  "connectors": [
+    {
+      "slug": "database-ro-000",
+      "display_name": "Database RO 000",
+      "category": "database",
+      "rank": 1,
+      "description": "Scale-catalog source_control connector. Tools: list_source_control, apply_source_control, delete_source_control_row, notify_source_control.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-source_control-000",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "source_control.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_database",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.99,
+        "p95_latency_ms": 35,
+        "calls_24h": 4000
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "observability-ro-001",
+      "display_name": "Observability RO 001",
+      "category": "observability",
+      "rank": 2,
+      "description": "Scale-catalog workspace connector. Tools: list_workspace.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-workspace-001",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "workspace.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_observability",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.99,
+        "p95_latency_ms": 35,
+        "calls_24h": 4001
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "database-ro-002",
+      "display_name": "Database RO 002",
+      "category": "database",
+      "rank": 3,
+      "description": "Scale-catalog ci_cd connector. Tools: list_ci_cd.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-ci_cd-002",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "ci_cd.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_database",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.99,
+        "p95_latency_ms": 35,
+        "calls_24h": 4002
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "observability-ro-003",
+      "display_name": "Observability RO 003",
+      "category": "observability",
+      "rank": 4,
+      "description": "Scale-catalog documentation connector. Tools: list_documentation.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-documentation-003",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "documentation.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_observability",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.99,
+        "p95_latency_ms": 35,
+        "calls_24h": 4003
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "database-ro-004",
+      "display_name": "Database RO 004",
+      "category": "database",
+      "rank": 5,
+      "description": "Scale-catalog database connector. Tools: list_database.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-database-004",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "database.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_database",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.99,
+        "p95_latency_ms": 35,
+        "calls_24h": 4004
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "observability-ro-005",
+      "display_name": "Observability RO 005",
+      "category": "observability",
+      "rank": 6,
+      "description": "Scale-catalog analytics connector. Tools: list_analytics.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-analytics-005",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "analytics.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_observability",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.99,
+        "p95_latency_ms": 35,
+        "calls_24h": 4005
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "database-ro-006",
+      "display_name": "Database RO 006",
+      "category": "database",
+      "rank": 7,
+      "description": "Scale-catalog observability connector. Tools: list_observability.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-observability-006",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "observability.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_database",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.99,
+        "p95_latency_ms": 35,
+        "calls_24h": 4006
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "observability-ro-007",
+      "display_name": "Observability RO 007",
+      "category": "observability",
+      "rank": 8,
+      "description": "Scale-catalog browser connector. Tools: list_browser, apply_browser.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-browser-007",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "browser.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_observability",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.99,
+        "p95_latency_ms": 35,
+        "calls_24h": 4007
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "database-ro-008",
+      "display_name": "Database RO 008",
+      "category": "database",
+      "rank": 9,
+      "description": "Scale-catalog cloud connector. Tools: list_cloud.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-cloud-008",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "cloud.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_database",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.99,
+        "p95_latency_ms": 35,
+        "calls_24h": 4008
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "observability-ro-009",
+      "display_name": "Observability RO 009",
+      "category": "observability",
+      "rank": 10,
+      "description": "Scale-catalog kubernetes connector. Tools: list_kubernetes.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-kubernetes-009",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "kubernetes.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_observability",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.99,
+        "p95_latency_ms": 35,
+        "calls_24h": 4009
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "iac-010",
+      "display_name": "Iac 010",
+      "category": "iac",
+      "rank": 11,
+      "description": "Scale-catalog iac connector. Tools: list_iac.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-iac-010",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "iac.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_iac",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 70,
+        "calls_24h": 370
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "security-011",
+      "display_name": "Security 011",
+      "category": "security",
+      "rank": 12,
+      "description": "Scale-catalog security connector. Tools: list_security, notify_security.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-security-011",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "security.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 1,
+      "tools": [
+        {
+          "name": "list_security",
+          "capability": "read"
+        },
+        {
+          "name": "notify_security",
+          "capability": "external_communication"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 75,
+        "calls_24h": 407
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 1,
+        "posture": "review_required"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "compliance-012",
+      "display_name": "Compliance 012",
+      "category": "compliance",
+      "rank": 13,
+      "description": "Scale-catalog compliance connector. Tools: list_compliance.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-compliance-012",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "compliance.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_compliance",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 80,
+        "calls_24h": 444
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "messaging-013",
+      "display_name": "Messaging 013",
+      "category": "messaging",
+      "rank": 14,
+      "description": "Scale-catalog messaging connector. Tools: list_messaging.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-messaging-013",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "messaging.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_messaging",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 85,
+        "calls_24h": 481
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "product_analytics-014",
+      "display_name": "Product Analytics 014",
+      "category": "product_analytics",
+      "rank": 15,
+      "description": "Scale-catalog product_analytics connector. Tools: list_product_analytics, apply_product_analytics.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "reviewed",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-product_analytics-014",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "product_analytics.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 1,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_product_analytics",
+          "capability": "read"
+        },
+        {
+          "name": "apply_product_analytics",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 90,
+        "calls_24h": 518
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "feature_flags-015",
+      "display_name": "Feature Flags 015",
+      "category": "feature_flags",
+      "rank": 16,
+      "description": "Scale-catalog feature_flags connector. Tools: list_feature_flags.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-feature_flags-015",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "feature_flags.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_feature_flags",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 95,
+        "calls_24h": 555
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "financial-016",
+      "display_name": "Financial 016",
+      "category": "financial",
+      "rank": 17,
+      "description": "Scale-catalog financial connector. Tools: list_financial.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-financial-016",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "financial.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_financial",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 100,
+        "calls_24h": 592
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "source_control-017",
+      "display_name": "Source Control 017",
+      "category": "source_control",
+      "rank": 18,
+      "description": "Scale-catalog source_control connector. Tools: list_source_control.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-source_control-017",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "source_control.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_source_control",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 105,
+        "calls_24h": 629
+      },
+      "security": {
+        "signed": false,
+        "sbom": false,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "unknown"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "workspace-018",
+      "display_name": "Workspace 018",
+      "category": "workspace",
+      "rank": 19,
+      "description": "Scale-catalog workspace connector. Tools: list_workspace.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-workspace-018",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "workspace.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_workspace",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 110,
+        "calls_24h": 666
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "ci_cd-019",
+      "display_name": "Ci Cd 019",
+      "category": "ci_cd",
+      "rank": 20,
+      "description": "Scale-catalog ci_cd connector. Tools: list_ci_cd, delete_ci_cd_row.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-ci_cd-019",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "ci_cd.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 1,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_ci_cd",
+          "capability": "read"
+        },
+        {
+          "name": "delete_ci_cd_row",
+          "capability": "delete"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 115,
+        "calls_24h": 703
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "documentation-020",
+      "display_name": "Documentation 020",
+      "category": "documentation",
+      "rank": 21,
+      "description": "Scale-catalog documentation connector. Tools: list_documentation.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-documentation-020",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "documentation.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_documentation",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 120,
+        "calls_24h": 740
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "database-021",
+      "display_name": "Database 021",
+      "category": "database",
+      "rank": 22,
+      "description": "Scale-catalog database connector. Tools: list_database, apply_database.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "reviewed",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-database-021",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "database.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 2,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_database",
+          "capability": "read"
+        },
+        {
+          "name": "apply_database",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 125,
+        "calls_24h": 777
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "analytics-022",
+      "display_name": "Analytics 022",
+      "category": "analytics",
+      "rank": 23,
+      "description": "Scale-catalog analytics connector. Tools: list_analytics, notify_analytics.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-analytics-022",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "analytics.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 1,
+      "tools": [
+        {
+          "name": "list_analytics",
+          "capability": "read"
+        },
+        {
+          "name": "notify_analytics",
+          "capability": "external_communication"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 130,
+        "calls_24h": 814
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 1,
+        "posture": "review_required"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "observability-023",
+      "display_name": "Observability 023",
+      "category": "observability",
+      "rank": 24,
+      "description": "Scale-catalog observability connector. Tools: list_observability.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "quarantined",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-observability-023",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "observability.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_observability",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 135,
+        "calls_24h": 851
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "browser-024",
+      "display_name": "Browser 024",
+      "category": "browser",
+      "rank": 25,
+      "description": "Scale-catalog browser connector. Tools: list_browser.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-browser-024",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "browser.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_browser",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 140,
+        "calls_24h": 888
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "cloud-025",
+      "display_name": "Cloud 025",
+      "category": "cloud",
+      "rank": 26,
+      "description": "Scale-catalog cloud connector. Tools: list_cloud.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-cloud-025",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "cloud.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_cloud",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 145,
+        "calls_24h": 925
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "kubernetes-026",
+      "display_name": "Kubernetes 026",
+      "category": "kubernetes",
+      "rank": 27,
+      "description": "Scale-catalog kubernetes connector. Tools: list_kubernetes.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-kubernetes-026",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "kubernetes.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_kubernetes",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 150,
+        "calls_24h": 962
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "iac-027",
+      "display_name": "Iac 027",
+      "category": "iac",
+      "rank": 28,
+      "description": "Scale-catalog iac connector. Tools: list_iac.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-iac-027",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "iac.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_iac",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 155,
+        "calls_24h": 999
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "security-028",
+      "display_name": "Security 028",
+      "category": "security",
+      "rank": 29,
+      "description": "Scale-catalog security connector. Tools: list_security, apply_security.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "reviewed",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-security-028",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "security.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 1,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_security",
+          "capability": "read"
+        },
+        {
+          "name": "apply_security",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 160,
+        "calls_24h": 1036
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "compliance-029",
+      "display_name": "Compliance 029",
+      "category": "compliance",
+      "rank": 30,
+      "description": "Scale-catalog compliance connector. Tools: list_compliance.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-compliance-029",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "compliance.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_compliance",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 165,
+        "calls_24h": 1073
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 1,
+        "cve_high": 0,
+        "posture": "blocked"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "messaging-030",
+      "display_name": "Messaging 030",
+      "category": "messaging",
+      "rank": 31,
+      "description": "Scale-catalog messaging connector. Tools: list_messaging.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-messaging-030",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "messaging.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_messaging",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 170,
+        "calls_24h": 1110
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "product_analytics-031",
+      "display_name": "Product Analytics 031",
+      "category": "product_analytics",
+      "rank": 32,
+      "description": "Scale-catalog product_analytics connector. Tools: list_product_analytics.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-product_analytics-031",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "product_analytics.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_product_analytics",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 175,
+        "calls_24h": 1147
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "feature_flags-032",
+      "display_name": "Feature Flags 032",
+      "category": "feature_flags",
+      "rank": 33,
+      "description": "Scale-catalog feature_flags connector. Tools: list_feature_flags.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-feature_flags-032",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "feature_flags.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_feature_flags",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 180,
+        "calls_24h": 1184
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "financial-033",
+      "display_name": "Financial 033",
+      "category": "financial",
+      "rank": 34,
+      "description": "Scale-catalog financial connector. Tools: list_financial, notify_financial.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-financial-033",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "financial.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 1,
+      "tools": [
+        {
+          "name": "list_financial",
+          "capability": "read"
+        },
+        {
+          "name": "notify_financial",
+          "capability": "external_communication"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 185,
+        "calls_24h": 1221
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 1,
+        "posture": "review_required"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "source_control-034",
+      "display_name": "Source Control 034",
+      "category": "source_control",
+      "rank": 35,
+      "description": "Scale-catalog source_control connector. Tools: list_source_control.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-source_control-034",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "source_control.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_source_control",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 190,
+        "calls_24h": 1258
+      },
+      "security": {
+        "signed": false,
+        "sbom": false,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "unknown"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "workspace-035",
+      "display_name": "Workspace 035",
+      "category": "workspace",
+      "rank": 36,
+      "description": "Scale-catalog workspace connector. Tools: list_workspace, apply_workspace.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "reviewed",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-workspace-035",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "workspace.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 2,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_workspace",
+          "capability": "read"
+        },
+        {
+          "name": "apply_workspace",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 195,
+        "calls_24h": 1295
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "ci_cd-036",
+      "display_name": "Ci Cd 036",
+      "category": "ci_cd",
+      "rank": 37,
+      "description": "Scale-catalog ci_cd connector. Tools: list_ci_cd.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-ci_cd-036",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "ci_cd.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_ci_cd",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 200,
+        "calls_24h": 1332
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "documentation-037",
+      "display_name": "Documentation 037",
+      "category": "documentation",
+      "rank": 38,
+      "description": "Scale-catalog documentation connector. Tools: list_documentation.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-documentation-037",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "documentation.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_documentation",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 205,
+        "calls_24h": 1369
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "database-038",
+      "display_name": "Database 038",
+      "category": "database",
+      "rank": 39,
+      "description": "Scale-catalog database connector. Tools: list_database, delete_database_row.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-database-038",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "database.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 1,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_database",
+          "capability": "read"
+        },
+        {
+          "name": "delete_database_row",
+          "capability": "delete"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 210,
+        "calls_24h": 1406
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "analytics-039",
+      "display_name": "Analytics 039",
+      "category": "analytics",
+      "rank": 40,
+      "description": "Scale-catalog analytics connector. Tools: list_analytics.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-analytics-039",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "analytics.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_analytics",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 215,
+        "calls_24h": 1443
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "observability-040",
+      "display_name": "Observability 040",
+      "category": "observability",
+      "rank": 41,
+      "description": "Scale-catalog observability connector. Tools: list_observability.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-observability-040",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "observability.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_observability",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 20,
+        "calls_24h": 1480
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "browser-041",
+      "display_name": "Browser 041",
+      "category": "browser",
+      "rank": 42,
+      "description": "Scale-catalog browser connector. Tools: list_browser.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-browser-041",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "browser.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_browser",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 25,
+        "calls_24h": 1517
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "cloud-042",
+      "display_name": "Cloud 042",
+      "category": "cloud",
+      "rank": 43,
+      "description": "Scale-catalog cloud connector. Tools: list_cloud, apply_cloud.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "reviewed",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-cloud-042",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "cloud.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 1,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_cloud",
+          "capability": "read"
+        },
+        {
+          "name": "apply_cloud",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 30,
+        "calls_24h": 1554
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "kubernetes-043",
+      "display_name": "Kubernetes 043",
+      "category": "kubernetes",
+      "rank": 44,
+      "description": "Scale-catalog kubernetes connector. Tools: list_kubernetes.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-kubernetes-043",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "kubernetes.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_kubernetes",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 35,
+        "calls_24h": 1591
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "iac-044",
+      "display_name": "Iac 044",
+      "category": "iac",
+      "rank": 45,
+      "description": "Scale-catalog iac connector. Tools: list_iac, notify_iac.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-iac-044",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "iac.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 1,
+      "tools": [
+        {
+          "name": "list_iac",
+          "capability": "read"
+        },
+        {
+          "name": "notify_iac",
+          "capability": "external_communication"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 40,
+        "calls_24h": 1628
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 1,
+        "posture": "review_required"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "security-045",
+      "display_name": "Security 045",
+      "category": "security",
+      "rank": 46,
+      "description": "Scale-catalog security connector. Tools: list_security.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-security-045",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "security.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_security",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 45,
+        "calls_24h": 1665
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "compliance-046",
+      "display_name": "Compliance 046",
+      "category": "compliance",
+      "rank": 47,
+      "description": "Scale-catalog compliance connector. Tools: list_compliance.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "quarantined",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-compliance-046",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "compliance.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_compliance",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 50,
+        "calls_24h": 1702
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "messaging-047",
+      "display_name": "Messaging 047",
+      "category": "messaging",
+      "rank": 48,
+      "description": "Scale-catalog messaging connector. Tools: list_messaging.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-messaging-047",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "messaging.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_messaging",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 55,
+        "calls_24h": 1739
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "product_analytics-048",
+      "display_name": "Product Analytics 048",
+      "category": "product_analytics",
+      "rank": 49,
+      "description": "Scale-catalog product_analytics connector. Tools: list_product_analytics.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-product_analytics-048",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "product_analytics.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_product_analytics",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 60,
+        "calls_24h": 1776
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "feature_flags-049",
+      "display_name": "Feature Flags 049",
+      "category": "feature_flags",
+      "rank": 50,
+      "description": "Scale-catalog feature_flags connector. Tools: list_feature_flags, apply_feature_flags.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "reviewed",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-feature_flags-049",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "feature_flags.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 2,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_feature_flags",
+          "capability": "read"
+        },
+        {
+          "name": "apply_feature_flags",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 65,
+        "calls_24h": 1813
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "financial-050",
+      "display_name": "Financial 050",
+      "category": "financial",
+      "rank": 51,
+      "description": "Scale-catalog financial connector. Tools: list_financial.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-financial-050",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "financial.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_financial",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 70,
+        "calls_24h": 1850
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "source_control-051",
+      "display_name": "Source Control 051",
+      "category": "source_control",
+      "rank": 52,
+      "description": "Scale-catalog source_control connector. Tools: list_source_control.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-source_control-051",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "source_control.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_source_control",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 75,
+        "calls_24h": 1887
+      },
+      "security": {
+        "signed": false,
+        "sbom": false,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "unknown"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "workspace-052",
+      "display_name": "Workspace 052",
+      "category": "workspace",
+      "rank": 53,
+      "description": "Scale-catalog workspace connector. Tools: list_workspace.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-workspace-052",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "workspace.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_workspace",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 80,
+        "calls_24h": 1924
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "ci_cd-053",
+      "display_name": "Ci Cd 053",
+      "category": "ci_cd",
+      "rank": 54,
+      "description": "Scale-catalog ci_cd connector. Tools: list_ci_cd.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-ci_cd-053",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "ci_cd.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_ci_cd",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 85,
+        "calls_24h": 1961
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "documentation-054",
+      "display_name": "Documentation 054",
+      "category": "documentation",
+      "rank": 55,
+      "description": "Scale-catalog documentation connector. Tools: list_documentation.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-documentation-054",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "documentation.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_documentation",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 90,
+        "calls_24h": 1998
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "database-055",
+      "display_name": "Database 055",
+      "category": "database",
+      "rank": 56,
+      "description": "Scale-catalog database connector. Tools: list_database, notify_database.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-database-055",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "database.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 1,
+      "tools": [
+        {
+          "name": "list_database",
+          "capability": "read"
+        },
+        {
+          "name": "notify_database",
+          "capability": "external_communication"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 95,
+        "calls_24h": 2035
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 1,
+        "posture": "review_required"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "analytics-056",
+      "display_name": "Analytics 056",
+      "category": "analytics",
+      "rank": 57,
+      "description": "Scale-catalog analytics connector. Tools: list_analytics, apply_analytics.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "reviewed",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-analytics-056",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "analytics.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 1,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_analytics",
+          "capability": "read"
+        },
+        {
+          "name": "apply_analytics",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 100,
+        "calls_24h": 2072
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "observability-057",
+      "display_name": "Observability 057",
+      "category": "observability",
+      "rank": 58,
+      "description": "Scale-catalog observability connector. Tools: list_observability, delete_observability_row.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-observability-057",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "observability.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 1,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_observability",
+          "capability": "read"
+        },
+        {
+          "name": "delete_observability_row",
+          "capability": "delete"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 105,
+        "calls_24h": 2109
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "browser-058",
+      "display_name": "Browser 058",
+      "category": "browser",
+      "rank": 59,
+      "description": "Scale-catalog browser connector. Tools: list_browser.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-browser-058",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "browser.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_browser",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 110,
+        "calls_24h": 2146
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 1,
+        "cve_high": 0,
+        "posture": "blocked"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "cloud-059",
+      "display_name": "Cloud 059",
+      "category": "cloud",
+      "rank": 60,
+      "description": "Scale-catalog cloud connector. Tools: list_cloud.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-cloud-059",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "cloud.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_cloud",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 115,
+        "calls_24h": 2183
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "kubernetes-060",
+      "display_name": "Kubernetes 060",
+      "category": "kubernetes",
+      "rank": 61,
+      "description": "Scale-catalog kubernetes connector. Tools: list_kubernetes.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-kubernetes-060",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "kubernetes.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_kubernetes",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 120,
+        "calls_24h": 2220
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "iac-061",
+      "display_name": "Iac 061",
+      "category": "iac",
+      "rank": 62,
+      "description": "Scale-catalog iac connector. Tools: list_iac.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-iac-061",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "iac.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_iac",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 125,
+        "calls_24h": 2257
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "security-062",
+      "display_name": "Security 062",
+      "category": "security",
+      "rank": 63,
+      "description": "Scale-catalog security connector. Tools: list_security.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-security-062",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "security.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_security",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 130,
+        "calls_24h": 2294
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "compliance-063",
+      "display_name": "Compliance 063",
+      "category": "compliance",
+      "rank": 64,
+      "description": "Scale-catalog compliance connector. Tools: list_compliance, apply_compliance.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "reviewed",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-compliance-063",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "compliance.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 2,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_compliance",
+          "capability": "read"
+        },
+        {
+          "name": "apply_compliance",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 135,
+        "calls_24h": 2331
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "messaging-064",
+      "display_name": "Messaging 064",
+      "category": "messaging",
+      "rank": 65,
+      "description": "Scale-catalog messaging connector. Tools: list_messaging.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-messaging-064",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "messaging.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_messaging",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 140,
+        "calls_24h": 2368
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "product_analytics-065",
+      "display_name": "Product Analytics 065",
+      "category": "product_analytics",
+      "rank": 66,
+      "description": "Scale-catalog product_analytics connector. Tools: list_product_analytics.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-product_analytics-065",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "product_analytics.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_product_analytics",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 145,
+        "calls_24h": 2405
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "feature_flags-066",
+      "display_name": "Feature Flags 066",
+      "category": "feature_flags",
+      "rank": 67,
+      "description": "Scale-catalog feature_flags connector. Tools: list_feature_flags, notify_feature_flags.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-feature_flags-066",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "feature_flags.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 1,
+      "tools": [
+        {
+          "name": "list_feature_flags",
+          "capability": "read"
+        },
+        {
+          "name": "notify_feature_flags",
+          "capability": "external_communication"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 150,
+        "calls_24h": 2442
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 1,
+        "posture": "review_required"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "financial-067",
+      "display_name": "Financial 067",
+      "category": "financial",
+      "rank": 68,
+      "description": "Scale-catalog financial connector. Tools: list_financial.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-financial-067",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "financial.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_financial",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 155,
+        "calls_24h": 2479
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "source_control-068",
+      "display_name": "Source Control 068",
+      "category": "source_control",
+      "rank": 69,
+      "description": "Scale-catalog source_control connector. Tools: list_source_control.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-source_control-068",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "source_control.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_source_control",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 160,
+        "calls_24h": 2516
+      },
+      "security": {
+        "signed": false,
+        "sbom": false,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "unknown"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "workspace-069",
+      "display_name": "Workspace 069",
+      "category": "workspace",
+      "rank": 70,
+      "description": "Scale-catalog workspace connector. Tools: list_workspace.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "quarantined",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-workspace-069",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "workspace.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_workspace",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 165,
+        "calls_24h": 2553
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "ci_cd-070",
+      "display_name": "Ci Cd 070",
+      "category": "ci_cd",
+      "rank": 71,
+      "description": "Scale-catalog ci_cd connector. Tools: list_ci_cd, apply_ci_cd.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "reviewed",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-ci_cd-070",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "ci_cd.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 1,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_ci_cd",
+          "capability": "read"
+        },
+        {
+          "name": "apply_ci_cd",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 170,
+        "calls_24h": 2590
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "documentation-071",
+      "display_name": "Documentation 071",
+      "category": "documentation",
+      "rank": 72,
+      "description": "Scale-catalog documentation connector. Tools: list_documentation.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-documentation-071",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "documentation.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_documentation",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 175,
+        "calls_24h": 2627
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "database-072",
+      "display_name": "Database 072",
+      "category": "database",
+      "rank": 73,
+      "description": "Scale-catalog database connector. Tools: list_database.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-database-072",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "database.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_database",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 180,
+        "calls_24h": 2664
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "analytics-073",
+      "display_name": "Analytics 073",
+      "category": "analytics",
+      "rank": 74,
+      "description": "Scale-catalog analytics connector. Tools: list_analytics.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-analytics-073",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "analytics.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_analytics",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 185,
+        "calls_24h": 2701
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "observability-074",
+      "display_name": "Observability 074",
+      "category": "observability",
+      "rank": 75,
+      "description": "Scale-catalog observability connector. Tools: list_observability.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-observability-074",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "observability.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_observability",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 190,
+        "calls_24h": 2738
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "browser-075",
+      "display_name": "Browser 075",
+      "category": "browser",
+      "rank": 76,
+      "description": "Scale-catalog browser connector. Tools: list_browser.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-browser-075",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "browser.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_browser",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 195,
+        "calls_24h": 2775
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "cloud-076",
+      "display_name": "Cloud 076",
+      "category": "cloud",
+      "rank": 77,
+      "description": "Scale-catalog cloud connector. Tools: list_cloud, delete_cloud_row.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-cloud-076",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "cloud.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 1,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_cloud",
+          "capability": "read"
+        },
+        {
+          "name": "delete_cloud_row",
+          "capability": "delete"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 200,
+        "calls_24h": 2812
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "kubernetes-077",
+      "display_name": "Kubernetes 077",
+      "category": "kubernetes",
+      "rank": 78,
+      "description": "Scale-catalog kubernetes connector. Tools: list_kubernetes, apply_kubernetes, notify_kubernetes.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "reviewed",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-kubernetes-077",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "kubernetes.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 2,
+      "delete_tool_count": 0,
+      "external_tool_count": 1,
+      "tools": [
+        {
+          "name": "list_kubernetes",
+          "capability": "read"
+        },
+        {
+          "name": "apply_kubernetes",
+          "capability": "write"
+        },
+        {
+          "name": "notify_kubernetes",
+          "capability": "external_communication"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 205,
+        "calls_24h": 2849
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 1,
+        "posture": "review_required"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "iac-078",
+      "display_name": "Iac 078",
+      "category": "iac",
+      "rank": 79,
+      "description": "Scale-catalog iac connector. Tools: list_iac.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-iac-078",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "iac.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_iac",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 210,
+        "calls_24h": 2886
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "security-079",
+      "display_name": "Security 079",
+      "category": "security",
+      "rank": 80,
+      "description": "Scale-catalog security connector. Tools: list_security.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-security-079",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "security.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_security",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 215,
+        "calls_24h": 2923
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "compliance-080",
+      "display_name": "Compliance 080",
+      "category": "compliance",
+      "rank": 81,
+      "description": "Scale-catalog compliance connector. Tools: list_compliance.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-compliance-080",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "compliance.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_compliance",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 20,
+        "calls_24h": 2960
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "messaging-081",
+      "display_name": "Messaging 081",
+      "category": "messaging",
+      "rank": 82,
+      "description": "Scale-catalog messaging connector. Tools: list_messaging.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-messaging-081",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "messaging.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_messaging",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 25,
+        "calls_24h": 2997
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "product_analytics-082",
+      "display_name": "Product Analytics 082",
+      "category": "product_analytics",
+      "rank": 83,
+      "description": "Scale-catalog product_analytics connector. Tools: list_product_analytics.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-product_analytics-082",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "product_analytics.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_product_analytics",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 30,
+        "calls_24h": 3034
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "feature_flags-083",
+      "display_name": "Feature Flags 083",
+      "category": "feature_flags",
+      "rank": 84,
+      "description": "Scale-catalog feature_flags connector. Tools: list_feature_flags.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-feature_flags-083",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "feature_flags.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_feature_flags",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 35,
+        "calls_24h": 3071
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "financial-084",
+      "display_name": "Financial 084",
+      "category": "financial",
+      "rank": 85,
+      "description": "Scale-catalog financial connector. Tools: list_financial, apply_financial.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "reviewed",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-financial-084",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "financial.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 1,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_financial",
+          "capability": "read"
+        },
+        {
+          "name": "apply_financial",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 40,
+        "calls_24h": 3108
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "source_control-085",
+      "display_name": "Source Control 085",
+      "category": "source_control",
+      "rank": 86,
+      "description": "Scale-catalog source_control connector. Tools: list_source_control.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-source_control-085",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "source_control.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_source_control",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 45,
+        "calls_24h": 3145
+      },
+      "security": {
+        "signed": false,
+        "sbom": false,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "unknown"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "workspace-086",
+      "display_name": "Workspace 086",
+      "category": "workspace",
+      "rank": 87,
+      "description": "Scale-catalog workspace connector. Tools: list_workspace.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-workspace-086",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "workspace.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_workspace",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 50,
+        "calls_24h": 3182
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "ci_cd-087",
+      "display_name": "Ci Cd 087",
+      "category": "ci_cd",
+      "rank": 88,
+      "description": "Scale-catalog ci_cd connector. Tools: list_ci_cd.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-ci_cd-087",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "ci_cd.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_ci_cd",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 55,
+        "calls_24h": 3219
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 1,
+        "cve_high": 0,
+        "posture": "blocked"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "documentation-088",
+      "display_name": "Documentation 088",
+      "category": "documentation",
+      "rank": 89,
+      "description": "Scale-catalog documentation connector. Tools: list_documentation, notify_documentation.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-documentation-088",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "documentation.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 1,
+      "tools": [
+        {
+          "name": "list_documentation",
+          "capability": "read"
+        },
+        {
+          "name": "notify_documentation",
+          "capability": "external_communication"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 60,
+        "calls_24h": 3256
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 1,
+        "posture": "review_required"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "database-089",
+      "display_name": "Database 089",
+      "category": "database",
+      "rank": 90,
+      "description": "Scale-catalog database connector. Tools: list_database.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-database-089",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "database.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_database",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 65,
+        "calls_24h": 3293
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "analytics-090",
+      "display_name": "Analytics 090",
+      "category": "analytics",
+      "rank": 91,
+      "description": "Scale-catalog analytics connector. Tools: list_analytics.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-analytics-090",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "analytics.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_analytics",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 70,
+        "calls_24h": 3330
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "observability-091",
+      "display_name": "Observability 091",
+      "category": "observability",
+      "rank": 92,
+      "description": "Scale-catalog observability connector. Tools: list_observability, apply_observability.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "reviewed",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-observability-091",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "observability.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 2,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_observability",
+          "capability": "read"
+        },
+        {
+          "name": "apply_observability",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 75,
+        "calls_24h": 3367
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "browser-092",
+      "display_name": "Browser 092",
+      "category": "browser",
+      "rank": 93,
+      "description": "Scale-catalog browser connector. Tools: list_browser.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "quarantined",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-browser-092",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "browser.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_browser",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 80,
+        "calls_24h": 3404
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "cloud-093",
+      "display_name": "Cloud 093",
+      "category": "cloud",
+      "rank": 94,
+      "description": "Scale-catalog cloud connector. Tools: list_cloud.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-cloud-093",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "cloud.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_cloud",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 85,
+        "calls_24h": 3441
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "kubernetes-094",
+      "display_name": "Kubernetes 094",
+      "category": "kubernetes",
+      "rank": 95,
+      "description": "Scale-catalog kubernetes connector. Tools: list_kubernetes.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-kubernetes-094",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "kubernetes.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_kubernetes",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 90,
+        "calls_24h": 3478
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "iac-095",
+      "display_name": "Iac 095",
+      "category": "iac",
+      "rank": 96,
+      "description": "Scale-catalog iac connector. Tools: list_iac, delete_iac_row.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-iac-095",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "iac.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 1,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_iac",
+          "capability": "read"
+        },
+        {
+          "name": "delete_iac_row",
+          "capability": "delete"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 95,
+        "calls_24h": 3515
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "security-096",
+      "display_name": "Security 096",
+      "category": "security",
+      "rank": 97,
+      "description": "Scale-catalog security connector. Tools: list_security.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-security-096",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "security.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_security",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 100,
+        "calls_24h": 3552
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "compliance-097",
+      "display_name": "Compliance 097",
+      "category": "compliance",
+      "rank": 98,
+      "description": "Scale-catalog compliance connector. Tools: list_compliance.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-compliance-097",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "compliance.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_compliance",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 105,
+        "calls_24h": 3589
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "messaging-098",
+      "display_name": "Messaging 098",
+      "category": "messaging",
+      "rank": 99,
+      "description": "Scale-catalog messaging connector. Tools: list_messaging, apply_messaging.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "reviewed",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-messaging-098",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "messaging.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 1,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_messaging",
+          "capability": "read"
+        },
+        {
+          "name": "apply_messaging",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 110,
+        "calls_24h": 3626
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "product_analytics-099",
+      "display_name": "Product Analytics 099",
+      "category": "product_analytics",
+      "rank": 100,
+      "description": "Scale-catalog product_analytics connector. Tools: list_product_analytics, notify_product_analytics.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-product_analytics-099",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "product_analytics.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 1,
+      "tools": [
+        {
+          "name": "list_product_analytics",
+          "capability": "read"
+        },
+        {
+          "name": "notify_product_analytics",
+          "capability": "external_communication"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 115,
+        "calls_24h": 3663
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 1,
+        "posture": "review_required"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "feature_flags-100",
+      "display_name": "Feature Flags 100",
+      "category": "feature_flags",
+      "rank": 101,
+      "description": "Scale-catalog feature_flags connector. Tools: list_feature_flags.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-feature_flags-100",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "feature_flags.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_feature_flags",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 120,
+        "calls_24h": 3700
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "financial-101",
+      "display_name": "Financial 101",
+      "category": "financial",
+      "rank": 102,
+      "description": "Scale-catalog financial connector. Tools: list_financial.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-financial-101",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "financial.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_financial",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 125,
+        "calls_24h": 3737
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "source_control-102",
+      "display_name": "Source Control 102",
+      "category": "source_control",
+      "rank": 103,
+      "description": "Scale-catalog source_control connector. Tools: list_source_control.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-source_control-102",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "source_control.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_source_control",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 130,
+        "calls_24h": 3774
+      },
+      "security": {
+        "signed": false,
+        "sbom": false,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "unknown"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "workspace-103",
+      "display_name": "Workspace 103",
+      "category": "workspace",
+      "rank": 104,
+      "description": "Scale-catalog workspace connector. Tools: list_workspace.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-workspace-103",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "workspace.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_workspace",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 135,
+        "calls_24h": 3811
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "ci_cd-104",
+      "display_name": "Ci Cd 104",
+      "category": "ci_cd",
+      "rank": 105,
+      "description": "Scale-catalog ci_cd connector. Tools: list_ci_cd.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-ci_cd-104",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "ci_cd.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_ci_cd",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 140,
+        "calls_24h": 3848
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "documentation-105",
+      "display_name": "Documentation 105",
+      "category": "documentation",
+      "rank": 106,
+      "description": "Scale-catalog documentation connector. Tools: list_documentation, apply_documentation.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "reviewed",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-documentation-105",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "documentation.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 2,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_documentation",
+          "capability": "read"
+        },
+        {
+          "name": "apply_documentation",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 145,
+        "calls_24h": 3885
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "database-106",
+      "display_name": "Database 106",
+      "category": "database",
+      "rank": 107,
+      "description": "Scale-catalog database connector. Tools: list_database.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-database-106",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "database.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_database",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 150,
+        "calls_24h": 3922
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "analytics-107",
+      "display_name": "Analytics 107",
+      "category": "analytics",
+      "rank": 108,
+      "description": "Scale-catalog analytics connector. Tools: list_analytics.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-analytics-107",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "analytics.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_analytics",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 155,
+        "calls_24h": 3959
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "observability-108",
+      "display_name": "Observability 108",
+      "category": "observability",
+      "rank": 109,
+      "description": "Scale-catalog observability connector. Tools: list_observability.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-observability-108",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "observability.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_observability",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 160,
+        "calls_24h": 3996
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "browser-109",
+      "display_name": "Browser 109",
+      "category": "browser",
+      "rank": 110,
+      "description": "Scale-catalog browser connector. Tools: list_browser.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-browser-109",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "browser.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_browser",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 165,
+        "calls_24h": 4033
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "cloud-110",
+      "display_name": "Cloud 110",
+      "category": "cloud",
+      "rank": 111,
+      "description": "Scale-catalog cloud connector. Tools: list_cloud, notify_cloud.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "in_lab",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-cloud-110",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "cloud.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 1,
+      "tools": [
+        {
+          "name": "list_cloud",
+          "capability": "read"
+        },
+        {
+          "name": "notify_cloud",
+          "capability": "external_communication"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 170,
+        "calls_24h": 4070
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 1,
+        "posture": "review_required"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "kubernetes-111",
+      "display_name": "Kubernetes 111",
+      "category": "kubernetes",
+      "rank": 112,
+      "description": "Scale-catalog kubernetes connector. Tools: list_kubernetes.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-kubernetes-111",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "kubernetes.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_kubernetes",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 175,
+        "calls_24h": 4107
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "iac-112",
+      "display_name": "Iac 112",
+      "category": "iac",
+      "rank": 113,
+      "description": "Scale-catalog iac connector. Tools: list_iac, apply_iac.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "reviewed",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-iac-112",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "iac.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 1,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_iac",
+          "capability": "read"
+        },
+        {
+          "name": "apply_iac",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 180,
+        "calls_24h": 4144
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "security-113",
+      "display_name": "Security 113",
+      "category": "security",
+      "rank": 114,
+      "description": "Scale-catalog security connector. Tools: list_security.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-security-113",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "security.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_security",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 185,
+        "calls_24h": 4181
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "compliance-114",
+      "display_name": "Compliance 114",
+      "category": "compliance",
+      "rank": 115,
+      "description": "Scale-catalog compliance connector. Tools: list_compliance, delete_compliance_row.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-compliance-114",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "public",
+      "outbound_domains": [
+        "compliance.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 0,
+      "delete_tool_count": 1,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_compliance",
+          "capability": "read"
+        },
+        {
+          "name": "delete_compliance_row",
+          "capability": "delete"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 190,
+        "calls_24h": 4218
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "messaging-115",
+      "display_name": "Messaging 115",
+      "category": "messaging",
+      "rank": 116,
+      "description": "Scale-catalog messaging connector. Tools: list_messaging.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "unverified",
+      "certification_state": "quarantined",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-messaging-115",
+      "allowed_environments": [
+        "development",
+        "staging",
+        "production"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "messaging.internal"
+      ],
+      "read_tool_count": 2,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_messaging",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 195,
+        "calls_24h": 4255
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": true,
+      "synthetic": true
+    },
+    {
+      "slug": "product_analytics-116",
+      "display_name": "Product Analytics 116",
+      "category": "product_analytics",
+      "rank": 117,
+      "description": "Scale-catalog product_analytics connector. Tools: list_product_analytics.",
+      "owner_team": "platform-security",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "sandboxed",
+      "certification_state": "in_lab",
+      "transport": "stdio",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-product_analytics-116",
+      "allowed_environments": [
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "product_analytics.internal"
+      ],
+      "read_tool_count": 3,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_product_analytics",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "healthy",
+        "healthy": true,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 200,
+        "calls_24h": 4292
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 1,
+        "cve_high": 0,
+        "posture": "blocked"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "feature_flags-117",
+      "display_name": "Feature Flags 117",
+      "category": "feature_flags",
+      "rank": 118,
+      "description": "Scale-catalog feature_flags connector. Tools: list_feature_flags.",
+      "owner_team": "data-platform",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "reviewed",
+      "certification_state": "in_lab",
+      "transport": "streamable_http",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-feature_flags-117",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "regulated",
+      "outbound_domains": [
+        "feature_flags.internal"
+      ],
+      "read_tool_count": 4,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_feature_flags",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "degraded",
+        "healthy": false,
+        "success_rate_24h": 0.94,
+        "p95_latency_ms": 205,
+        "calls_24h": 4329
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "financial-118",
+      "display_name": "Financial 118",
+      "category": "financial",
+      "rank": 119,
+      "description": "Scale-catalog financial connector. Tools: list_financial.",
+      "owner_team": "sre",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "certified",
+      "certification_state": "certified",
+      "transport": "sse_legacy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-financial-118",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "internal",
+      "outbound_domains": [
+        "financial.internal"
+      ],
+      "read_tool_count": 5,
+      "write_tool_count": 0,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_financial",
+          "capability": "read"
+        }
+      ],
+      "health": {
+        "status": "failing",
+        "healthy": false,
+        "success_rate_24h": 0.72,
+        "p95_latency_ms": 210,
+        "calls_24h": 4366
+      },
+      "security": {
+        "signed": true,
+        "sbom": true,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "ok"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    },
+    {
+      "slug": "source_control-119",
+      "display_name": "Source Control 119",
+      "category": "source_control",
+      "rank": 120,
+      "description": "Scale-catalog source_control connector. Tools: list_source_control, apply_source_control.",
+      "owner_team": "app-eng",
+      "escalation_contact": "secops@localhost",
+      "trust_tier": "production_critical",
+      "certification_state": "reviewed",
+      "transport": "gateway_proxy",
+      "version": "1.0.0",
+      "image_digest": "sha256:scale-source_control-119",
+      "allowed_environments": [
+        "development",
+        "staging"
+      ],
+      "data_classification": "confidential",
+      "outbound_domains": [
+        "source_control.internal"
+      ],
+      "read_tool_count": 6,
+      "write_tool_count": 2,
+      "delete_tool_count": 0,
+      "external_tool_count": 0,
+      "tools": [
+        {
+          "name": "list_source_control",
+          "capability": "read"
+        },
+        {
+          "name": "apply_source_control",
+          "capability": "write"
+        }
+      ],
+      "health": {
+        "status": "unknown",
+        "healthy": false,
+        "success_rate_24h": 0.995,
+        "p95_latency_ms": 215,
+        "calls_24h": 4403
+      },
+      "security": {
+        "signed": false,
+        "sbom": false,
+        "cve_critical": 0,
+        "cve_high": 0,
+        "posture": "unknown"
+      },
+      "active_in_production": false,
+      "synthetic": true
+    }
+  ]
+}

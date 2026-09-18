@@ -10,6 +10,8 @@ levelupworld/pilots/**/evidence/runs/*
 !levelupworld/pilots/**/evidence/runs/.gitkeep
 levelupworld/registry/lab-evidence/*
 !levelupworld/registry/lab-evidence/.gitkeep
+levelupworld/registry/web/.next/
+levelupworld/registry/web/out/
 **/__pycache__/
 *.py[cod]
 .pytest_cache/

@@ -1,0 +1,16 @@
+{
+  "name": "agent-ops-registry-web",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Next.js virtualized MCP connector catalog. Run: npm install && npm run dev (port 3000, /registry).",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000"
+  },
+  "dependencies": {
+    "next": "^15.5.25",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  }
+}

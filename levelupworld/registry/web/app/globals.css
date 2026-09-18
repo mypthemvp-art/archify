@@ -1,0 +1,69 @@
+:root {
+  --bg: #f6f1e8;
+  --ink: #1c1917;
+  --muted: #78716c;
+  --card: #fffdf8;
+  --line: #e7e0d4;
+  --ok: #166534;
+  --warn: #a16207;
+  --deny: #9f1239;
+  --font: "Iowan Old Style", Palatino, Georgia, serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font);
+  background: linear-gradient(180deg, #faf6ef 0%, var(--bg) 220px);
+}
+a { color: inherit; }
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 253, 248, 0.92);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.brand { display: flex; flex-direction: column; }
+.brand span, .muted { color: var(--muted); }
+.shell { max-width: 1280px; margin: 0 auto; padding: 1.25rem; }
+h1 { margin: 0 0 0.35rem; letter-spacing: -0.02em; }
+.filters, .views { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.8rem 0; }
+input, select, button {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 8px;
+  padding: 0.4rem 0.55rem;
+}
+button.active { background: var(--ink); color: var(--card); }
+.meta { color: var(--muted); font-size: 0.92rem; }
+.scroller {
+  height: 640px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { text-align: left; padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+code { font-family: var(--mono); font-size: 0.78rem; }
+.badge { border-radius: 999px; padding: 0.1rem 0.45rem; background: #efe8dc; }
+.posture-ok { color: var(--ok); }
+.posture-review_required, .posture-unknown { color: var(--warn); }
+.posture-blocked { color: var(--deny); }
+.card-list { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.5rem; }
+.card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.7rem 0.8rem;
+  background: #fff;
+}
+.detail { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1rem; }

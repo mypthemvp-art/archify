@@ -8,7 +8,7 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Connector manifest validation, catalog UI (table-first), multi-filters, saved views API
 - [x] Version detail pages and owner/certification metadata
 - [x] OIDC production IdP wiring (`gateway/app/oidc.py`, `docs/AUTH.md`, `AUTH_MODE=oidc` + JWKS)
-- [ ] Next.js virtualized table at 100+ scale
+- [x] Next.js virtualized table at 100+ scale (`registry/web` `/registry`; window test `scripts/test-catalog-window.mjs`)
 
 ### Milestone 2 — Assurance plane
 

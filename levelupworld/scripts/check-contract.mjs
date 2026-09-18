@@ -40,6 +40,13 @@ for (const required of [
   'levelupworld/registry/schema/005_full_product_model.sql',
   'levelupworld/registry/types/connector-filters.ts',
   'levelupworld/registry/scripts/ephemeral-lab-runner.mjs',
+  'levelupworld/registry/scripts/generate-scale-catalog.mjs',
+  'levelupworld/registry/scripts/test-catalog-window.mjs',
+  'levelupworld/registry/web/package.json',
+  'levelupworld/registry/web/app/registry/page.js',
+  'levelupworld/registry/web/components/VirtualCatalog.js',
+  'levelupworld/registry/web/lib/window.mjs',
+  'levelupworld/registry/web/fixtures/scale-catalog.json',
   'levelupworld/scripts/prove-hooks-fail-closed.mjs',
   '.github/workflows/hooks-bypass-proof.yml',
   '.cursor/rules/00-agent-security.mdc',
@@ -124,5 +131,10 @@ assert.equal(
   }).permission,
   'allow',
 );
+
+const windowTest = spawnSync(process.execPath, [
+  path.join(root, 'levelupworld/registry/scripts/test-catalog-window.mjs'),
+]);
+assert.equal(windowTest.status, 0, windowTest.stderr || windowTest.stdout);
 
 console.log('levelupworld agent-ops + registry contract checks passed');
