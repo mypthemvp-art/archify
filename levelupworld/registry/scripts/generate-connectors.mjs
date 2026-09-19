@@ -9,6 +9,9 @@ import { fileURLToPath } from 'node:url';
 const dir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../connectors');
 fs.mkdirSync(dir, { recursive: true });
 
+// Pinned so CI regeneration is byte-stable. Do not use new Date() here.
+const GENERATED_AT = '2026-09-17T05:51:53.242Z';
+
 const connectors = [
   {
     slug: 'github-readonly',
@@ -326,7 +329,7 @@ for (const c of connectors) {
       error_rate_24h: 0.01,
       policy_denial_rate_24h: 0.02,
       healthy: true,
-      last_health_at: new Date().toISOString(),
+      last_health_at: GENERATED_AT,
     },
     active_in_production: ['github-readonly', 'git-repository', 'policy-approval-gateway', 'audit-evidence-store'].includes(
       c.slug,
@@ -372,7 +375,7 @@ spec:
   trust:
     tier: ${trustTier[c.trust_tier] ?? 1}
     certification: ${c.certification_state}
-    lastSecurityReviewAt: ${new Date().toISOString()}
+    lastSecurityReviewAt: ${GENERATED_AT}
   data:
     classifications: [${c.data_classification}]
     outboundDomains: [${c.outbound_domains.map((d) => d).join(', ')}]

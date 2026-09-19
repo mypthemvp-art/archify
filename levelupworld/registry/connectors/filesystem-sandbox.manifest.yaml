@@ -19,7 +19,7 @@ spec:
   trust:
     tier: 3
     certification: certified
-    lastSecurityReviewAt: 2026-09-17T05:51:53.241Z
+    lastSecurityReviewAt: 2026-09-17T05:51:53.242Z
   data:
     classifications: [internal]
     outboundDomains: []
