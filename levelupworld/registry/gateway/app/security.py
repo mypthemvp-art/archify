@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import threading
 import time
 import uuid
 from typing import Any
@@ -103,25 +104,32 @@ class BudgetTracker:
         self.max_duration_ms = max_duration_ms
         self.max_cost_micros = max_cost_micros
         self.runs: dict[str, dict[str, Any]] = {}
+        self._lock = threading.RLock()
 
     def begin(self, run_id: str | None) -> str:
         rid = run_id or str(uuid.uuid4())
-        self.runs.setdefault(
-            rid,
-            {
-                "tool_calls": 0,
-                "cost_micros": 0,
-                "started_ms": int(time.time() * 1000),
-                "breached": False,
-            },
-        )
+        with self._lock:
+            self.runs.setdefault(
+                rid,
+                {
+                    "tool_calls": 0,
+                    "cost_micros": 0,
+                    "started_ms": int(time.time() * 1000),
+                    "breached": False,
+                },
+            )
         return rid
 
     def charge(self, run_id: str, cost_micros: int = 0) -> tuple[bool, str]:
-        state = self.runs[self.begin(run_id)]
-        state["tool_calls"] += 1
-        state["cost_micros"] += cost_micros
-        elapsed = int(time.time() * 1000) - state["started_ms"]
+        with self._lock:
+            state = self.runs[self.begin(run_id)]
+            state["tool_calls"] += 1
+            state["cost_micros"] += cost_micros
+            elapsed = int(time.time() * 1000) - state["started_ms"]
+            breached = self._charge_locked(state, elapsed)
+        return breached
+
+    def _charge_locked(self, state: dict[str, Any], elapsed: int) -> tuple[bool, str]:
         if state["tool_calls"] > self.max_tools:
             state["breached"] = True
             return False, f"tool-call budget exceeded ({self.max_tools})"

@@ -67,6 +67,15 @@ jobs:
           export GITHUB_WRITE_DRY_RUN=1
           pytest -q levelupworld/registry/gateway/tests
 
+      - name: Catalog window stress
+        run: node levelupworld/registry/scripts/stress-catalog.mjs
+
+      - name: Gateway concurrency stress and audit chain
+        run: |
+          export AUTH_MODE=disabled
+          export GITHUB_WRITE_DRY_RUN=1
+          python levelupworld/registry/scripts/stress-gateway.py
+
       - name: Sandbox certification + github-write dry-run via API
         run: |
           export AUTH_MODE=disabled
@@ -79,3 +88,13 @@ jobs:
             sleep 0.5
           done
           python levelupworld/registry/scripts/ci-smoke-github-write.py http://127.0.0.1:8787
+
+  ship:
+    needs: certify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: shipped
+    steps:
+      - name: Record ship gate
+        run: echo "Stress test and full registry audit passed for ${{ github.sha }}. Shipped environment is the post-audit record; the gateway is not exposed with AUTH_MODE=disabled."
