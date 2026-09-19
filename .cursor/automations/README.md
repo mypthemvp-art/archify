@@ -20,4 +20,6 @@ Create live Automations via `/automate` or cursor.com/automations by copying a b
 | Open-Source Maintenance | `open-source-maintenance` |
 | Any / unknown | `levelupworld-catalog-router` |
 
+Needs Attention is not one of the 100 catalog rows. The operational prompt, subagent rails, and triage script live in [`needs-attention-coordinator.md`](needs-attention-coordinator.md).
+
 Full catalog: [`levelupworld/docs/CATALOG.md`](../../levelupworld/docs/CATALOG.md)

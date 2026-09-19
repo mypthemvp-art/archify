@@ -6,6 +6,11 @@ on:
     paths:
       - ".cursor/hooks/**"
       - ".cursor/hooks.json"
+      - ".cursor/needs-attention/**"
+      - ".cursor/agents/**"
+      - "levelupworld/scripts/lib/needs-attention-rails.mjs"
+      - "levelupworld/scripts/needs-attention-triage.mjs"
+      - "levelupworld/scripts/prove-needs-attention-rails.mjs"
       - ".cursor/mcp.json"
       - ".cursor/mcp.pilot.json"
       - ".cursor/mcp.gateway.example.json"
@@ -16,6 +21,11 @@ on:
     paths:
       - ".cursor/hooks/**"
       - ".cursor/hooks.json"
+      - ".cursor/needs-attention/**"
+      - ".cursor/agents/**"
+      - "levelupworld/scripts/lib/needs-attention-rails.mjs"
+      - "levelupworld/scripts/needs-attention-triage.mjs"
+      - "levelupworld/scripts/prove-needs-attention-rails.mjs"
       - ".cursor/mcp.json"
       - ".cursor/mcp.pilot.json"
       - ".cursor/mcp.gateway.example.json"
@@ -34,5 +44,7 @@ jobs:
           node-version: 22
       - name: Prove hooks fail closed (adversarial cases)
         run: node levelupworld/scripts/prove-hooks-fail-closed.mjs
+      - name: Prove Needs Attention subagent rails
+        run: node levelupworld/scripts/prove-needs-attention-rails.mjs
       - name: Agent-ops contract checks
         run: node levelupworld/scripts/check-contract.mjs

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "stallAfterMs": 1800000,
+  "unopenedAfterMs": 900000,
+  "errorRetries": 2,
+  "subagentLoopLimit": 3,
+  "subagentAllowlist": [
+    "explore",
+    "generalPurpose",
+    "ci-investigator",
+    "validation-review",
+    "docs-reliability-review",
+    "security-review",
+    "bugbot",
+    "cursor-guide",
+    "needs-attention-triage",
+    "needs-attention-resolver"
+  ],
+  "humanOnly": [
+    "environment_setup",
+    "mcp_auth",
+    "secret",
+    "production_apply",
+    "external_message",
+    "payment",
+    "delete",
+    "force_push"
+  ]
+}

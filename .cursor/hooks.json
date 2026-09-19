@@ -47,6 +47,32 @@
       {
         "command": ".cursor/hooks/post-tool-audit-log.mjs"
       }
+    ],
+    "subagentStart": [
+      {
+        "command": ".cursor/hooks/subagent-start-rail.mjs",
+        "timeoutSeconds": 5,
+        "failClosed": true,
+        "description": "Allow only rail-listed subagents so a blocked child cannot sit in Needs Attention"
+      }
+    ],
+    "subagentStop": [
+      {
+        "command": ".cursor/hooks/subagent-stop-rail.mjs",
+        "timeoutSeconds": 5,
+        "failClosed": false,
+        "loop_limit": 3,
+        "description": "Auto-continue a subagent that stopped to ask instead of deciding"
+      }
+    ],
+    "stop": [
+      {
+        "command": ".cursor/hooks/agent-continue-rail.mjs",
+        "timeoutSeconds": 5,
+        "failClosed": false,
+        "loop_limit": 2,
+        "description": "Retry an errored agent turn instead of leaving it in Needs Attention"
+      }
     ]
   },
   "_spec": "See levelupworld/registry/docs/MULTI-TENANT-DASHBOARD-SPEC.md §7 — matcher fields vary by Cursor release; keep failClosed preflight."
