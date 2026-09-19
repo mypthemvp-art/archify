@@ -32,3 +32,4 @@ Needs Attention is an Agents Window group, not a Cloud Agent lifecycle status. C
 - Clicking Allow on a local approval prompt.
 - Answering a plan-mode gate.
 - Adding an environment secret. That remains `request-environment-setup-actions` and a person.
+- The Working lane and the read-automation full check. Those are `.cursor/automations/working-coordinator.md` and `.cursor/automations/read-automation-check.md`.
