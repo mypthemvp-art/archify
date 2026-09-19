@@ -1,6 +1,7 @@
 {
   "version": 1,
   "stallAfterMs": 1800000,
+  "workingBudgetMs": 3600000,
   "unopenedAfterMs": 900000,
   "errorRetries": 2,
   "subagentLoopLimit": 3,
@@ -14,7 +15,9 @@
     "bugbot",
     "cursor-guide",
     "needs-attention-triage",
-    "needs-attention-resolver"
+    "needs-attention-resolver",
+    "working-watch",
+    "read-automation-auditor"
   ],
   "humanOnly": [
     "environment_setup",

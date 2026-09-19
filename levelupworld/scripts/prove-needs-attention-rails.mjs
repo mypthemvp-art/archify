@@ -4,6 +4,7 @@
  * Separate from prove-hooks-fail-closed.mjs so this file stays free of
  * credential-shaped fixtures.
  */
+import { auditReadBlueprint } from './lib/read-automation-check.mjs';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -147,6 +148,69 @@ for (const [id, disposition] of Object.entries(expect)) {
 if (!report.correlation_id || report.tenant_missing || report.mutate_blocked) {
   fail('triage must emit correlation_id and keep tenant');
 } else ok('fleet triage dispositions match rails');
+
+const lanes = Object.fromEntries(report.results.map((row) => [row.evidence.bcId, row.lane]));
+const laneExpect = {
+  err: 'needs_attention',
+  setup: 'needs_attention',
+  auth: 'needs_attention',
+  pr: 'read',
+  quiet: 'needs_attention',
+  live: 'working',
+  old: 'read',
+};
+for (const [id, lane] of Object.entries(laneExpect)) {
+  if (lanes[id] !== lane) fail(`agent ${id} expected lane ${lane}, got ${lanes[id]}`);
+}
+const prRow = report.results.find((row) => row.evidence.bcId === 'pr');
+if (prRow?.action !== 'read_check') fail('delivered pull request must request a read check');
+else if (report.summary.working !== 1 || report.summary.read !== 2) {
+  fail(`lane summary mismatch ${JSON.stringify(report.summary)}`);
+} else ok('working and read lanes are labeled');
+
+const stuck = triage({
+  tenant: 'tenant_demo',
+  now: 10_000_000,
+  agents: [{ bcId: 'stuck', status: 'RUNNING', lastMessageActivityAtMs: 1, url: 'https://cursor.com/agents/stuck' }],
+});
+const stuckRow = stuck.results[0];
+if (stuckRow.lane !== 'working' || stuckRow.disposition !== 'page_human' || stuckRow.reason !== 'working_over_budget') {
+  fail(`over-budget working run mismatch ${stuckRow.lane} ${stuckRow.disposition} ${stuckRow.reason}`);
+} else ok('working run over budget pages a person');
+
+const allowedWatch = runHook(startRail, {
+  subagent_type: 'working-watch',
+  task: 'List working runs',
+  subagent_id: 'sub-w',
+});
+const allowedAudit = runHook(startRail, {
+  subagent_type: 'read-automation-auditor',
+  task: 'Check read automations',
+  subagent_id: 'sub-r',
+});
+if (allowedWatch.permission !== 'allow' || allowedAudit.permission !== 'allow') {
+  fail('working and read subagents must be allowlisted');
+} else ok('working and read subagents allowlisted');
+
+const readCheck = spawnSync(process.execPath, [path.join(root, 'levelupworld/scripts/check-read-automations.mjs')], {
+  encoding: 'utf8',
+});
+if (readCheck.status !== 0) fail(`read automation full check failed: ${readCheck.stdout}\n${readCheck.stderr}`);
+else {
+  const readReport = JSON.parse(readCheck.stdout);
+  if (!readReport.ok || readReport.checked < 1 || readReport.findings.length !== 0) {
+    fail('read automation full check must pass with zero findings');
+  } else ok(`read automation full check passed (${readReport.checked} checked, ${readReport.skipped} skipped)`);
+}
+
+const badBlueprint = auditReadBlueprint(
+  { id: 'A000', title: 'Example', trigger: 'Weekly', capability: 'git', output: 'report', plugin: 'x' },
+  '---\nid: A000\ntitle: Example\nmutation: plan\ncontract: [trigger]\n---\n# nope\n',
+  { skillExists: false },
+);
+if (!badBlueprint.some((finding) => finding.check === 'mutation') || !badBlueprint.some((finding) => finding.check === 'read_only')) {
+  fail('a non-read blueprint must fail the full check');
+} else ok('full check rejects a blueprint that is not read-only');
 
 const noTenant = triage({ agents: [{ bcId: 'x', status: 'ERROR' }] });
 if (!noTenant.tenant_missing || !noTenant.mutate_blocked) fail('missing tenant must fail closed for mutation');

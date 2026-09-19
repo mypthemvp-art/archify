@@ -5,7 +5,7 @@
  * stdout: triage JSON. Read-only. Does not resume agents.
  */
 import fs from 'node:fs';
-import { triageFleet } from './lib/needs-attention-rails.mjs';
+import { triageWithLanes } from './lib/agent-window-lanes.mjs';
 
 let input;
 try {
@@ -16,7 +16,7 @@ try {
 }
 
 const now = typeof input.now === 'number' ? input.now : Date.parse(input.now || '') || Date.now();
-const report = triageFleet({
+const report = triageWithLanes({
   agents: Array.isArray(input.agents) ? input.agents : [],
   eventsById: input.eventsById && typeof input.eventsById === 'object' ? input.eventsById : {},
   now,
