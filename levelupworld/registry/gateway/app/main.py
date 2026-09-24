@@ -60,6 +60,7 @@ def healthz():
         "audit_events": len(audit.events),
         "auth_mode": idp.mode,
         "database_rls": db.enabled,
+        "persistence": "postgres" if db.enabled else "memory",
         "mcp_endpoint": "/mcp",
         "mcp_transport": "streamable_http",
         "version": app.version,

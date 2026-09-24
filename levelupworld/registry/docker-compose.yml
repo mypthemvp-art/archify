@@ -1,0 +1,20 @@
+# Optional local Postgres for Phase B gateway persistence.
+# Usage:
+#   docker compose -f levelupworld/registry/docker-compose.yml up -d
+#   export DATABASE_URL=postgresql://gateway:gateway@127.0.0.1:54329/agent_ops
+#   psql "$DATABASE_URL" -f levelupworld/registry/schema/006_gateway_runtime.sql
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: gateway
+      POSTGRES_PASSWORD: gateway
+      POSTGRES_DB: agent_ops
+    ports:
+      - "54329:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gateway -d agent_ops"]
+      interval: 3s
+      timeout: 3s
+      retries: 10

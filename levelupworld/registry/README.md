@@ -50,6 +50,8 @@ AUTH_MODE=disabled GITHUB_WRITE_DRY_RUN=1 \
 | `connectors/*.manifest.json` | Core connectors + `github-write` |
 | `gateway/` | FastAPI registry + policy gateway |
 | `dashboard/` | Catalog / Lab / Ops / Audit / Approvals UI |
+| `schema/006_gateway_runtime.sql` | Postgres dual-write for audit/approvals (`DATABASE_URL`) |
+| `docs/PERSISTENCE.md` | Phase B persistence runbook |
 
 ## API surface (v1)
 

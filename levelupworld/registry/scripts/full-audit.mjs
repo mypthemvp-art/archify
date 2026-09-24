@@ -5,12 +5,19 @@
  * Prints one JSON receipt. Exits non-zero if any gate fails.
  */
 import { spawnSync } from 'node:child_process';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const registryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const repoRoot = path.resolve(registryRoot, '../..');
-const py = path.join(registryRoot, 'gateway/.venv/bin/python');
+const venvPy = path.join(registryRoot, 'gateway/.venv/bin/python');
+const py = fs.existsSync(venvPy) ? venvPy : 'python3';
+const pyEnv = {
+  AUTH_MODE: 'disabled',
+  GITHUB_WRITE_DRY_RUN: '1',
+  PYTHONPATH: path.join(registryRoot, 'gateway'),
+};
 
 const steps = [
   ['certify-connectors', 'node', ['levelupworld/registry/scripts/certify-connectors.mjs']],
@@ -20,18 +27,8 @@ const steps = [
   ['ephemeral-lab', 'node', ['levelupworld/registry/scripts/ephemeral-lab-runner.mjs', 'github-readonly', 'full']],
   ['contract', 'node', ['levelupworld/scripts/check-contract.mjs']],
   ['hooks-bypass', 'node', ['levelupworld/scripts/prove-hooks-fail-closed.mjs']],
-  [
-    'pytest',
-    py,
-    ['-m', 'pytest', '-q', 'levelupworld/registry/gateway/tests'],
-    { AUTH_MODE: 'disabled', GITHUB_WRITE_DRY_RUN: '1' },
-  ],
-  [
-    'gateway-stress',
-    py,
-    ['levelupworld/registry/scripts/stress-gateway.py'],
-    { AUTH_MODE: 'disabled', GITHUB_WRITE_DRY_RUN: '1' },
-  ],
+  ['pytest', py, ['-m', 'pytest', '-q', 'levelupworld/registry/gateway/tests'], pyEnv],
+  ['gateway-stress', py, ['levelupworld/registry/scripts/stress-gateway.py'], pyEnv],
 ];
 
 const results = [];

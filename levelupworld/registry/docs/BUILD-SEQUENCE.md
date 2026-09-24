@@ -41,6 +41,12 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Dual approval + step-up for production writes
 - [x] Mutation observe gate (`GET /api/v1/metrics/mutations` + `docs/MUTATION-OBSERVE.md`) — expand writes only after staging quality review
 
+### Phase B — Production persistence
+
+- [x] Postgres dual-write for audit + approvals (`schema/006_gateway_runtime.sql`, `gateway/app/persist.py`)
+- [x] Optional `docker-compose.yml` for local Postgres (`DATABASE_URL`)
+- [x] Persistence runbook (`docs/PERSISTENCE.md`); `/healthz` reports `persistence`
+
 ### Phase C — production lifecycle hardening
 
 - [x] Cursor-paginated catalog (`limit` / `next_cursor` on `GET /api/v1/connectors`)
@@ -52,6 +58,7 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Async invoke completion (`POST /gateway/v1/tools/complete`)
 - [ ] Onboard next sandboxed connector category beyond the core 11
 - [ ] Expand mutations beyond `github-write` dry-run after staging observe review
+- [ ] Hosted gateway deploy with `AUTH_MODE=oidc` (no disabled auth in production)
 
 ### Weeks 1–8 (historical delivery slices)
 
@@ -60,4 +67,4 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Weeks 5–6 gateway approvals + github-write
 - [x] Weeks 7–8 Cursor pilot certification
 
-See [`IMPLEMENTATION-STARTER.md`](IMPLEMENTATION-STARTER.md), [`CERTIFICATION.md`](CERTIFICATION.md), [`PHASE-C.md`](PHASE-C.md), and [`../../pilots/archify/CERTIFICATION.md`](../../pilots/archify/CERTIFICATION.md).
+See [`IMPLEMENTATION-STARTER.md`](IMPLEMENTATION-STARTER.md), [`CERTIFICATION.md`](CERTIFICATION.md), [`PERSISTENCE.md`](PERSISTENCE.md), [`PHASE-C.md`](PHASE-C.md), and [`../../pilots/archify/CERTIFICATION.md`](../../pilots/archify/CERTIFICATION.md).

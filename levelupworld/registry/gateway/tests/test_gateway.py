@@ -405,6 +405,7 @@ def test_healthz_reports_auth_and_rls(client):
     assert body["ok"] is True
     assert body["auth_mode"] == "disabled"
     assert body["database_rls"] is False
+    assert body["persistence"] == "memory"
     assert body["mcp_endpoint"] == "/mcp"
     assert body["mcp_transport"] == "streamable_http"
     assert "version" in body

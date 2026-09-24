@@ -14,6 +14,7 @@ from typing import Any
 import jwt
 
 from .models import ApprovalCreateRequest, Environment
+from .persist import persistence
 from .security import args_hash
 
 
@@ -26,12 +27,13 @@ def default_approver_count(environment: str, explicit: int | None = None) -> int
 
 
 class ApprovalService:
-    def __init__(self, signing_secret: str | None = None):
+    def __init__(self, signing_secret: str | None = None, store=None):
         self.signing_secret = signing_secret or os.environ.get(
             "GATEWAY_SIGNING_SECRET", "dev-only-change-me-agent-ops-gateway"
         )
         self.requests: dict[str, dict[str, Any]] = {}
         self.grants: dict[str, dict[str, Any]] = {}
+        self._persist = store if store is not None else persistence
 
     def create_request(self, body: ApprovalCreateRequest) -> dict[str, Any]:
         req_id = f"apr_{uuid.uuid4().hex}"
@@ -66,6 +68,7 @@ class ApprovalService:
             "grant_token": None,
         }
         self.requests[req_id] = record
+        self._persist.upsert_approval(record)
         return record
 
     def decide(
@@ -112,12 +115,14 @@ class ApprovalService:
 
         if not approve:
             req["status"] = "denied"
+            self._persist.upsert_approval(req)
             return req
 
         approvals = [d for d in decisions if d["approve"]]
         if len(approvals) < req["required_approver_count"]:
             req["status"] = "partially_approved"
             req["grant_token"] = None
+            self._persist.upsert_approval(req)
             return req
 
         return self._issue_grant(req, [d["approver"] for d in approvals])
@@ -162,6 +167,8 @@ class ApprovalService:
         req["status"] = "approved"
         req["grant_id"] = grant_id
         req["grant_token"] = token
+        self._persist.upsert_approval(req)
+        self._persist.upsert_grant(self.grants[grant_id], org_id=req["org_id"], approval_request_id=req["id"])
         return req
 
     def verify_grant(
@@ -227,6 +234,13 @@ class ApprovalService:
             if req_id and req_id in self.requests:
                 self.requests[req_id]["status"] = "consumed"
                 self.requests[req_id]["consumed_at"] = stored["consumed_at"]
+                self._persist.upsert_approval(self.requests[req_id])
+            if req_id:
+                self._persist.upsert_grant(
+                    stored,
+                    org_id=str(claims.get("org_id") or "org_local"),
+                    approval_request_id=str(req_id),
+                )
         return claims
 
     def consume(
@@ -254,4 +268,6 @@ class ApprovalService:
         grant_id = req.get("grant_id")
         if grant_id and grant_id in self.grants:
             self.grants[grant_id]["consumed_at"] = req["consumed_at"]
+            self._persist.upsert_grant(self.grants[grant_id], org_id=req["org_id"], approval_request_id=req["id"])
+        self._persist.upsert_approval(req)
         return req
