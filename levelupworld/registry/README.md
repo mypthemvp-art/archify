@@ -71,6 +71,10 @@ AUTH_MODE=disabled GITHUB_WRITE_DRY_RUN=1 \
 | POST | `/api/v1/approvals` | Create approval request |
 | POST | `/api/v1/approvals/{id}/decide` | Issue/deny signed grant |
 | GET | `/api/v1/metrics/connectors` | Ops metrics by connector |
+| GET | `/api/v1/health/connectors` | Connector health summaries |
+| GET | `/api/v1/certification-queue` | Reviewer certification queue |
+| POST | `/api/v1/supply-chain/refresh` | Re-ingest SBOM/CVE posture |
+| POST | `/gateway/v1/tools/complete` | Async invoke completion |
 | GET | `/api/v1/audit/invocations` | Immutable evidence trail |
 | GET | `/api/v1/policies/{policyKey}/decisions` | Policy decision log |
 
@@ -82,7 +86,8 @@ AUTH_MODE=disabled GITHUB_WRITE_DRY_RUN=1 \
 - [`docs/SECURITY-TEST-LAB.md`](docs/SECURITY-TEST-LAB.md) — suite families + hard gates
 - [`docs/CERTIFICATION.md`](docs/CERTIFICATION.md) — certification checklist + CI gate
 - [`docs/APPROVAL-TOKENS.md`](docs/APPROVAL-TOKENS.md) — signed grants
-- [`docs/BUILD-SEQUENCE.md`](docs/BUILD-SEQUENCE.md) — milestones M1–M5
+- [`docs/BUILD-SEQUENCE.md`](docs/BUILD-SEQUENCE.md) — milestones M1–M5 + Phase C
+- [`docs/PHASE-C.md`](docs/PHASE-C.md) — production lifecycle hardening APIs
 - [`schema/001_init.sql`](schema/001_init.sql) … [`schema/005_full_product_model.sql`](schema/005_full_product_model.sql)
 - [`types/connector-filters.ts`](types/connector-filters.ts) — shareable filter model
 

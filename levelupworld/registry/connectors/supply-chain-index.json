@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T06:16:54.857Z",
+  "generated_at": "2026-09-24T02:38:08.303Z",
   "feed_present": true,
   "connectors": {
     "audit-evidence-store": {
@@ -13,9 +13,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-17T06:16:54.858Z",
+      "last_scanned_at": "2026-09-24T02:38:08.303Z",
       "source": "feed",
-      "record_sha256": "02c183ea6ea4f5d36be367620b285f4cb9312789ee18c4d06e48e90e9f43987a"
+      "record_sha256": "c032e967b2e6228f94ce99380c53dcf8317ca68c77aeb82ec9612cde8e00306f"
     },
     "browser-test-runner": {
       "slug": "browser-test-runner",
@@ -28,9 +28,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-17T06:16:54.858Z",
+      "last_scanned_at": "2026-09-24T02:38:08.303Z",
       "source": "feed",
-      "record_sha256": "782da3832a2dfbc181d872d9096b1c0a21e23c561af43d5c54877a0092b02a88"
+      "record_sha256": "b2a657a0cccdafbdc752a64379ec9747296d82df2acf8ffdf75dd16cd32d5d29"
     },
     "cicd-observer": {
       "slug": "cicd-observer",
@@ -43,9 +43,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-17T06:16:54.858Z",
+      "last_scanned_at": "2026-09-24T02:38:08.303Z",
       "source": "feed",
-      "record_sha256": "5df13344052364f350850dd6f09b9f63dcdbf372552a053b3b5e7cb38d22cc61"
+      "record_sha256": "95905e7d4eed446f0bf5044b6f7796ea0da4c9b78f9a6cf11be2ac5886affe0f"
     },
     "docs-fetch-search": {
       "slug": "docs-fetch-search",
@@ -58,9 +58,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-17T06:16:54.858Z",
+      "last_scanned_at": "2026-09-24T02:38:08.304Z",
       "source": "feed",
-      "record_sha256": "54c67bbc172c1e299f579f820b112ff83a7b7fc5b115f3e05fd00e70066c9a92"
+      "record_sha256": "0ac83fdae5c2895cc7ac24d61ab8e40f13b21f774e5b0023c083028d9f6f71a7"
     },
     "filesystem-sandbox": {
       "slug": "filesystem-sandbox",
@@ -73,9 +73,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-17T06:16:54.858Z",
+      "last_scanned_at": "2026-09-24T02:38:08.304Z",
       "source": "feed",
-      "record_sha256": "eae0ba61b81418598cf8ddc838eaec635a5ccece08adc002e5d6424953ecec20"
+      "record_sha256": "15ca905cb01c11d4d4bdb1c77bf805dfdd76172ebf2a0a3fe067979ff8430790"
     },
     "git-repository": {
       "slug": "git-repository",
@@ -88,9 +88,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-17T06:16:54.858Z",
+      "last_scanned_at": "2026-09-24T02:38:08.304Z",
       "source": "feed",
-      "record_sha256": "d081934f5c7b89b954742d652c5c44540424674e34a03fad7081270f1c776633"
+      "record_sha256": "9b63f12ef4e679edad072b06245d0a505a069513c8b87fd72664b0bb865bddb1"
     },
     "github-readonly": {
       "slug": "github-readonly",
@@ -133,9 +133,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-17T06:16:54.858Z",
+      "last_scanned_at": "2026-09-24T02:38:08.304Z",
       "source": "feed",
-      "record_sha256": "0e1b22cc1886d001c4964ab471378a72085e1701771fe8ba54b197cde6603019"
+      "record_sha256": "e22a9b897e0464878b76b58306262304b65d3439c75fe96fabe19bcbf61e7589"
     },
     "policy-approval-gateway": {
       "slug": "policy-approval-gateway",
@@ -148,9 +148,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-17T06:16:54.859Z",
+      "last_scanned_at": "2026-09-24T02:38:08.304Z",
       "source": "feed",
-      "record_sha256": "52e20529a498fa4825932c333f3f032a40678e3ed70ddb67c6fa23041c1bd433"
+      "record_sha256": "7f2e66260824bb5b3c650a2f9df1636566336c05799aa1ebde19ce41e5ff6318"
     },
     "postgres-readonly": {
       "slug": "postgres-readonly",
@@ -163,9 +163,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-17T06:16:54.859Z",
+      "last_scanned_at": "2026-09-24T02:38:08.304Z",
       "source": "fixture-scanner",
-      "record_sha256": "5e62ccd6a910beafc82de2d45faf5375802388d9175d4e7284a10a31ea26796c"
+      "record_sha256": "f7c2c07358b4f1a12f6f44928ebb24285c2266f4830da853e6e6b4a0bb1e8014"
     }
   }
 }

@@ -34,7 +34,7 @@ DASHBOARD = ROOT / "dashboard"
 
 app = FastAPI(
     title="Agent-Ops MCP Registry Gateway",
-    version="0.4.0",
+    version="0.5.0",
     description="Control plane (registry) + policy gateway for certified MCP connectors.",
 )
 
@@ -225,8 +225,10 @@ def list_connectors(
     q: str | None = None,
     sort: str | None = None,
     view: str | None = Query(None, description="table|cards — advisory for UI clients"),
+    limit: int = Query(100, ge=1, le=500),
+    cursor: str | None = Query(None, description="pagination cursor (last slug from prior page)"),
 ):
-    """Multi-filter catalog for 100+ connectors. Comma-separated multi-value filters supported."""
+    """Multi-filter catalog for 100+ connectors. Cursor-paginated; comma-separated multi-value filters supported."""
     items = registry.list(
         category=category,
         trust_tier=trust_tier or trustTier,
@@ -241,8 +243,19 @@ def list_connectors(
         q=q,
         sort=sort,
     )
+    start = 0
+    if cursor:
+        for i, c in enumerate(items):
+            if c.slug == cursor:
+                start = i + 1
+                break
+    page = items[start : start + limit]
+    next_cursor = page[-1].slug if start + limit < len(items) and page else None
     return {
         "count": len(items),
+        "returned": len(page),
+        "limit": limit,
+        "next_cursor": next_cursor,
         "view": view or "table",
         "filters": {
             "category": category,
@@ -252,7 +265,7 @@ def list_connectors(
             "health": health,
             "sort": sort or "rank",
         },
-        "connectors": [c.model_dump() for c in items],
+        "connectors": [c.model_dump() for c in page],
     }
 
 
@@ -363,6 +376,32 @@ def list_activations(project_id: str | None = None):
     return {"activations": control_plane.list_activations(project_id)}
 
 
+@app.post("/api/v1/activations/{activation_id}/disable")
+def disable_activation(activation_id: str, body: dict, principal: Principal = Depends(require_roles("admin", "approver", "operator"))):
+    try:
+        return control_plane.disable_activation(
+            activation_id,
+            actor=body.get("actor") or principal.subject,
+            reason=body.get("reason", "disabled by operator"),
+        )
+    except KeyError:
+        raise HTTPException(404, "activation not found") from None
+
+
+@app.post("/api/v1/activations/{activation_id}/renew")
+def renew_activation(activation_id: str, body: dict, principal: Principal = Depends(require_roles("admin", "approver", "operator"))):
+    try:
+        return control_plane.renew_activation(
+            activation_id,
+            actor=body.get("actor") or principal.subject,
+            days=int(body.get("days", 90)),
+        )
+    except KeyError:
+        raise HTTPException(404, "activation not found") from None
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
+
+
 @app.post("/api/v1/connectors/{slug}/quarantine")
 def quarantine_connector(slug: str, body: dict):
     conn = registry.get(slug)
@@ -375,6 +414,37 @@ def quarantine_connector(slug: str, body: dict):
     # Reflect in in-memory manifest certification state for catalog UX
     conn.certification_state = "quarantined"
     return record
+
+
+@app.post("/api/v1/connectors/{slug}/versions/{version}/unquarantine")
+@app.post("/api/v1/connectors/{slug}/unquarantine")
+def unquarantine_connector(slug: str, body: dict, version: str | None = None):
+    """Lift quarantine with recorded reason (spec §5.1)."""
+    conn = registry.get(slug)
+    if not conn:
+        raise HTTPException(404, "connector not found")
+    ver = version or body.get("version") or conn.version
+    reason = body.get("reason", "quarantine lifted after review")
+    actor = body.get("actor", "user:secops")
+    try:
+        record = control_plane.unquarantine(slug, ver, reason, actor)
+    except KeyError:
+        raise HTTPException(404, "active quarantine not found") from None
+    # Restore certification state from last cert decision or reviewed default
+    decisions = control_plane.list_certification_decisions(slug)
+    last = next((d for d in decisions if d["version"] == ver), None)
+    if last and last["decision"] == "certify":
+        conn.certification_state = "certified"
+    elif last and last["decision"] == "fail":
+        conn.certification_state = "failed"
+    else:
+        conn.certification_state = "reviewed"
+    return record
+
+
+@app.get("/api/v1/quarantines")
+def list_quarantines(active_only: bool = True):
+    return {"quarantines": control_plane.list_quarantines(active_only=active_only)}
 
 
 @app.get("/api/v1/metrics/connectors")
@@ -785,6 +855,154 @@ def dashboard_quarantine(request: Request):
         "quarantine.html",
         {"page": "quarantine", "quarantines": active},
     )
+
+
+# ── Phase C — production lifecycle hardening ───────────────────────────────
+
+
+@app.post("/api/v1/connectors/{slug}/versions/{version}/certification-decisions")
+def create_certification_decision(
+    slug: str,
+    version: str,
+    body: dict,
+    principal: Principal = Depends(require_roles("admin", "approver")),
+):
+    conn = registry.get(slug)
+    if not conn or conn.version != version:
+        raise HTTPException(404, "connector version not found")
+    decision = body.get("decision", "review")
+    try:
+        record = control_plane.record_certification_decision(
+            slug=slug,
+            version=version,
+            decision=decision,
+            actor=body.get("actor") or principal.subject,
+            reason=body.get("reason", ""),
+            test_run_id=body.get("test_run_id"),
+            org_id=principal.org_id,
+        )
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    if decision == "certify":
+        conn.certification_state = "certified"
+    elif decision == "fail":
+        conn.certification_state = "failed"
+    elif decision == "review":
+        conn.certification_state = "reviewed"
+    return record
+
+
+@app.get("/api/v1/certification-queue")
+def certification_queue():
+    return {"queue": control_plane.list_certification_queue(registry.connectors)}
+
+
+@app.get("/api/v1/certification-decisions")
+def list_certification_decisions(slug: str | None = None):
+    return {"decisions": control_plane.list_certification_decisions(slug)}
+
+
+@app.get("/api/v1/health/connectors")
+def health_connectors():
+    """Current health summaries for ops dashboards (spec §5.5)."""
+    events = audit.events
+    by_slug: dict[str, dict] = {}
+    for conn in registry.list():
+        by_slug[conn.slug] = {
+            "slug": conn.slug,
+            "version": conn.version,
+            "reported_health": (conn.health or {}).get("status", "unknown"),
+            "quarantined": control_plane.is_quarantined(conn.slug, conn.version),
+            "certification_state": conn.certification_state,
+            "calls": 0,
+            "deny": 0,
+            "allow": 0,
+            "last_outcome": None,
+            "last_seen_at": None,
+        }
+    for event in events:
+        slug = event.get("connector_slug")
+        if slug not in by_slug:
+            continue
+        bucket = by_slug[slug]
+        bucket["calls"] += 1
+        decision = event.get("policy_decision")
+        if decision == "deny":
+            bucket["deny"] += 1
+        elif decision == "allow":
+            bucket["allow"] += 1
+        bucket["last_outcome"] = event.get("outcome")
+        bucket["last_seen_at"] = event.get("ts") or event.get("created_at")
+    for bucket in by_slug.values():
+        if bucket["quarantined"]:
+            bucket["status"] = "quarantined"
+        elif bucket["deny"] > 0 and bucket["allow"] == 0 and bucket["calls"] > 0:
+            bucket["status"] = "unhealthy"
+        elif bucket["calls"] == 0:
+            bucket["status"] = bucket["reported_health"] or "unknown"
+        else:
+            bucket["status"] = "healthy"
+    return {"connectors": list(by_slug.values())}
+
+
+@app.post("/api/v1/supply-chain/refresh")
+def supply_chain_refresh(principal: Principal = Depends(require_roles("admin", "operator"))):
+    """Re-ingest SBOM/signature/CVE feed into the catalog index (live refresh beyond one-shot fixtures)."""
+    import json
+    import subprocess
+
+    script = ROOT / "scripts" / "ingest-supply-chain.mjs"
+    proc = subprocess.run(["node", str(script)], capture_output=True, text=True, check=False)
+    if proc.returncode != 0:
+        raise HTTPException(500, f"ingest failed: {proc.stderr or proc.stdout}")
+    summary = json.loads(proc.stdout.strip().splitlines()[-1])
+    # Auto-quarantine blocked posture connectors
+    index_path = ROOT / "connectors" / "supply-chain-index.json"
+    blocked = []
+    if index_path.exists():
+        data = json.loads(index_path.read_text(encoding="utf-8"))
+        for slug, item in (data.get("connectors") or {}).items():
+            if item.get("posture") == "blocked":
+                conn = registry.get(slug)
+                if conn and not control_plane.is_quarantined(slug, conn.version):
+                    control_plane.quarantine(slug, conn.version, "supply-chain posture blocked (critical CVE)", principal.subject)
+                    conn.certification_state = "quarantined"
+                    blocked.append(slug)
+    summary["auto_quarantined"] = blocked
+    summary["refreshed_by"] = principal.subject
+    return summary
+
+
+@app.post("/gateway/v1/tools/complete")
+def gateway_tools_complete(body: dict, principal: Principal = Depends(get_principal)):
+    """Record final outcome for async tool invocations (spec §5.6)."""
+    correlation_id = body.get("correlation_id")
+    if not correlation_id:
+        raise HTTPException(400, "correlation_id required")
+    outcome = body.get("outcome", "completed")
+    event = audit.append(
+        {
+            "correlation_id": correlation_id,
+            "actor_id": principal.subject,
+            "organization": principal.org_id,
+            "tenant": principal.tenant_id,
+            "project": body.get("project_id", "project_local"),
+            "environment": body.get("environment", "development"),
+            "connector_slug": body.get("connector_slug"),
+            "tool_name": body.get("tool_name"),
+            "normalized_arguments_hash": body.get("args_hash"),
+            "policy_decision": body.get("policy_decision", "allow"),
+            "approval_id": body.get("approval_id"),
+            "idempotency_key": body.get("idempotency_key"),
+            "latency_ms": int(body.get("latency_ms") or 0),
+            "outcome": outcome,
+            "response_hash": body.get("response_hash"),
+            "evidence_uri": body.get("evidence_uri"),
+            "redaction_count": int(body.get("redaction_count") or 0),
+            "async_complete": True,
+        }
+    )
+    return {"ok": True, "event_hash": event.get("event_hash"), "correlation_id": correlation_id}
 
 
 # ── Streamable HTTP MCP termination (Milestone 3) ─────────────────────────

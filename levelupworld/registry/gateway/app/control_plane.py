@@ -3,12 +3,21 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 
 def _now() -> str:
     return datetime.now(tz=timezone.utc).isoformat()
+
+
+def _parse_iso(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
 
 
 class ControlPlaneStore:
@@ -17,6 +26,7 @@ class ControlPlaneStore:
         self.quarantines: dict[str, dict[str, Any]] = {}  # key: slug@version
         self.test_runs: dict[str, dict[str, Any]] = {}
         self.policy_decisions: list[dict[str, Any]] = []
+        self.certification_decisions: list[dict[str, Any]] = []
 
     def quarantine(self, slug: str, version: str, reason: str, actor: str) -> dict[str, Any]:
         key = f"{slug}@{version}"
@@ -27,6 +37,9 @@ class ControlPlaneStore:
             "reason": reason,
             "actor": actor,
             "quarantined_at": _now(),
+            "lifted_at": None,
+            "lifted_by": None,
+            "lift_reason": None,
             "active": True,
         }
         self.quarantines[key] = record
@@ -35,11 +48,29 @@ class ControlPlaneStore:
             if act["slug"] == slug and act["version"] == version:
                 act["enabled"] = False
                 act["disabled_reason"] = f"quarantine: {reason}"
+                act["status"] = "disabled"
         return record
+
+    def unquarantine(self, slug: str, version: str, reason: str, actor: str) -> dict[str, Any]:
+        key = f"{slug}@{version}"
+        existing = self.quarantines.get(key)
+        if not existing or not existing.get("active"):
+            raise KeyError("active quarantine not found")
+        existing["active"] = False
+        existing["lifted_at"] = _now()
+        existing["lifted_by"] = actor
+        existing["lift_reason"] = reason
+        return existing
 
     def is_quarantined(self, slug: str, version: str) -> bool:
         q = self.quarantines.get(f"{slug}@{version}")
         return bool(q and q.get("active"))
+
+    def list_quarantines(self, *, active_only: bool = True) -> list[dict[str, Any]]:
+        items = list(self.quarantines.values())
+        if active_only:
+            items = [q for q in items if q.get("active")]
+        return items
 
     def request_activation(self, body: dict[str, Any]) -> dict[str, Any]:
         act_id = f"act_{uuid.uuid4().hex}"
@@ -57,6 +88,8 @@ class ControlPlaneStore:
             "approved_by": None,
             "approved_at": None,
             "expires_at": body.get("expires_at"),
+            "disabled_reason": None,
+            "renewed_at": None,
         }
         self.activations[act_id] = record
         return record
@@ -72,9 +105,43 @@ class ControlPlaneStore:
         if approve:
             act["enabled"] = True
             act["status"] = "approved"
+            act["disabled_reason"] = None
+            if not act.get("expires_at"):
+                act["expires_at"] = (datetime.now(tz=timezone.utc) + timedelta(days=90)).isoformat()
         else:
             act["enabled"] = False
             act["status"] = "denied"
+        return act
+
+    def disable_activation(self, activation_id: str, actor: str, reason: str) -> dict[str, Any]:
+        act = self.activations.get(activation_id)
+        if not act:
+            raise KeyError("activation not found")
+        act["enabled"] = False
+        act["status"] = "disabled"
+        act["disabled_reason"] = reason
+        act["disabled_by"] = actor
+        act["disabled_at"] = _now()
+        return act
+
+    def renew_activation(self, activation_id: str, actor: str, days: int = 90) -> dict[str, Any]:
+        act = self.activations.get(activation_id)
+        if not act:
+            raise KeyError("activation not found")
+        if self.is_quarantined(act["slug"], act["version"]):
+            raise ValueError("connector version is quarantined")
+        if act.get("status") == "denied":
+            raise ValueError("denied activations cannot be renewed")
+        base = _parse_iso(act.get("expires_at")) or datetime.now(tz=timezone.utc)
+        if base < datetime.now(tz=timezone.utc):
+            base = datetime.now(tz=timezone.utc)
+        act["expires_at"] = (base + timedelta(days=max(1, days))).isoformat()
+        act["renewed_at"] = _now()
+        act["renewed_by"] = actor
+        if act.get("status") in {"approved", "disabled"} and not self.is_quarantined(act["slug"], act["version"]):
+            act["enabled"] = True
+            act["status"] = "approved"
+            act["disabled_reason"] = None
         return act
 
     def list_activations(self, project_id: str | None = None) -> list[dict[str, Any]]:
@@ -82,6 +149,69 @@ class ControlPlaneStore:
         if project_id:
             items = [a for a in items if a["project_id"] == project_id]
         return items
+
+    def record_certification_decision(
+        self,
+        *,
+        slug: str,
+        version: str,
+        decision: str,
+        actor: str,
+        reason: str,
+        test_run_id: str | None = None,
+        org_id: str = "org_local",
+    ) -> dict[str, Any]:
+        allowed = {"review", "certify", "fail", "waive"}
+        if decision not in allowed:
+            raise ValueError(f"decision must be one of {sorted(allowed)}")
+        record = {
+            "id": f"cert_{uuid.uuid4().hex}",
+            "org_id": org_id,
+            "slug": slug,
+            "version": version,
+            "decision": decision,
+            "actor": actor,
+            "reason": reason,
+            "test_run_id": test_run_id,
+            "created_at": _now(),
+        }
+        self.certification_decisions.append(record)
+        return record
+
+    def list_certification_queue(self, registry_connectors: dict[str, Any]) -> list[dict[str, Any]]:
+        """Versions needing reviewer attention: not certified, or actively quarantined."""
+        terminal: dict[str, str] = {}
+        for d in self.certification_decisions:
+            if d["decision"] in {"certify", "fail", "waive"}:
+                terminal[f"{d['slug']}@{d['version']}"] = d["decision"]
+
+        queue: list[dict[str, Any]] = []
+        for slug, conn in registry_connectors.items():
+            key = f"{slug}@{conn.version}"
+            quarantined = self.is_quarantined(slug, conn.version)
+            state = conn.certification_state
+            needs_review = state in {"in_lab", "reviewed", "failed", "quarantined"} or quarantined
+            if state == "certified" and terminal.get(key) == "certify" and not quarantined:
+                continue
+            if needs_review or state != "certified":
+                queue.append(
+                    {
+                        "slug": slug,
+                        "version": conn.version,
+                        "certification_state": state,
+                        "owner_team": conn.owner_team,
+                        "trust_tier": conn.trust_tier.value,
+                        "quarantined": quarantined,
+                        "last_decision": terminal.get(key),
+                    }
+                )
+        return queue
+
+    def list_certification_decisions(self, slug: str | None = None) -> list[dict[str, Any]]:
+        items = self.certification_decisions
+        if slug:
+            items = [d for d in items if d["slug"] == slug]
+        return list(reversed(items[-200:]))
 
     def create_test_run(self, slug: str, version: str, suite: str, org_id: str = "org_local") -> dict[str, Any]:
         run_id = f"run_{uuid.uuid4().hex}"

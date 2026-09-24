@@ -21,7 +21,7 @@ from .auth import Principal, get_principal
 from .models import Environment, InvokeRequest, PolicyDecision
 
 PROTOCOL_VERSION = "2024-11-05"
-SERVER_INFO = {"name": "agent-ops-mcp-gateway", "version": "0.4.0"}
+SERVER_INFO = {"name": "agent-ops-mcp-gateway", "version": "0.5.0"}
 
 router = APIRouter(tags=["mcp"])
 

@@ -32,6 +32,7 @@ def reset_control_plane():
     control_plane.quarantines.clear()
     control_plane.test_runs.clear()
     control_plane.policy_decisions.clear()
+    control_plane.certification_decisions.clear()
     # Restore any certification_state mutated by quarantine UX
     for conn in registry.connectors.values():
         if conn.certification_state == "quarantined":
@@ -637,3 +638,108 @@ def test_db_disabled_without_url():
     assert d.enabled is False
     with d.session(org_id="org_x", actor_subject="user:x") as conn:
         assert conn is None
+
+def test_catalog_cursor_pagination(client):
+    first = client.get("/api/v1/connectors", params={"limit": 3, "sort": "rank"})
+    assert first.status_code == 200
+    body = first.json()
+    assert body["returned"] == 3
+    assert body["next_cursor"]
+    assert body["count"] >= 11
+    second = client.get(
+        "/api/v1/connectors",
+        params={"limit": 3, "sort": "rank", "cursor": body["next_cursor"]},
+    )
+    assert second.status_code == 200
+    first_slugs = {c["slug"] for c in body["connectors"]}
+    second_slugs = {c["slug"] for c in second.json()["connectors"]}
+    assert first_slugs.isdisjoint(second_slugs)
+
+
+def test_unquarantine_activation_lifecycle_and_cert_queue(client):
+    act = client.post(
+        "/api/v1/activations",
+        json={
+            "slug": "github-readonly",
+            "version": "1.0.0",
+            "project_id": "agent-platform",
+            "environment": "staging",
+            "actor": "user:alice",
+        },
+    ).json()
+    client.post(f"/api/v1/activations/{act['id']}/approve", json={"approver": "user:boss", "approve": True})
+
+    q = client.post(
+        "/api/v1/connectors/github-readonly/quarantine",
+        json={"version": "1.0.0", "reason": "cve drill", "actor": "user:secops"},
+    )
+    assert q.status_code == 200
+    listed = client.get("/api/v1/quarantines")
+    assert listed.status_code == 200
+    assert any(x["slug"] == "github-readonly" and x["active"] for x in listed.json()["quarantines"])
+
+    # quarantine disables activations
+    acts = client.get("/api/v1/activations").json()["activations"]
+    matched = next(a for a in acts if a["id"] == act["id"])
+    assert matched["enabled"] is False
+
+    lifted = client.post(
+        "/api/v1/connectors/github-readonly/versions/1.0.0/unquarantine",
+        json={"reason": "false positive", "actor": "user:secops"},
+    )
+    assert lifted.status_code == 200
+    assert lifted.json()["active"] is False
+
+    disabled = client.post(
+        f"/api/v1/activations/{act['id']}/disable",
+        json={"reason": "project retired"},
+    )
+    assert disabled.status_code == 200
+    assert disabled.json()["status"] == "disabled"
+
+    renewed = client.post(
+        f"/api/v1/activations/{act['id']}/renew",
+        json={"days": 30},
+    )
+    assert renewed.status_code == 200
+    assert renewed.json()["enabled"] is True
+    assert renewed.json()["expires_at"]
+
+    cert = client.post(
+        "/api/v1/connectors/github-readonly/versions/1.0.0/certification-decisions",
+        json={"decision": "certify", "reason": "lab green", "actor": "user:reviewer"},
+    )
+    assert cert.status_code == 200
+    assert cert.json()["decision"] == "certify"
+
+    queue = client.get("/api/v1/certification-queue")
+    assert queue.status_code == 200
+    assert "queue" in queue.json()
+
+    health = client.get("/api/v1/health/connectors")
+    assert health.status_code == 200
+    assert len(health.json()["connectors"]) >= 11
+
+
+def test_supply_chain_refresh_and_async_complete(client):
+    refresh = client.post("/api/v1/supply-chain/refresh")
+    assert refresh.status_code == 200
+    body = refresh.json()
+    assert body["ok"] is True
+    assert body["connectors"] >= 11
+    assert "auto_quarantined" in body
+
+    done = client.post(
+        "/gateway/v1/tools/complete",
+        json={
+            "correlation_id": "00000000-0000-0000-0000-0000000000cc",
+            "connector_slug": "github-readonly",
+            "tool_name": "get_pull_request",
+            "outcome": "completed",
+            "latency_ms": 12,
+        },
+    )
+    assert done.status_code == 200
+    assert done.json()["ok"] is True
+    assert done.json()["event_hash"]
+

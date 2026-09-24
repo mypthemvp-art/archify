@@ -41,6 +41,18 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Dual approval + step-up for production writes
 - [x] Mutation observe gate (`GET /api/v1/metrics/mutations` + `docs/MUTATION-OBSERVE.md`) — expand writes only after staging quality review
 
+### Phase C — production lifecycle hardening
+
+- [x] Cursor-paginated catalog (`limit` / `next_cursor` on `GET /api/v1/connectors`)
+- [x] Unquarantine + quarantine list APIs
+- [x] Activation disable / renew
+- [x] Certification decisions + reviewer queue
+- [x] Connector health summaries (`GET /api/v1/health/connectors`)
+- [x] Supply-chain live refresh (`POST /api/v1/supply-chain/refresh`) with auto-quarantine on blocked posture
+- [x] Async invoke completion (`POST /gateway/v1/tools/complete`)
+- [ ] Onboard next sandboxed connector category beyond the core 11
+- [ ] Expand mutations beyond `github-write` dry-run after staging observe review
+
 ### Weeks 1–8 (historical delivery slices)
 
 - [x] Weeks 1–2 registry read path
@@ -48,4 +60,4 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Weeks 5–6 gateway approvals + github-write
 - [x] Weeks 7–8 Cursor pilot certification
 
-See [`IMPLEMENTATION-STARTER.md`](IMPLEMENTATION-STARTER.md), [`CERTIFICATION.md`](CERTIFICATION.md), and [`../../pilots/archify/CERTIFICATION.md`](../../pilots/archify/CERTIFICATION.md).
+See [`IMPLEMENTATION-STARTER.md`](IMPLEMENTATION-STARTER.md), [`CERTIFICATION.md`](CERTIFICATION.md), [`PHASE-C.md`](PHASE-C.md), and [`../../pilots/archify/CERTIFICATION.md`](../../pilots/archify/CERTIFICATION.md).

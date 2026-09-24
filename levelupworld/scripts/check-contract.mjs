@@ -66,6 +66,7 @@ for (const required of [
   'levelupworld/registry/gateway/app/adapters/github_write.py',
   'levelupworld/registry/docs/AUTH.md',
   'levelupworld/registry/docs/MUTATION-OBSERVE.md',
+  'levelupworld/registry/docs/PHASE-C.md',
   'levelupworld/registry/scripts/ingest-supply-chain.mjs',
   'levelupworld/registry/supply-chain/feed.json',
   'levelupworld/registry/connectors/supply-chain-index.json',
