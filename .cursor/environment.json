@@ -1,0 +1,6 @@
+{
+  "name": "Archify",
+  "install": "bash .cursor/install.sh",
+  "start": "bash .cursor/start.sh",
+  "ports": [3000, 8787]
+}
