@@ -68,6 +68,7 @@ for (const required of [
   'levelupworld/registry/gateway/app/otel_setup.py',
   'levelupworld/registry/gateway/app/control_plane.py',
   'levelupworld/registry/gateway/app/adapters/github_write.py',
+  'levelupworld/registry/gateway/app/adapters/feature_flags_readonly.py',
   'levelupworld/registry/docs/AUTH.md',
   'levelupworld/registry/docs/MUTATION-OBSERVE.md',
   'levelupworld/registry/docs/PHASE-C.md',
@@ -79,6 +80,8 @@ for (const required of [
   'levelupworld/registry/connectors/github-readonly.manifest.yaml',
   'levelupworld/registry/connectors/github-write.manifest.json',
   'levelupworld/registry/connectors/github-write.manifest.yaml',
+  'levelupworld/registry/connectors/feature-flags-readonly.manifest.json',
+  'levelupworld/registry/connectors/feature-flags-readonly.manifest.yaml',
   'levelupworld/registry/scripts/certify-connectors.mjs',
   '.github/workflows/registry-cert.yml',
   '.github/workflows/pilot-cert.yml',
@@ -105,12 +108,13 @@ for (const required of [
 const manifests = fs
   .readdirSync(path.join(root, 'levelupworld/registry/connectors'))
   .filter((f) => f.endsWith('.manifest.json'));
-assert.equal(manifests.length, 11);
+assert.equal(manifests.length, 12);
 assert.ok(manifests.includes('github-write.manifest.json'));
+assert.ok(manifests.includes('feature-flags-readonly.manifest.json'));
 const yamls = fs
   .readdirSync(path.join(root, 'levelupworld/registry/connectors'))
   .filter((f) => f.endsWith('.manifest.yaml'));
-assert.equal(yamls.length, 11);
+assert.equal(yamls.length, 12);
 
 const policy = path.join(root, '.cursor/hooks/policy-pre-tool.mjs');
 function run(input) {

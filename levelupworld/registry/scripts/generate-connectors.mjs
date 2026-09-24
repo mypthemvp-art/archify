@@ -282,6 +282,31 @@ const connectors = [
     ],
     safety: 'Non-prod only; repo allowlist; signed grant; dry-run default',
   },
+  {
+    slug: 'feature-flags-readonly',
+    display_name: 'Feature Flags Read-only',
+    category: 'feature_flags',
+    rank: 12,
+    description:
+      'Sandboxed discovery of feature flag definitions and evaluation rules. No toggles, targeting edits, or rollout mutations.',
+    owner_team: 'platform-security',
+    escalation_contact: 'secops@localhost',
+    trust_tier: 'sandboxed',
+    certification_state: 'in_lab',
+    transport: 'streamable_http',
+    version: '1.0.0',
+    image_digest: 'sha256:feature-flags-readonly-dev-digest',
+    oauth_scopes: ['flags:read', 'environments:read'],
+    outbound_domains: ['flags.example.com'],
+    allowed_environments: ['development', 'staging'],
+    data_classification: 'internal',
+    tools: [
+      { name: 'list_flags', capability: 'read', risk_level: 'low', requires_approval: false },
+      { name: 'get_flag', capability: 'read', risk_level: 'low', requires_approval: false },
+      { name: 'get_evaluation_rules', capability: 'read', risk_level: 'low', requires_approval: false },
+    ],
+    safety: 'Read-only; project allowlist; no mutate/toggle; non-prod environments only while sandboxed',
+  },
 ];
 
 for (const c of connectors) {
@@ -301,13 +326,45 @@ for (const c of connectors) {
               draft: { type: 'boolean' },
             },
           }
-        : {
-            type: 'object',
-            additionalProperties: false,
-            properties: {
-              correlation_id: { type: 'string' },
-            },
-          };
+        : c.slug === 'feature-flags-readonly' && t.name === 'list_flags'
+          ? {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                project: { type: 'string' },
+                environment: { type: 'string' },
+                q: { type: 'string' },
+              },
+            }
+          : c.slug === 'feature-flags-readonly' && t.name === 'get_flag'
+            ? {
+                type: 'object',
+                additionalProperties: false,
+                required: ['flag_key'],
+                properties: {
+                  flag_key: { type: 'string' },
+                  project: { type: 'string' },
+                  environment: { type: 'string' },
+                },
+              }
+            : c.slug === 'feature-flags-readonly' && t.name === 'get_evaluation_rules'
+              ? {
+                  type: 'object',
+                  additionalProperties: false,
+                  required: ['flag_key'],
+                  properties: {
+                    flag_key: { type: 'string' },
+                    project: { type: 'string' },
+                    environment: { type: 'string' },
+                  },
+                }
+              : {
+                  type: 'object',
+                  additionalProperties: false,
+                  properties: {
+                    correlation_id: { type: 'string' },
+                  },
+                };
     return {
       ...t,
       description: `${t.name} for ${c.display_name}`,

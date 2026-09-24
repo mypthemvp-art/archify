@@ -17,7 +17,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from .adapters import github_write
+from .adapters import feature_flags_readonly, github_write
 from .approvals import ApprovalService
 from .audit import AuditStore
 from .auth import Principal, get_principal, idp, require_roles
@@ -595,6 +595,12 @@ def invoke(req: InvokeRequest, principal: Principal = Depends(get_principal)):
         try:
             if req.connector_slug == github_write.SLUG and req.tool_name == github_write.TOOL_NAME:
                 raw = github_write.create_pull_request(
+                    arguments=req.arguments,
+                    environment=req.environment.value,
+                )
+            elif req.connector_slug == feature_flags_readonly.SLUG:
+                raw = feature_flags_readonly.invoke(
+                    tool_name=req.tool_name,
                     arguments=req.arguments,
                     environment=req.environment.value,
                 )

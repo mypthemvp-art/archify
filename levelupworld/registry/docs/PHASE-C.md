@@ -25,3 +25,9 @@ After Milestones 1–5, Phase C closes remaining control-plane lifecycle gaps fr
 - Hooks stay preflight-only.
 - Do not expand write connectors until `GET /api/v1/metrics/mutations` observe gate + human review (see [`MUTATION-OBSERVE.md`](MUTATION-OBSERVE.md)).
 - Onboard additional catalog categories one at a time (sandboxed → reviewed → certified).
+
+## Category onboarding progress
+
+| Category | Connector | Trust | Status |
+|---|---|---|---|
+| feature_flags | `feature-flags-readonly` | sandboxed / in_lab | Gateway adapter + certify gate; non-prod only; no mutate tools |

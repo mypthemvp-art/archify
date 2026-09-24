@@ -46,14 +46,19 @@ def test_catalog_lists_core_connectors_plus_github_write(client):
     res = client.get("/api/v1/connectors")
     assert res.status_code == 200
     body = res.json()
-    assert body["count"] >= 11
+    assert body["count"] >= 12
     slugs = {c["slug"] for c in body["connectors"]}
     assert "github-readonly" in slugs
     assert "policy-approval-gateway" in slugs
     assert "audit-evidence-store" in slugs
     assert "github-write" in slugs
+    assert "feature-flags-readonly" in slugs
     gw = next(c for c in body["connectors"] if c["slug"] == "github-write")
     assert "production" not in gw["allowed_environments"]
+    ff = next(c for c in body["connectors"] if c["slug"] == "feature-flags-readonly")
+    assert ff["trust_tier"] == "sandboxed"
+    assert "production" not in ff["allowed_environments"]
+    assert all(t["capability"] == "read" for t in ff["tools"])
 
 
 def test_read_only_invoke_allowed(client):
@@ -743,4 +748,60 @@ def test_supply_chain_refresh_and_async_complete(client):
     assert done.status_code == 200
     assert done.json()["ok"] is True
     assert done.json()["event_hash"]
+
+def test_feature_flags_readonly_sandbox_invoke(client):
+    ok = client.post(
+        "/api/v1/gateway/invoke",
+        json={
+            "actor": "user:alice",
+            "connector_slug": "feature-flags-readonly",
+            "tool_name": "list_flags",
+            "arguments": {"project": "agent-platform", "q": "pilot"},
+            "environment": "development",
+        },
+    )
+    assert ok.status_code == 200
+    body = ok.json()["result"]
+    assert body["ok"] is True
+    assert body["count"] >= 1
+    assert all("key" in f for f in body["flags"])
+
+    detail = client.post(
+        "/api/v1/gateway/invoke",
+        json={
+            "actor": "user:alice",
+            "connector_slug": "feature-flags-readonly",
+            "tool_name": "get_flag",
+            "arguments": {"flag_key": "secure-pr-guardian", "project": "agent-platform"},
+            "environment": "staging",
+        },
+    )
+    assert detail.status_code == 200
+    assert detail.json()["result"]["flag"]["key"] == "secure-pr-guardian"
+
+    # production denied by allowlist while sandboxed
+    prod = client.post(
+        "/api/v1/policy/evaluate",
+        json={
+            "actor": "user:alice",
+            "connector_slug": "feature-flags-readonly",
+            "tool_name": "list_flags",
+            "arguments": {"project": "agent-platform"},
+            "environment": "production",
+        },
+    )
+    assert prod.status_code == 200
+    assert prod.json()["decision"] == "deny"
+
+    bad_project = client.post(
+        "/api/v1/gateway/invoke",
+        json={
+            "actor": "user:alice",
+            "connector_slug": "feature-flags-readonly",
+            "tool_name": "list_flags",
+            "arguments": {"project": "not-allowlisted"},
+            "environment": "development",
+        },
+    )
+    assert bad_project.status_code == 400
 

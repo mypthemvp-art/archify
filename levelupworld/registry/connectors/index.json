@@ -11,6 +11,7 @@
     "browser-test-runner",
     "policy-approval-gateway",
     "audit-evidence-store",
-    "github-write"
+    "github-write",
+    "feature-flags-readonly"
   ]
 }

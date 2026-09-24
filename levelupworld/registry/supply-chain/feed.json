@@ -19,6 +19,13 @@
       "cve_high": 0,
       "signed": true,
       "source": "fixture-scanner"
+    },
+    "feature-flags-readonly": {
+      "cve_critical": 0,
+      "cve_high": 0,
+      "signed": true,
+      "source": "fixture-scanner",
+      "last_scanned_at": "2026-09-24T03:00:00Z"
     }
   }
 }

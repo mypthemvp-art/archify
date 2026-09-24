@@ -1,0 +1,52 @@
+apiVersion: registry.mcp.yourorg/v1
+kind: MCPConnector
+metadata:
+  slug: feature-flags-readonly
+  version: 1.0.0
+  ownerTeam: platform-security
+  source:
+    repository: https://github.com/your-org/mcp-feature-flags-readonly
+    commit: local-dev
+  lifecycle: active
+spec:
+  transport:
+    type: streamable-http
+    endpoint: https://mcp-gateway.example.com/connectors/feature-flags-readonly
+  runtime:
+    image: ghcr.io/your-org/mcp-feature-flags-readonly@sha256:feature-flags-readonly-dev-digest
+    sbomUri: oci://ghcr.io/your-org/mcp-feature-flags-readonly:sbom
+    provenanceUri: oci://ghcr.io/your-org/mcp-feature-flags-readonly:attestation
+  trust:
+    tier: 1
+    certification: in_lab
+    lastSecurityReviewAt: 2026-09-17T05:51:53.242Z
+  data:
+    classifications: [internal]
+    outboundDomains: [flags.example.com]
+    retention: none
+  auth:
+    mode: oauth
+    scopes: [flags:read, environments:read]
+    credentialSource: workload-identity
+  tools:
+    - name: list_flags
+      operation: read
+      risk: low
+      policy: feature-flags-readonly.list_flags
+    - name: get_flag
+      operation: read
+      risk: low
+      policy: feature-flags-readonly.get_flag
+    - name: get_evaluation_rules
+      operation: read
+      risk: low
+      policy: feature-flags-readonly.get_evaluation_rules
+  limits:
+    timeoutSeconds: 30
+    maxCallsPerRun: 20
+    maxCallsPerMinute: 60
+    maxResponseBytes: 1048576
+  environments: [development, staging]
+  status:
+    health: healthy
+    activated: false

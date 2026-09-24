@@ -5,7 +5,7 @@ Catalog and certify MCP connector versions; enforce authorization, tenant/enviro
 ## Quick start
 
 ```bash
-# Generate top-10 + github-write connector manifests
+# Generate core connectors + github-write + sandboxed feature-flags-readonly
 node levelupworld/registry/scripts/generate-connectors.mjs
 node levelupworld/registry/scripts/certify-connectors.mjs
 

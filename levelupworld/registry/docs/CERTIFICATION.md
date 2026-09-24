@@ -49,7 +49,7 @@ A connector **cannot** be marked `certified` until all items pass. The gateway m
 GitHub Actions workflow [`.github/workflows/registry-cert.yml`](../../../.github/workflows/registry-cert.yml) runs on registry changes:
 
 1. Regenerate manifests and fail if committed JSON/YAML is stale
-2. `node levelupworld/registry/scripts/certify-connectors.mjs` (top-10 + `github-write`)
+2. `node levelupworld/registry/scripts/certify-connectors.mjs` (top-10 + `github-write` + sandboxed categories)
 3. Agent-ops contract checks
 4. Gateway pytest (`AUTH_MODE=disabled`, `GITHUB_WRITE_DRY_RUN=1`)
 5. Live API smoke: sandbox test-run + approval-bound `github-write.create_pull_request` dry-run

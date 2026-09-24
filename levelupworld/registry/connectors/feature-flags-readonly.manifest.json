@@ -1,0 +1,113 @@
+{
+  "slug": "feature-flags-readonly",
+  "display_name": "Feature Flags Read-only",
+  "category": "feature_flags",
+  "rank": 12,
+  "description": "Sandboxed discovery of feature flag definitions and evaluation rules. No toggles, targeting edits, or rollout mutations.",
+  "owner_team": "platform-security",
+  "escalation_contact": "secops@localhost",
+  "trust_tier": "sandboxed",
+  "certification_state": "in_lab",
+  "transport": "streamable_http",
+  "version": "1.0.0",
+  "image_digest": "sha256:feature-flags-readonly-dev-digest",
+  "oauth_scopes": [
+    "flags:read",
+    "environments:read"
+  ],
+  "outbound_domains": [
+    "flags.example.com"
+  ],
+  "allowed_environments": [
+    "development",
+    "staging"
+  ],
+  "data_classification": "internal",
+  "tools": [
+    {
+      "name": "list_flags",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "list_flags for Feature Flags Read-only",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "project": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "q": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_flag",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "get_flag for Feature Flags Read-only",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "flag_key"
+        ],
+        "properties": {
+          "flag_key": {
+            "type": "string"
+          },
+          "project": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_evaluation_rules",
+      "capability": "read",
+      "risk_level": "low",
+      "requires_approval": false,
+      "description": "get_evaluation_rules for Feature Flags Read-only",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "flag_key"
+        ],
+        "properties": {
+          "flag_key": {
+            "type": "string"
+          },
+          "project": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "safety": "Read-only; project allowlist; no mutate/toggle; non-prod environments only while sandboxed",
+  "read_tool_count": 3,
+  "write_tool_count": 0,
+  "delete_tool_count": 0,
+  "health": {
+    "success_rate_24h": 0.99,
+    "p95_latency_ms": 120,
+    "error_rate_24h": 0.01,
+    "policy_denial_rate_24h": 0.02,
+    "healthy": true,
+    "last_health_at": "2026-09-17T05:51:53.242Z"
+  },
+  "active_in_production": false
+}

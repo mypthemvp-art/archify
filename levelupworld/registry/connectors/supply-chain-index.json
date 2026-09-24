@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T02:38:08.303Z",
+  "generated_at": "2026-09-24T03:41:36.317Z",
   "feed_present": true,
   "connectors": {
     "audit-evidence-store": {
@@ -13,9 +13,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-24T02:38:08.303Z",
+      "last_scanned_at": "2026-09-24T03:41:36.317Z",
       "source": "feed",
-      "record_sha256": "c032e967b2e6228f94ce99380c53dcf8317ca68c77aeb82ec9612cde8e00306f"
+      "record_sha256": "47486b1185ad4a6c65abf64d38a9f84a059ef11e0d17c9671b3c1f65c7582786"
     },
     "browser-test-runner": {
       "slug": "browser-test-runner",
@@ -28,9 +28,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-24T02:38:08.303Z",
+      "last_scanned_at": "2026-09-24T03:41:36.317Z",
       "source": "feed",
-      "record_sha256": "b2a657a0cccdafbdc752a64379ec9747296d82df2acf8ffdf75dd16cd32d5d29"
+      "record_sha256": "6dc11c9f72a5fddb8e37bada19e05883b9369f6114d9a7aa7a3cd3636a862ce6"
     },
     "cicd-observer": {
       "slug": "cicd-observer",
@@ -43,9 +43,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-24T02:38:08.303Z",
+      "last_scanned_at": "2026-09-24T03:41:36.317Z",
       "source": "feed",
-      "record_sha256": "95905e7d4eed446f0bf5044b6f7796ea0da4c9b78f9a6cf11be2ac5886affe0f"
+      "record_sha256": "631119bff5e396582cff8f7943f478c649ed3e12cdafd7b09e32c9926f1afa46"
     },
     "docs-fetch-search": {
       "slug": "docs-fetch-search",
@@ -58,9 +58,24 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-24T02:38:08.304Z",
+      "last_scanned_at": "2026-09-24T03:41:36.317Z",
       "source": "feed",
-      "record_sha256": "0ac83fdae5c2895cc7ac24d61ab8e40f13b21f774e5b0023c083028d9f6f71a7"
+      "record_sha256": "7fedccc6b8938e678a87f09dcb31dc9fbd96e2f59a48f32a529a484fa0a489ff"
+    },
+    "feature-flags-readonly": {
+      "slug": "feature-flags-readonly",
+      "version": "1.0.0",
+      "image_digest": "sha256:feature-flags-readonly-dev-digest",
+      "signed": true,
+      "sbom_uri": "oci://ghcr.io/your-org/mcp-feature-flags-readonly:sbom",
+      "signature_uri": "oci://ghcr.io/your-org/mcp-feature-flags-readonly:attestation",
+      "provenance_uri": "oci://ghcr.io/your-org/mcp-feature-flags-readonly:attestation",
+      "cve_critical": 0,
+      "cve_high": 0,
+      "posture": "ok",
+      "last_scanned_at": "2026-09-24T03:00:00Z",
+      "source": "fixture-scanner",
+      "record_sha256": "9b11266a3f4fb694fe40631171e0abaed8f00c075f7e166d0f9641df7bbde201"
     },
     "filesystem-sandbox": {
       "slug": "filesystem-sandbox",
@@ -73,9 +88,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-24T02:38:08.304Z",
+      "last_scanned_at": "2026-09-24T03:41:36.317Z",
       "source": "feed",
-      "record_sha256": "15ca905cb01c11d4d4bdb1c77bf805dfdd76172ebf2a0a3fe067979ff8430790"
+      "record_sha256": "5c8ed130976a47ef18f7b8ea23073740795ad1bd53a01dace7aeea53eb9c101e"
     },
     "git-repository": {
       "slug": "git-repository",
@@ -88,9 +103,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-24T02:38:08.304Z",
+      "last_scanned_at": "2026-09-24T03:41:36.317Z",
       "source": "feed",
-      "record_sha256": "9b63f12ef4e679edad072b06245d0a505a069513c8b87fd72664b0bb865bddb1"
+      "record_sha256": "05b068872b7a0b0a17bd5e914318a8efd56d549b3bc56782cde3a983d3b96f49"
     },
     "github-readonly": {
       "slug": "github-readonly",
@@ -133,9 +148,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-24T02:38:08.304Z",
+      "last_scanned_at": "2026-09-24T03:41:36.318Z",
       "source": "feed",
-      "record_sha256": "e22a9b897e0464878b76b58306262304b65d3439c75fe96fabe19bcbf61e7589"
+      "record_sha256": "2ff22d788e57ba67247f7f98712b5c90294ab4724178ef480e82c0edca94868d"
     },
     "policy-approval-gateway": {
       "slug": "policy-approval-gateway",
@@ -148,9 +163,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-24T02:38:08.304Z",
+      "last_scanned_at": "2026-09-24T03:41:36.318Z",
       "source": "feed",
-      "record_sha256": "7f2e66260824bb5b3c650a2f9df1636566336c05799aa1ebde19ce41e5ff6318"
+      "record_sha256": "09c4f2dbf35efa965aa513175b084dcbdfd5eb7eef7928f269d2abb5aad885a9"
     },
     "postgres-readonly": {
       "slug": "postgres-readonly",
@@ -163,9 +178,9 @@
       "cve_critical": 0,
       "cve_high": 0,
       "posture": "ok",
-      "last_scanned_at": "2026-09-24T02:38:08.304Z",
+      "last_scanned_at": "2026-09-24T03:41:36.318Z",
       "source": "fixture-scanner",
-      "record_sha256": "f7c2c07358b4f1a12f6f44928ebb24285c2266f4830da853e6e6b4a0bb1e8014"
+      "record_sha256": "1978fbade8c38730ca7640b5407295dd379b3fbe98314e76867aaac224882b35"
     }
   }
 }

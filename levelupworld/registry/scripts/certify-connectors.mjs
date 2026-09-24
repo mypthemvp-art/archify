@@ -26,6 +26,8 @@ const requiredTop10 = [
   'audit-evidence-store',
 ];
 
+const requiredSandboxedCategories = ['feature-flags-readonly'];
+
 function fail(msg) {
   console.error(`FAIL: ${msg}`);
   failures += 1;
@@ -34,6 +36,19 @@ function fail(msg) {
 for (const slug of requiredTop10) {
   if (!files.includes(`${slug}.manifest.json`)) fail(`missing core connector ${slug}`);
   if (!fs.existsSync(path.join(dir, `${slug}.manifest.yaml`))) fail(`missing YAML for ${slug}`);
+}
+
+for (const slug of requiredSandboxedCategories) {
+  if (!files.includes(`${slug}.manifest.json`)) fail(`missing sandboxed category connector ${slug}`);
+  if (!fs.existsSync(path.join(dir, `${slug}.manifest.yaml`))) fail(`missing YAML for ${slug}`);
+  const data = JSON.parse(fs.readFileSync(path.join(dir, `${slug}.manifest.json`), 'utf8'));
+  if (data.trust_tier !== 'sandboxed') fail(`${slug}: trust_tier must be sandboxed for category onboarding`);
+  if ((data.allowed_environments || []).includes('production')) {
+    fail(`${slug}: sandboxed category must not allow production yet`);
+  }
+  for (const tool of data.tools || []) {
+    if (tool.capability !== 'read') fail(`${slug}.${tool.name}: sandboxed onboarding is read-only`);
+  }
 }
 
 for (const file of files) {

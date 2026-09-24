@@ -56,7 +56,7 @@ Mapped to the full product milestones in [`INTERACTIVE-MCP-REGISTRY-DASHBOARD.md
 - [x] Connector health summaries (`GET /api/v1/health/connectors`)
 - [x] Supply-chain live refresh (`POST /api/v1/supply-chain/refresh`) with auto-quarantine on blocked posture
 - [x] Async invoke completion (`POST /gateway/v1/tools/complete`)
-- [ ] Onboard next sandboxed connector category beyond the core 11
+- [x] Onboard next sandboxed connector category beyond the core 11 (`feature-flags-readonly`)
 - [ ] Expand mutations beyond `github-write` dry-run after staging observe review
 - [ ] Hosted gateway deploy with `AUTH_MODE=oidc` (no disabled auth in production)
 
